@@ -1,0 +1,60 @@
+$primary-dark: #1e3a8a;
+$primary-light: #2563eb;
+$text-light: #ffffff;
+
+.sidebar {
+  width: 240px;
+  background: linear-gradient(180deg, $primary-dark, $primary-light);
+  color: $text-light;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+
+  .logo {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 30px;
+  }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    a {
+      padding: 10px 12px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: $text-light;
+      transition: 0.2s;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.15);
+      }
+
+      &.active {
+        background: rgba(255, 255, 255, 0.25);
+        font-weight: 500;
+      }
+    }
+  }
+
+  .user-box {
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 15px;
+
+    button {
+      margin-top: 8px;
+      width: 100%;
+      padding: 6px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+  }
+}
