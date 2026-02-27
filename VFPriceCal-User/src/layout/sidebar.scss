@@ -3,11 +3,11 @@ $primary-light: #2563eb;
 $text-light: #ffffff;
 
 .sidebar {
-  background: linear-gradient(180deg, $primary-dark, $primary-light);
+  background: linear-gradient(180deg, #0a2a4a 0%, #0f3b66 50%, #0e5c7a 100%);
   color: $text-light;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 10px;
   position: fixed;
   left: 0;
   top: 0;
@@ -19,25 +19,96 @@ $text-light: #ffffff;
     margin-bottom: 30px;
   }
 
+  p {
+    font-size: 12px;
+  }
+  hr {
+    border: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    margin: 20px 0;
+  }
   nav {
     display: flex;
     flex-direction: column;
     gap: 8px;
 
-    a {
-      padding: 10px 12px;
-      border-radius: 8px;
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 15px;
       text-decoration: none;
-      color: $text-light;
+      color: #cbd5e1;
+      border-radius: 8px;
       transition: 0.2s;
+    }
+
+    .menu-item:hover {
+      background: #1e293b;
+      color: white;
+    }
+
+    .menu-item.active {
+      background: #38bdf8;
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    /* MENU CHA */
+    .parent {
+      justify-content: space-between;
+    }
+
+    .menu-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .arrow {
+      transition: 0.3s;
+    }
+
+    .rotate {
+      transform: rotate(180deg);
+    }
+
+    /* SUBMENU */
+    .submenu {
+      padding-left: 35px;
+      margin-top: 5px;
+      padding-left: 20px;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+    .submenu-item {
+      border-left: 1px solid rgba(255, 255, 255, 0.2);
+      margin-left: 20px;
+      display: flex;
+      gap: 8px;
+      padding: 8px 0;
+      color: #94a3b8;
+      align-items: center;
+      text-decoration: none;
+      font-size: 16px;
+      transition: 0.3s;
+      position: relative;
+
+      &::before {
+        content: "›";
+        margin-left: 10px;
+        text-align: center;
+      }
 
       &:hover {
-        background: rgba(255, 255, 255, 0.15);
+        color: white;
       }
 
       &.active {
-        background: rgba(255, 255, 255, 0.25);
-        font-weight: 500;
+        color: #38bdf8;
+        font-weight: 600;
       }
     }
   }

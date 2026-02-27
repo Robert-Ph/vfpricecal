@@ -9,7 +9,13 @@ const QuotationPage = () => {
                 <div className="info-item info-quantity"></div>
             </div>
             <div className="quotation">
-                <p>This is the quotation page.</p>
+
+                <div className="price-return">
+                    <h3>Kết quả báo giá</h3>
+                    <p>This is the quotation page.</p>
+                    <p>Price: $100</p>
+                    <p>Return: 10%</p>
+                </div>
             </div>
 
         </div>
