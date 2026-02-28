@@ -6,7 +6,7 @@ import { FiChevronDown } from "react-icons/fi";
 import "./sidebar.scss";
 
 const Sidebar = () => {
-    const [openSubMenu, setOpenSubMenu] = useState(true);
+    const [openSubMenu, setOpenSubMenu] = useState(false);
 
     return (
         <div className="sidebar">
