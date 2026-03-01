@@ -4,7 +4,6 @@ $text-light: #313030;
 
 .topbar {
   height: $topbar-height;
-  background: $primary-light;
   color: $text-light;
   display: flex;
   align-items: center;
@@ -13,7 +12,9 @@ $text-light: #313030;
   position: fixed;
   right: 0;
   top: 0;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  position: relative;
+  display: inline-block;
 
   .title {
     font-size: 18px;
@@ -29,6 +30,54 @@ $text-light: #313030;
       border-radius: 6px;
       border: none;
       cursor: pointer;
+    }
+  }
+
+  .menu-icon {
+    font-size: 20px;
+    cursor: pointer;
+  }
+  .container {
+    display: flex;
+    margin: auto;
+    gap: 15px;
+    padding-top: 20px;
+    margin-right: 50px;
+    float: right;
+  }
+
+  /* Dropdown */
+  .dropdown {
+    position: absolute;
+    top: 100%; // nằm ngay dưới trigger
+    right: 0; // canh phải
+
+    width: 200px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    padding: 8px 0;
+    z-index: 999;
+  }
+  .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.3s;
+
+    &:hover {
+      background: #f3f4f6;
+    }
+  }
+
+  .logout {
+    color: #ef4444;
+
+    &:hover {
+      background: #fee2e2;
     }
   }
 }
