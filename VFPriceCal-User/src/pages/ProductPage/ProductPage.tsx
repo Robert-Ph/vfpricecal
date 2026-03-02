@@ -1,8 +1,12 @@
 import "./productPage.scss";
+import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 
 const ProductPage = () => {
+
+    const navigate = useNavigate();
+
 
     return (
         <div className="product-page">
@@ -41,7 +45,10 @@ const ProductPage = () => {
                                 <td>SP001</td>
                                 <td>Mô tả sản phẩm A </td>
                                 <td className="action-buttons">
-                                    <button className=" icon edit-btn"><FiEdit /></button>
+                                    <button className=" icon edit-btn"
+                                        onClick={() => navigate("/product/1")}>
+                                        <FiEdit />
+                                    </button>
                                     <button className=" icon delete-btn"><FiTrash2 /></button>
                                 </td>
 
@@ -54,7 +61,7 @@ const ProductPage = () => {
                                 <td>Mô tả sản phẩm B </td>
                                 <td className="action-buttons">
                                     <button className=" icon edit-btn"><FiEdit /></button>
-                                    <button className=" icon delete-btn"><FiTrash2 /></button>
+                                    <button className=" icon delete-btn" ><FiTrash2 /></button>
                                 </td>
 
                             </tr>
