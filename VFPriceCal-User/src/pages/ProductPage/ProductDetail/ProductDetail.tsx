@@ -13,7 +13,29 @@ const ProductDetail = () => {
             </div>
             <div className="product-detail-info">
                 <div className="product-info-basic">
-                    <label htmlFor="product-name">Tên sản phẩm:</label>
+                    <div className="product-image">
+                        {/* Image placeholder */}
+                    </div>
+                    <div className="product-item">
+                        <label htmlFor="product-name">Tên sản phẩm:</label>
+                        <input type="text" id="product-name" value="Sản phẩm A" />
+                    </div>
+
+                    <div className="product-item">
+                        <label htmlFor="product-code">Mã sản phẩm:</label>
+                        <input type="text" id="product-code" value="SP001" />
+                    </div>
+
+                    <div className="product-item">
+                        <label htmlFor="product-description">Mô tả:</label>
+                        <input type="text" id="product-description" value="Mô tả sản phẩm A" />
+                    </div>
+
+                    <div className="product-item">
+                        <label htmlFor="product-status">Trạng thái:</label>
+                        <input type="text" id="product-status" value="Đang hoạt động" />
+                    </div>
+
                 </div>
                 <div className="product-info-advanced">
                     <div className="tabs">
