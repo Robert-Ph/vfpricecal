@@ -10,7 +10,7 @@ const Sidebar = () => {
 
     return (
         <div className="sidebar">
-            <h3>VF PRINT</h3>
+            <h3 title="version 1.0">VF PRINT</h3>
             <p>Phần mềm báo giá in ấn</p>
 
             <hr />
