@@ -38,11 +38,11 @@ const Sidebar = () => {
                 </div>
                 {openSubMenu && (
                     <div className="submenu">
-                        <NavLink to="/price/paper" className="submenu-item">
+                        <NavLink to="/component/papers" className="submenu-item">
                             Giấy
                         </NavLink>
 
-                        <NavLink to="/price/process" className="submenu-item">
+                        <NavLink to="/component/processing" className="submenu-item">
                             Gia công
                         </NavLink>
 

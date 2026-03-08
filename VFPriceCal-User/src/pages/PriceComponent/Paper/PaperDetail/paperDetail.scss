@@ -1,0 +1,190 @@
+.paper-detail {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+
+    .add-paper-btn {
+        padding: 8px 16px;
+        background-color: #3b82f6;
+        background: #2563eb;
+        color: white;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #2563eb;
+        }
+    }
+    .paper-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+
+        h3 {
+            font-size: 16px;
+            font-weight: 600;
+        }
+    }
+
+    .paper-detail-info {
+        display: flex;
+        width: 100%;
+        height: 90%;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+
+        .paper-info-basic {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 30%;
+            border-right: 1px solid #aeaeaf;
+
+            .paper-image {
+                margin-top: 20px;
+                width: 60%;
+                height: 30%;
+                background: #e5e7eb;
+                border-radius: 8px;
+                margin-bottom: 20px;
+            }
+
+            .paper-item {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                padding: 0 20px;
+                gap: 10px;
+                margin-bottom: 20px;
+                float: left;
+
+                label {
+                    font-size: 16px;
+                    font-weight: 500;
+                }
+                input {
+                    margin-left: 10px;
+                    padding: 10px;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    border: none;
+                }
+            }
+
+            span {
+                margin-left: 10px;
+                padding: 6px;
+            }
+        }
+
+        .paper-info-advanced {
+            display: flex;
+            flex-direction: column;
+
+            width: 70%;
+            gap: 15px;
+
+            label {
+                font-size: 16px;
+                font-weight: 500;
+            }
+
+            span {
+                margin-left: 10px;
+                padding: 6px;
+            }
+
+            .tabs {
+                display: flex;
+                height: 5%;
+                background: #f3f4f6;
+
+                .tab {
+                    padding: 6px 12px;
+                    background: #f3f4f6;
+                    min-width: 20%;
+                    cursor: pointer;
+
+                    &.active {
+                        background: linear-gradient(180deg, #d4e9ff 0%, #52c0f3 100%);
+                        border-bottom: 2px solid #0537a5;
+                        color: rgb(43, 43, 43);
+                        font-weight: 600;
+                    }
+                }
+            }
+
+            .tab-content {
+                table {
+                    width: 100%;
+                    align-content: center;
+                    margin-bottom: 20px;
+                    border-collapse: collapse;
+
+                    thead {
+                        background-color: #f3f4f6;
+
+                        th {
+                            padding: 12px;
+                            text-align: left;
+                            font-size: 14px;
+                            color: #3c414d;
+                        }
+                    }
+
+                    tbody {
+                        tr {
+                            border-bottom: 1px solid #e5e7eb;
+                            text-align: left;
+
+                            &:hover {
+                                background-color: #739bf0;
+                            }
+
+                            td {
+                                padding: 5px;
+                                font-size: 14px;
+                                color: #374151;
+                            }
+
+                            .action-buttons {
+                                display: flex;
+                                gap: 5px;
+                                align-items: center;
+                                justify-content: right;
+                            }
+
+                            .icon {
+                                cursor: pointer;
+                                font-size: 18px;
+                                transition: 0.2s;
+                            }
+
+                            .icon.edit-btn {
+                                color: #2563eb;
+                            }
+
+                            .icon.edit-btn:hover {
+                                color: #1d4ed8;
+                                transform: scale(1.1);
+                            }
+
+                            .icon.delete-btn {
+                                color: #ef4444;
+                            }
+
+                            .icon.delete-btn:hover {
+                                color: #dc2626;
+                                transform: scale(1.1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

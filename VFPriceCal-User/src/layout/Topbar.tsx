@@ -8,8 +8,8 @@ const Topbar = () => {
 
     // Click ngoài sẽ đóng menu
     useEffect(() => {
-        const handleClickOutside = (e) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
                 setOpenDropdown(false);
             }
         };
