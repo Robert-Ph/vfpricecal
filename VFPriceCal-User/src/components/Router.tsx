@@ -7,6 +7,7 @@ import ComponentPaper from "../pages/PriceComponent/Paper/ComponentPaper";
 import Processing from "../pages/PriceComponent/Processing/Processing";
 import ProcessingDetail from "../pages/PriceComponent/Processing/ProcessingDetail";
 import PaperDetail from "../pages/PriceComponent/Paper/PaperDetail/PaperDetail";
+import UserManagement from "../pages/SystemPage/UserManagement";
 
 
 export const router = createBrowserRouter([
@@ -20,7 +21,8 @@ export const router = createBrowserRouter([
       { path: "/component/papers", element: <ComponentPaper /> },
       { path: "/component/processing", element: <Processing /> },
       { path: "/component/processing/:id", element: <ProcessingDetail /> },
-      { path: "/component/papers/:id", element: <PaperDetail /> }
+      { path: "/component/papers/:id", element: <PaperDetail /> },
+      { path: "/system/users", element: <UserManagement /> }
 
     ],
   },

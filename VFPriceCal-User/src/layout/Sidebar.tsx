@@ -7,6 +7,7 @@ import "./sidebar.scss";
 
 const Sidebar = () => {
     const [openSubMenu, setOpenSubMenu] = useState(false);
+    const [openSubMenuSystem, setOpenSubMenuSystem] = useState(false);
 
     return (
         <div className="sidebar">
@@ -51,19 +52,37 @@ const Sidebar = () => {
                         </NavLink>
                     </div>
                 )
-
                 }
-
-
                 <NavLink className="menu-item" to="/report">
                     <FaChartBar className="menu-icon" />
                     <span>Báo cáo</span>
                 </NavLink>
 
-                <NavLink className="menu-item" to="/system">
-                    <FaCog className="menu-icon" />
-                    <span>Hệ thống</span>
-                </NavLink>
+                <div className="menu-item parent"
+                    onClick={() => setOpenSubMenuSystem(!openSubMenuSystem)}>
+                    <div className="menu-left">
+                        <FaCog className="menu-icon" />
+                        <span>Hệ thống</span>
+                    </div>
+                    <FiChevronDown
+                        className={`arrow ${openSubMenuSystem ? "rotate" : ""}`}
+                    />
+
+                </div>
+                {openSubMenuSystem && (
+                    <div className="submenu">
+                        <NavLink to="/system/users" className="submenu-item">
+                            Quản lý người dùng
+                        </NavLink>
+                        <NavLink to="/system/settings" className="submenu-item">
+                            Cài đặt hệ thống
+                        </NavLink>
+                        <NavLink to="/system/settings" className="submenu-item">
+                            Sao lưu dữ liệu
+                        </NavLink>
+                    </div>
+                )
+                }
             </nav>
         </div>
     );
