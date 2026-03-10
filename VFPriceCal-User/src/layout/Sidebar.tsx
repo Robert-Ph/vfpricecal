@@ -47,7 +47,7 @@ const Sidebar = () => {
                             Gia công
                         </NavLink>
 
-                        <NavLink to="/price/print" className="submenu-item">
+                        <NavLink to="/component/printcost" className="submenu-item">
                             Giá in
                         </NavLink>
                     </div>
@@ -77,7 +77,7 @@ const Sidebar = () => {
                         <NavLink to="/system/settings" className="submenu-item">
                             Cài đặt hệ thống
                         </NavLink>
-                        <NavLink to="/system/settings" className="submenu-item">
+                        <NavLink to="/system/backup" className="submenu-item">
                             Sao lưu dữ liệu
                         </NavLink>
                     </div>
