@@ -7,9 +7,12 @@ import ComponentPaper from "../pages/PriceComponent/Paper/ComponentPaper";
 import Processing from "../pages/PriceComponent/Processing/Processing";
 import ProcessingDetail from "../pages/PriceComponent/Processing/ProcessingDetail";
 import PaperDetail from "../pages/PriceComponent/Paper/PaperDetail/PaperDetail";
-import UserManagement from "../pages/SystemPage/UserManagement";
 import Login from "../pages/Login/Login";
 import ForgotPassword from "../pages/Login/ForgotPassword/ForgotPassword";
+import UserManagement from "../pages/SystemPage/UserManagement/UserManagement";
+import PrintCost from "../pages/PriceComponent/PrintCost/PrintCost";
+import SystemSetting from "../pages/SystemPage/SystemSetting/SystemSetting";
+import SystemBackup from "../pages/SystemPage/SystemBackup/SystemBackup"
 
 
 export const router = createBrowserRouter([
@@ -33,6 +36,9 @@ export const router = createBrowserRouter([
       { path: "/component/processing/:id", element: <ProcessingDetail /> },
       { path: "/component/papers/:id", element: <PaperDetail /> },
       { path: "/system/users", element: <UserManagement /> },
+      { path: "/component/printcost", element: <PrintCost /> },
+      { path: "/system/settings", element: <SystemSetting /> },
+      { path: "/system/backup", element: <SystemBackup /> }
     ],
   },
 ]);
