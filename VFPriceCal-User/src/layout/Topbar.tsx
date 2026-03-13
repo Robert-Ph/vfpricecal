@@ -1,10 +1,12 @@
 import "./topbar.scss"
 import { useState, useRef, useEffect } from "react";
 import { FaCog, FaUser, FaChartLine, FaSignOutAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Topbar = () => {
     const [openDropdown, setOpenDropdown] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
 
     // Click ngoài sẽ đóng menu
     useEffect(() => {
@@ -16,6 +18,15 @@ const Topbar = () => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
+
+
+    const handleLogout = () => {
+        // nếu có token thì xóa
+        localStorage.removeItem("token");
+
+        // chuyển trang
+        navigate("/login");
+    };
 
     return (
         <div className="topbar">
@@ -34,7 +45,7 @@ const Topbar = () => {
                         <FaChartLine className="dropdown-icon" />
                         <span>Thống kê</span>
                     </div>
-                    <div className="dropdown-item">
+                    <div className="dropdown-item" onClick={handleLogout}>
                         <FaSignOutAlt className="dropdown-icon" />
                         <span>Đăng xuất</span>
                     </div>

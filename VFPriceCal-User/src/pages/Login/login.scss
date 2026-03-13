@@ -1,0 +1,112 @@
+.login {
+    height: 100vh;
+    display: flex;
+    font-family: "Segoe UI", sans-serif;
+
+    &__left {
+        flex: 1;
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .login__brand {
+            text-align: center;
+
+            h1 {
+                font-size: 48px;
+                font-weight: bold;
+                letter-spacing: 2px;
+            }
+
+            p {
+                margin-top: 10px;
+                opacity: 0.9;
+            }
+        }
+    }
+
+    &__right {
+        flex: 1;
+        background: #f4f6f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__form {
+        width: 380px;
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+
+        h2 {
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+    }
+}
+
+.form-group {
+    margin-bottom: 20px;
+
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        transition: 0.3s;
+
+        &:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+    }
+}
+
+.password-box {
+    position: relative;
+
+    .show-pass {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #667eea;
+        font-weight: 600;
+    }
+}
+
+.login-btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    background: #667eea;
+    color: white;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+        background: #5a6fd6;
+    }
+}
+
+.login__extra {
+    margin-top: 15px;
+    text-align: right;
+    color: #667eea;
+    cursor: pointer;
+    font-size: 14px;
+}

@@ -8,9 +8,19 @@ import Processing from "../pages/PriceComponent/Processing/Processing";
 import ProcessingDetail from "../pages/PriceComponent/Processing/ProcessingDetail";
 import PaperDetail from "../pages/PriceComponent/Paper/PaperDetail/PaperDetail";
 import UserManagement from "../pages/SystemPage/UserManagement";
+import Login from "../pages/Login/Login";
+import ForgotPassword from "../pages/Login/ForgotPassword/ForgotPassword";
 
 
 export const router = createBrowserRouter([
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/forgot-password",
+    element: <ForgotPassword />,
+  },
   {
     path: "/",
     element: <MainLayout />,
@@ -22,8 +32,7 @@ export const router = createBrowserRouter([
       { path: "/component/processing", element: <Processing /> },
       { path: "/component/processing/:id", element: <ProcessingDetail /> },
       { path: "/component/papers/:id", element: <PaperDetail /> },
-      { path: "/system/users", element: <UserManagement /> }
-
+      { path: "/system/users", element: <UserManagement /> },
     ],
   },
 ]);
