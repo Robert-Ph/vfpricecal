@@ -70,7 +70,6 @@ const ComponentPaper = () => {
                     </table>
                 </div>
             </div>
-
         </div>
     );
 }

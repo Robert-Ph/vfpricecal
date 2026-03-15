@@ -7,12 +7,12 @@ import ComponentPaper from "../pages/PriceComponent/Paper/ComponentPaper";
 import Processing from "../pages/PriceComponent/Processing/Processing";
 import ProcessingDetail from "../pages/PriceComponent/Processing/ProcessingDetail";
 import PaperDetail from "../pages/PriceComponent/Paper/PaperDetail/PaperDetail";
-import Login from "../pages/Login/Login";
-import ForgotPassword from "../pages/Login/ForgotPassword/ForgotPassword";
-import UserManagement from "../pages/SystemPage/UserManagement/UserManagement";
+import Login from "../pages/Auth/Login";
+import ForgotPassword from "../pages/Auth/ForgotPassword";
+import UserManagement from "../pages/SystemPage/User/UserManagement";
 import PrintCost from "../pages/PriceComponent/PrintCost/PrintCost";
-import SystemSetting from "../pages/SystemPage/SystemSetting/SystemSetting";
-import SystemBackup from "../pages/SystemPage/SystemBackup/SystemBackup"
+import SystemSetting from "../pages/SystemPage/Setting/SystemSetting";
+import SystemBackup from "../pages/SystemPage/Backup/SystemBackup"
 
 
 export const router = createBrowserRouter([
