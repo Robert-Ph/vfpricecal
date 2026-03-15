@@ -7,13 +7,19 @@ const ProductPage = () => {
 
     const navigate = useNavigate();
 
+    const handleAddProduct = () => {
+        navigate("/product/new");
+    }
+
 
     return (
         <div className="product-page">
             <div className="product-header">
                 <h3>Sản phẩm</h3>
 
-                <button className="add-product-btn"> <FaPlus /> Thêm sản phẩm</button>
+                <button className="add-product-btn" onClick={handleAddProduct}>
+                    <FaPlus /> Thêm sản phẩm
+                </button>
             </div>
 
             <div className="product-info">

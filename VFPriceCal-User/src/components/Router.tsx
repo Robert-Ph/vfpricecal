@@ -13,6 +13,7 @@ import UserManagement from "../pages/SystemPage/User/UserManagement";
 import PrintCost from "../pages/PriceComponent/PrintCost/PrintCost";
 import SystemSetting from "../pages/SystemPage/Setting/SystemSetting";
 import SystemBackup from "../pages/SystemPage/Backup/SystemBackup"
+import NewProduct from "../pages/ProductPage/NewProduct";
 
 
 export const router = createBrowserRouter([
@@ -30,6 +31,7 @@ export const router = createBrowserRouter([
     children: [
       { path: "/", element: <QuotationPage /> },
       { path: "/product", element: <ProductPage /> },
+      { path: "/product/new", element: <NewProduct /> },
       { path: "/product/:id", element: <ProductDetail /> },
       { path: "/component/papers", element: <ComponentPaper /> },
       { path: "/component/processing", element: <Processing /> },
