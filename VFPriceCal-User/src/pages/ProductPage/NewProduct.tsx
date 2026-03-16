@@ -2,10 +2,73 @@ import "./newProduct.scss";
 import { FaPlus } from "react-icons/fa";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { useState } from "react";
+import SelectModal from "../../components/SelectModal";
+
+const paperMaster = [
+    { id: 1, name: "Decal giấy đế vàng", size: "320x430" },
+    { id: 2, name: "Decal nhựa trong", size: "330x480" }
+];
+
+const processMaster = [
+    { id: 1, name: "Cán màng bóng", type: "Cán" },
+    { id: 2, name: "Bế demi", type: "Bế" }
+];
+
+const paperColumns = [
+    { field: "name", label: "Tên giấy" },
+    { field: "size", label: "Kích thước" }
+];
+
+const processColumns = [
+    { field: "name", label: "Tên gia công" },
+    { field: "type", label: "Loại" },
+    { field: "price", label: "Đơn giá" }
+];
 
 
 const NewProduct = () => {
     const [activeTab, setActiveTab] = useState("paper");
+
+
+    const [openPaperModal, setOpenPaperModal] = useState(false);
+    const [openProcessModal, setOpenProcessModal] = useState(false);
+
+    const [paperList, setPaperList] = useState([]);
+    const [processList, setProcessList] = useState([]);
+
+
+    const handleAddPaper = (list) => {
+
+        setPaperList(prev => {
+
+            const newList = [...prev];
+
+            list.forEach(p => {
+                const exist = newList.find(x => x.id === p.id);
+                if (!exist) newList.push(p);
+            });
+
+            return newList;
+        });
+
+    };
+
+    const handleAddProcess = (list) => {
+
+        setProcessList(prev => {
+
+            const newList = [...prev];
+
+            list.forEach(p => {
+                const exist = newList.find(x => x.id === p.id);
+                if (!exist) newList.push(p);
+            });
+
+            return newList;
+        });
+
+    };
+
 
     return (
         <div className="product-detail">
@@ -34,15 +97,27 @@ const NewProduct = () => {
                     </div>
 
                     <div className="product-item">
+                        <label htmlFor="product-description">Biên lợi nhuận:</label>
+                        <input type="text" id="product-description" value="150%" />
+                    </div>
+
+                    <div className="product-item">
                         <label htmlFor="product-status">Trạng thái:</label>
                         <input type="text" id="product-status" value="Đang hoạt động" />
                     </div>
+
+                    <div className="button-setting">
+                        <button className="add-product-btn save-btn">Lưu</button>
+                        <button className="add-product-btn cancel-btn">Hủy</button>
+                    </div>
+
 
                 </div>
                 <div className="product-info-advanced">
                     <div className="tabs">
                         <div className={`tab ${activeTab === "paper" ? "active" : ""}`} onClick={() => setActiveTab("paper")}>Giấy</div>
                         <div className={`tab ${activeTab === "processing" ? "active" : ""}`} onClick={() => setActiveTab("processing")}>Gia công</div>
+                        <div className={`tab ${activeTab === "customer" ? "active" : ""}`} onClick={() => setActiveTab("customer")}>Khách hàng</div>
                     </div>
                     <div className="tab-content">
                         {activeTab === "paper" &&
@@ -105,9 +180,10 @@ const NewProduct = () => {
                                     </table>
                                 </div>
 
-                                <button className="add-product-btn"><FaPlus /> Thêm loại giấy</button>
+                                <button className="add-product-btn" onClick={() => setOpenPaperModal(true)}>
+                                    <FaPlus /> Thêm loại giấy
+                                </button>
                             </div>
-
                         }
                         {activeTab === "processing" &&
                             <div className="product-paper-list">
@@ -170,12 +246,46 @@ const NewProduct = () => {
                                         </tbody>
 
                                     </table>
-                                    <button className="add-product-btn"><FaPlus /> Thêm loại giấy</button>
+                                    <button className="add-product-btn" onClick={() => setOpenProcessModal(true)}>
+                                        <FaPlus /> Thêm gia công
+                                    </button>
+                                </div>
+                            </div>
+                        }
+                        {activeTab === "customer" &&
+                            <div className="product-paper-list">
+                                <div className="product-item">
+                                    <label htmlFor="customer">Khách hàng thường</label>
+                                    <input type="text" id="customer" />
+                                </div>
+                                <div className="product-item">
+                                    <label htmlFor="customer">Khách hàng VIP</label>
+                                    <input type="text" id="customer" />
                                 </div>
                             </div>
                         }
                     </div>
+
+                    <SelectModal
+                        open={openPaperModal}
+                        setOpen={setOpenPaperModal}
+                        data={paperMaster}
+                        columns={paperColumns}
+                        title="Chọn giấy"
+                        onSubmit={handleAddPaper}
+                    />
+
+                    <SelectModal
+                        open={openProcessModal}
+                        setOpen={setOpenProcessModal}
+                        data={processMaster}
+                        columns={processColumns}
+                        title="Chọn gia công"
+                        onSubmit={handleAddProcess}
+                    />
+
                 </div>
+
             </div>
         </div>
     )
