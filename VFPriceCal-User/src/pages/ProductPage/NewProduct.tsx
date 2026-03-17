@@ -78,9 +78,9 @@ const NewProduct = () => {
             </div>
             <div className="product-detail-info">
                 <div className="product-info-basic">
-                    <div className="product-image">
-                        {/* Image placeholder */}
-                    </div>
+                    {/* <div className="product-image">
+                        Image placeholder
+                    </div> */}
                     <div className="product-item">
                         <label htmlFor="product-name">Tên sản phẩm:</label>
                         <input type="text" id="product-name" value="Sản phẩm A" />
@@ -254,12 +254,16 @@ const NewProduct = () => {
                         }
                         {activeTab === "customer" &&
                             <div className="product-paper-list">
-                                <div className="product-item">
-                                    <label htmlFor="customer">Khách hàng thường</label>
+                                <div className="customer-item">
+                                    <label htmlFor="customer">Khách hàng thường (Giảm%):</label>
                                     <input type="text" id="customer" />
                                 </div>
-                                <div className="product-item">
-                                    <label htmlFor="customer">Khách hàng VIP</label>
+                                <div className="customer-item">
+                                    <label htmlFor="customer">Khách hàng VIP (Giảm%)</label>
+                                    <input type="text" id="customer" />
+                                </div>
+                                <div className="customer-item">
+                                    <label htmlFor="customer">Đại lý (Giảm%)</label>
                                     <input type="text" id="customer" />
                                 </div>
                             </div>

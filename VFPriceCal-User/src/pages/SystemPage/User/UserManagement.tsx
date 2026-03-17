@@ -1,17 +1,22 @@
 import "./userManagement.scss";
+import { useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import UserModal from "../../../components/UserModal";
 
 const UserManagement = () => {
 
     const navigate = useNavigate();
+    const [openUserModal, setOpenUserModal] = useState(false);
+
+
     return (
         <div className="user-page">
             <div className="user-header">
                 <h3>Người dùng</h3>
 
-                <button className="add-user-btn"> <FaPlus /> Thêm người dùng</button>
+                <button className="add-user-btn" onClick={() => setOpenUserModal(true)}> <FaPlus /> Thêm người dùng</button>
             </div>
 
             <div className="user-info">
@@ -67,6 +72,11 @@ const UserManagement = () => {
                     </table>
                 </div>
             </div>
+
+<UserModal
+   open={openUserModal}
+   setOpen={setOpenUserModal}
+/>
 
         </div>
     );

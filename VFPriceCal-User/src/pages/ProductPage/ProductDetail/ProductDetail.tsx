@@ -15,9 +15,9 @@ const ProductDetail = () => {
             </div>
             <div className="product-detail-info">
                 <div className="product-info-basic">
-                    <div className="product-image">
-                        {/* Image placeholder */}
-                    </div>
+                    {/* <div className="product-image">
+                        Image placeholder
+                    </div> */}
                     <div className="product-item">
                         <label htmlFor="product-name">Tên sản phẩm:</label>
                         <input type="text" id="product-name" value="Sản phẩm A" />
@@ -34,8 +34,18 @@ const ProductDetail = () => {
                     </div>
 
                     <div className="product-item">
+                        <label htmlFor="product-description">Biên lợi nhuận:</label>
+                        <input type="text" id="product-description" value="150%" />
+                    </div>
+
+                    <div className="product-item">
                         <label htmlFor="product-status">Trạng thái:</label>
                         <input type="text" id="product-status" value="Đang hoạt động" />
+                    </div>
+
+                    <div className="button-setting">
+                        <button className="add-product-btn save-btn">Lưu</button>
+                        <button className="add-product-btn cancel-btn">Hủy</button>
                     </div>
 
                 </div>
@@ -43,6 +53,7 @@ const ProductDetail = () => {
                     <div className="tabs">
                         <div className={`tab ${activeTab === "paper" ? "active" : ""}`} onClick={() => setActiveTab("paper")}>Giấy</div>
                         <div className={`tab ${activeTab === "processing" ? "active" : ""}`} onClick={() => setActiveTab("processing")}>Gia công</div>
+                         <div className={`tab ${activeTab === "customer" ? "active" : ""}`} onClick={() => setActiveTab("customer")}>Khách hàng</div>
                     </div>
                     <div className="tab-content">
                         {activeTab === "paper" && 
@@ -173,6 +184,22 @@ const ProductDetail = () => {
                                 <button className="add-product-btn"><FaPlus/> Thêm loại giấy</button>
                             </div> 
                         </div> 
+                        }
+                        {activeTab === "customer" &&
+                            <div className="product-paper-list">
+                                <div className="customer-item">
+                                    <label htmlFor="customer">Khách hàng thường (Giảm%):</label>
+                                    <input type="text" id="customer" />
+                                </div>
+                                <div className="customer-item">
+                                    <label htmlFor="customer">Khách hàng VIP (Giảm%)</label>
+                                    <input type="text" id="customer" />
+                                </div>
+                                 <div className="customer-item">
+                                    <label htmlFor="customer">Đại lý (Giảm%)</label>
+                                    <input type="text" id="customer" />
+                                </div>
+                            </div>
                         }
                     </div>
                 </div>

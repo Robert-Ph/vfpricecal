@@ -19,8 +19,9 @@ const QuotationPage = () => {
                         <div className="form-type-customer">
                             <label htmlFor="customer-type">Loại khách hàng:</label>
                             <select id="customer-type" name="customer-type">
-                                <option value="individual">Cá nhân</option>
-                                <option value="company">Doanh nghiệp</option>
+                                <option value="individual">Khách hàng thường</option>
+                                <option value="vip">Khách hàng VIP</option>
+                                <option value="Company">Đại lý</option>
                             </select>
                         </div>
                     </div>

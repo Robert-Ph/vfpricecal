@@ -211,4 +211,26 @@
             }
         }
     }
+
+
+    .customer-item{
+        gap: 20px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 30px;
+        label{
+            font-size: 14px;
+            color: black;
+            padding: 10px;
+        }
+
+        input{
+            height: 30px;
+            width: 200px;
+            align-items: center;
+            padding: 5px;
+            border-radius: 5px;
+
+        }
+    }
 }
