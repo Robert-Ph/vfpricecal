@@ -12,15 +12,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "companies")
-public class Companies {
+@Table(name = "account")
+public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
-    private String phone;
-    private String address;
+    private Long company_id;
+    private String username;
+    private String password;
+    private String role;
     private Timestamp create_at;
-    
 }

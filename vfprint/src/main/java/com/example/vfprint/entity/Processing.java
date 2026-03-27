@@ -1,6 +1,5 @@
 package com.example.vfprint.entity;
 
-import java.sql.Timestamp;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,15 +11,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "companies")
-public class Companies {
+@Table(name = "processing")
+public class Processing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long category_id;
     private String name;
-    private String phone;
-    private String address;
-    private Timestamp create_at;
-    
+    private Float price;
+    private String price_type;
+    private Boolean is_active;
 }
