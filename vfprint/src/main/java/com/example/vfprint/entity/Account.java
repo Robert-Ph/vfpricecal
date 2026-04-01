@@ -1,6 +1,9 @@
 package com.example.vfprint.entity;
 
 import java.sql.Timestamp;
+
+import org.hibernate.annotations.CreationTimestamp;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,5 +25,7 @@ public class Account {
     private String username;
     private String password;
     private String role;
+
+    @CreationTimestamp
     private Timestamp create_at;
 }
