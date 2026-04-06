@@ -9,7 +9,7 @@ import com.example.vfprint.entity.Account;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long>{
 
-    Optional<Account> findByUserName(String name);
+    Optional<Account> findByUsername(String name);
 
 
     
