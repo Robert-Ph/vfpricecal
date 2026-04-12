@@ -1,5 +1,7 @@
 package com.example.vfprint.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +55,10 @@ public class AccountService {
                 .orElseThrow(() -> new RuntimeException("Account not found"));
     }
 
+    @Transactional
+    public List<Account> searchAccounts(String param){
+        return accountRepository.search(param);
+    }
 
     // Retrieve an account by username
     @Transactional(readOnly = true)

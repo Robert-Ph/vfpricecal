@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 import com.example.vfprint.repository.AccountRepository;
 import com.example.vfprint.service.AccountService;
 import com.example.vfprint.entity.Account;
@@ -24,19 +25,14 @@ public class AccountController {
     private AccountRepository accountRepository;
 
 
-    @GetMapping("username/{username}")
-    public Account getAccountByUsername(@PathVariable String username){
-        return accountService.getAccountByUsername(username);
-    }
-
     @GetMapping
     public List<Account> getAllAccounts(){
         return accountRepository.findAll();
     }
 
-    @GetMapping("id/{id}")
-    public Account getAccountById(@PathVariable Long id){
-        return accountService.getAccountById(id);
+    @GetMapping("/search")
+    public List<Account> searchAccounts(@RequestParam("param") String param){
+        return accountService.searchAccounts(param);
     }
 
     @PostMapping()
@@ -44,7 +40,7 @@ public class AccountController {
         return accountService.createAccount(account);
     }
 
-    @DeleteMapping("id/{id}")
+    @DeleteMapping("{id}")
     public String deleteAccount(@PathVariable Long id){
         accountService.deleteAccount(id);
         return "Account deleted";
