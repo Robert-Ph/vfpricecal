@@ -1,5 +1,6 @@
 package com.example.vfprint.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,9 +19,12 @@ public class PaperSize {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long company_id;
+    @Column(name = "company_id")
+    private Long companyId;
     private String name;
     private Float width;
     private Float height;
-    private Boolean is_active;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
 }
