@@ -19,9 +19,8 @@ public class PaperSize {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "company_id")
-    private Long companyId;
-    private String name;
+    @Column(name = "paper_id")
+    private Long paperId;
     private Float width;
     private Float height;
 

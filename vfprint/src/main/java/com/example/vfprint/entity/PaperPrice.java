@@ -1,5 +1,6 @@
 package com.example.vfprint.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,14 +12,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "processing_category")
-public class ProcessingCategory {
+@Table(name = "paper_type")
+public class PaperPrice {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long company_id;
-    private String name;
-    private Boolean is_active;
+    @Column(name = "paper_size_id")
+    private Long paperSizeId;
+    private Float price;
 
 }

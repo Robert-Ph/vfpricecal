@@ -33,5 +33,11 @@ public class Companies {
     @Column(name = "create_at", updatable = false)
     @CreationTimestamp
     private Timestamp createAt;
+
+    @Column(name = "tax_code")
+    private String taxCode;
+    private String email;
+    private String type;
+
     
 }

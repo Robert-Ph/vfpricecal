@@ -1,5 +1,6 @@
 package com.example.vfprint.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,9 +18,9 @@ public class PrintPrice {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long company_id;
+    @Column(name = "company_id")
+    private Long companyId;
     private String name;
-    private String color_type;
-    private Float price_per_sheet;
+    private Float price;
     private Boolean is_active;
 }
