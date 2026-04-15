@@ -30,11 +30,8 @@ public class PaperSizeService {
         PaperSize existingPaperSize = paperSizeRepository.findById(paperSize.getId())
                 .orElseThrow(() -> new RuntimeException("Paper size not found"));
         
-        existingPaperSize.setCompanyId(paperSize.getCompanyId());
-        existingPaperSize.setName(paperSize.getName());
         existingPaperSize.setWidth(paperSize.getWidth());
         existingPaperSize.setHeight(paperSize.getHeight());
-        existingPaperSize.setIsActive(paperSize.getIsActive());
         
         return paperSizeRepository.save(existingPaperSize);
     }
