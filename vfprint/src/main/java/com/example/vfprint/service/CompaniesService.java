@@ -17,8 +17,22 @@ public class CompaniesService {
 
     // Create a new company
     @Transactional
-    public Companies createCompany(Companies company){
-        return companiesRepository.save(company);
+    public void createCompany(CompaniesDto company){
+
+        if(companiesRepository.existsByName(company.getName())){
+            throw new RuntimeException("Company with the same name already exists");
+        }
+
+        Companies entity = Companies.builder()
+                .name(company.getName())
+                .phone(company.getPhone())
+                .address(company.getAddress())
+                .taxCode(company.getTaxCode())
+                .email(company.getEmail())
+                .type(company.getType())
+                .build();
+
+        companiesRepository.save(entity);
     }
 
     // Update company details
@@ -46,13 +60,31 @@ public class CompaniesService {
 
     //get all companies
     @Transactional(readOnly = true)
-    public List<Companies> getAllCompanies(){
-        return companiesRepository.findAll();
+    public List<CompaniesDto> getAllCompanies(){
+        return companiesRepository.findAll()
+                .stream()
+                .map(company -> {
+                    CompaniesDto dto = new CompaniesDto();
+                    dto.setName(company.getName());
+                    dto.setPhone(company.getPhone());
+                    dto.setAddress(company.getAddress());
+                    return dto;
+                })
+                .toList();
     }
 
     @Transactional
-    public List<Companies> searchCompanies(String param){
-        return companiesRepository.search(param);
+    public List<CompaniesDto> searchCompanies(String param){
+        return companiesRepository.search(param)
+                .stream()
+                .map(company -> {
+                    CompaniesDto dto = new CompaniesDto();
+                    dto.setName(company.getName());
+                    dto.setPhone(company.getPhone());
+                    dto.setAddress(company.getAddress());
+                    return dto;
+                })
+                .toList();
     }
 
 }

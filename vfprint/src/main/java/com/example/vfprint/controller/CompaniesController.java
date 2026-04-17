@@ -1,9 +1,12 @@
 package com.example.vfprint.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+
+import com.example.vfprint.dto.CompaniesDto;
 import com.example.vfprint.entity.Companies;
 import com.example.vfprint.repository.CompaniesRepository;
 import com.example.vfprint.service.CompaniesService;
@@ -21,23 +24,22 @@ public class CompaniesController {
     @Autowired 
     private CompaniesService companiesService;
 
-    @Autowired
-    private CompaniesRepository companiesRepository;
 
 
     @GetMapping
-    public List<Companies> getAllCompanies() {
+    public List<CompaniesDto> getAllCompanies() {
         return companiesService.getAllCompanies();
     }
     
     @GetMapping("/search")
-    public List<Companies> searchCompanies(@RequestParam("param") String param) {
+    public List<CompaniesDto> searchCompanies(@RequestParam("param") String param) {
         return companiesService.searchCompanies(param);
     }
 
     @PostMapping
-    public Companies createCompany(@RequestBody Companies company) {
-        return companiesService.createCompany(company);
+    public ResponseEntity<String> createCompany(@RequestBody CompaniesDto company) {
+        companiesService.createCompany(company);
+        return ResponseEntity.ok("Company created successfully");
     }
     
 

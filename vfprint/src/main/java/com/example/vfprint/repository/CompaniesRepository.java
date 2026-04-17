@@ -17,4 +17,5 @@ public interface CompaniesRepository extends JpaRepository<Companies, Long>{
             WHERE c.name LIKE %:param% OR c.phone LIKE %:param% OR c.address LIKE %:param%
             """)
     List<Companies> search(@Param("param") String param);
+    boolean existsByName(String name);
 }

@@ -48,12 +48,7 @@ public class PaperSizeService {
     }
 
     @Transactional
-    public List<PaperSize> searchPaperSizes(String param){
-        return paperSizeRepository.search(param);
-    }
-
-    @Transactional
-    public List<PaperSize> getPaperSizesByCompanyId(Long companyId){
-        return paperSizeRepository.findByCompanyId(companyId);
+    public List<PaperSize> getPaperSizesByPaperId(Long paperId){
+        return paperSizeRepository.findByPaperId(paperId);
     }
 }

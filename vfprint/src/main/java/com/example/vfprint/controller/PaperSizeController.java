@@ -31,16 +31,11 @@ public class PaperSizeController {
         return paperSizeService.getAllPaperSizes();
     }
 
-    @GetMapping("/{companyId}")
-    public List<PaperSize> getPaperSizesByCompanyId(@PathVariable Long companyId) {
-        return paperSizeService.getPaperSizesByCompanyId(companyId);
+    @GetMapping("/{paperId}")
+    public List<PaperSize> getPaperSizesByPaperId(@PathVariable Long paperId) {
+        return paperSizeService.getPaperSizesByPaperId(paperId);
     }
     
-
-    @GetMapping("/search")
-    public List<PaperSize> searchPaperSizes(@RequestParam("param") String param) {
-        return paperSizeService.searchPaperSizes(param);
-    }
 
     @PostMapping()
     public PaperSize createPaperSize(@RequestBody PaperSize paperSize) {
