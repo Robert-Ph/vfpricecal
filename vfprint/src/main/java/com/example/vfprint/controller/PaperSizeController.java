@@ -3,6 +3,7 @@ package com.example.vfprint.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.vfprint.service.PaperSizeService;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.example.vfprint.entity.PaperSize;
+import com.example.vfprint.dto.PaperSizeDTO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -27,25 +28,32 @@ public class PaperSizeController {
 
 
     @GetMapping
-    public List<PaperSize> getAllPaperSizes() {
-        return paperSizeService.getAllPaperSizes();
+    public List<PaperSizeDTO> getAllPaperSizes(@RequestParam("paperId") Long paperId){
+        return paperSizeService.getPaperSizesByPaperId(null);
     }
 
     @GetMapping("/{paperId}")
-    public List<PaperSize> getPaperSizesByPaperId(@PathVariable Long paperId) {
+    public List<PaperSizeDTO> getPaperSizesByPaperId(@PathVariable Long paperId) {
         return paperSizeService.getPaperSizesByPaperId(paperId);
     }
     
 
     @PostMapping()
-    public PaperSize createPaperSize(@RequestBody PaperSize paperSize) {
-        return paperSizeService.createPaperSize(paperSize);
+    public ResponseEntity<String> createPaperSize(@RequestBody List<PaperSizeDTO> paperSize) {
+        paperSizeService.createPaperSize(paperSize);
+        return ResponseEntity.ok("Paper size created successfully");
     }
 
     @DeleteMapping("{id}")
-    public String deletePaperSize(@RequestParam Long id) {
+    public ResponseEntity<String> deletePaperSize(@PathVariable Long id) {
         paperSizeService.deletePaperSize(id);
-        return "Paper size deleted Ok";
+        return ResponseEntity.ok("Paper size deleted successfully");
+    }
+
+    @DeleteMapping
+    public ResponseEntity<String> deletePaperSizesByPaperId(@RequestParam("paperId") Long paperId) {
+        paperSizeService.deletePaperSizesByPaperId(paperId);
+        return ResponseEntity.ok("Paper sizes deleted successfully");
     }
     
     

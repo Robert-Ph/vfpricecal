@@ -53,9 +53,17 @@ public class CompaniesService {
 
     //get company by ID
     @Transactional(readOnly = true)
-    public Companies getCompanyById(Long id){
-        return companiesRepository.findById(id)
+    public CompaniesDto getCompanyById(Long id){
+        Companies company = companiesRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
+        CompaniesDto dto = new CompaniesDto();
+        dto.setName(company.getName());
+        dto.setPhone(company.getPhone());
+        dto.setAddress(company.getAddress());
+        dto.setTaxCode(company.getTaxCode());
+        dto.setEmail(company.getEmail());
+        dto.setType(company.getType());
+        return dto;
     }
 
     //get all companies

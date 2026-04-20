@@ -14,7 +14,9 @@ public interface CompaniesRepository extends JpaRepository<Companies, Long>{
 
    @Query("""
             SELECT c FROM Companies c
-            WHERE c.name LIKE %:param% OR c.phone LIKE %:param% OR c.address LIKE %:param%
+            WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :param, '%')) OR LOWER(c.phone) LIKE LOWER(CONCAT('%', :param, '%')) 
+            OR LOWER(c.address) LIKE LOWER(CONCAT('%', :param, '%')) OR LOWER(c.taxCode) LIKE LOWER(CONCAT('%', :param, '%'))
+            OR LOWER(c.email) LIKE LOWER(CONCAT('%', :param, '%')) OR LOWER(c.type) LIKE LOWER(CONCAT('%', :param, '%'))
             """)
     List<Companies> search(@Param("param") String param);
     boolean existsByName(String name);

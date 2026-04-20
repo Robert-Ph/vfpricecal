@@ -1,11 +1,15 @@
 package com.example.vfprint.service;
 
 import java.util.List;
-
+import java.util.stream.Collectors;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.example.vfprint.dto.PaperSizeDTO;
 import com.example.vfprint.entity.PaperSize;
+import com.example.vfprint.repository.PaperRepository;
 import com.example.vfprint.repository.PaperSizeRepository;
 
 @Service
@@ -14,15 +18,49 @@ public class PaperSizeService {
     @Autowired
     private PaperSizeRepository paperSizeRepository;
 
+    @Autowired
+    private PaperRepository paperRepository;
 
+
+
+    //Tao moi 1 paper size cho 1 paper, neu da co thi khong tao nua
     @Transactional
-    public List<PaperSize> getAllPaperSizes(){
-        return paperSizeRepository.findAll();
+    public void createPaperSize(List<PaperSizeDTO> dtos){
+       if (dtos == null || dtos.isEmpty()) {
+        return;
     }
 
-    @Transactional
-    public PaperSize createPaperSize(PaperSize paperSize){
-        return paperSizeRepository.save(paperSize);
+    // 1. Gom nhóm PaperId để check database 1 lần duy nhất (tối ưu hiệu suất)
+    Set<Long> paperIds = dtos.stream()
+            .map(PaperSizeDTO::getPaperId)
+            .collect(Collectors.toSet());
+
+    for (Long pId : paperIds) {
+        if (!paperRepository.existsById(pId)) {
+            throw new RuntimeException("Paper không tồn tại với ID: " + pId);
+        }
+    }
+
+    // 2. Chuyển đổi và kiểm tra trùng lặp
+    List<PaperSize> entitiesToSave = dtos.stream()
+            .filter(dto -> {
+                // Kiểm tra xem size này đã tồn tại trong DB chưa
+                return !paperSizeRepository.existsByPaperIdAndWidthAndHeight(
+                        dto.getPaperId(), dto.getWidth(), dto.getHeight());
+            })
+            .map(dto -> PaperSize.builder()
+                    .paperId(dto.getPaperId())
+                    .width(dto.getWidth())
+                    .height(dto.getHeight())
+                    .isActive(true)
+                    .build())
+            .toList();
+
+    // 3. Lưu toàn bộ (nếu danh sách lọc xong không rỗng)
+    if (!entitiesToSave.isEmpty()) {
+        paperSizeRepository.saveAll(entitiesToSave);
+    }
+
     }
 
     @Transactional
@@ -42,13 +80,35 @@ public class PaperSizeService {
     }
 
     @Transactional(readOnly = true)
-    public PaperSize getPaperSizeById(Long id){
-        return paperSizeRepository.findById(id)
+    public void deletePaperSizesByPaperId(Long paperId){
+        paperSizeRepository.deleteByPaperId(paperId);
+    }
+
+    @Transactional(readOnly = true)
+    public PaperSizeDTO getPaperSizeById(Long paperId){
+        return paperSizeRepository.findById(paperId)
+                .map(ps -> {
+                    PaperSizeDTO dto = new PaperSizeDTO();
+                    dto.setPaperId(ps.getPaperId());
+                    dto.setWidth(ps.getWidth());
+                    dto.setHeight(ps.getHeight());
+                    return dto;
+                })
                 .orElseThrow(() -> new RuntimeException("Paper size not found"));
     }
 
     @Transactional
-    public List<PaperSize> getPaperSizesByPaperId(Long paperId){
-        return paperSizeRepository.findByPaperId(paperId);
+    public List<PaperSizeDTO> getPaperSizesByPaperId(Long paperId){
+        return paperSizeRepository.findAll()
+                .stream()
+                .filter(ps -> ps.getPaperId().equals(paperId))
+                .map(ps -> {
+                    PaperSizeDTO dto = new PaperSizeDTO();
+                    dto.setPaperId(ps.getPaperId());
+                    dto.setWidth(ps.getWidth());
+                    dto.setHeight(ps.getHeight());
+                    return dto;
+                })
+                .toList();
     }
 }

@@ -6,5 +6,5 @@ import com.example.vfprint.entity.Paper;
 
 @Repository
 public interface PaperRepository extends JpaRepository<Paper, Long> {
-    
+    boolean existsByNameAndCompanyId(String name, Long companyId);
 }

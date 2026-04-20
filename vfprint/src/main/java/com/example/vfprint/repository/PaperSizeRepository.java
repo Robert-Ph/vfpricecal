@@ -1,6 +1,9 @@
 package com.example.vfprint.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.example.vfprint.entity.PaperSize;
 import java.util.List;
@@ -9,5 +12,14 @@ import java.util.List;
 public interface PaperSizeRepository  extends JpaRepository<PaperSize, Long> {
    
     List<PaperSize> findByPaperId(Long paperId);
-    
+    void deleteByPaperId(Long paperId);
+    boolean existsByPaperId(Long paperId);
+    boolean existsByPaperIdAndWidthAndHeight(Long paperId, Float width, Float height);
+
+    @Modifying
+    @Query("""
+        DELETE FROM PaperSize ps WHERE ps.paperId = :paperId
+            
+            """)
+    void deleteByPaperIdCustom(@Param("paperId") Long paperId);
 }
