@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.example.vfprint.dto.PaperPriceDTO;
 import com.example.vfprint.entity.PaperPrice;
 import com.example.vfprint.repository.PaperPriceRepository;
 
@@ -18,8 +20,15 @@ public class PaperPriceService {
 
 
     @Transactional
-    public PaperPrice createPaperPrice(PaperPrice paperPrice){
-        return paperPriceRepository.save(paperPrice);
+    public void createPaperPrice(PaperPriceDTO paperPrice){
+        if (paperPriceRepository.existsByPaperSizeId(paperPrice.getPaperSizeId())) {
+            throw new RuntimeException("Paper price for the given size already exists");
+        }
+        PaperPrice paperPriceEntity = PaperPrice.builder()
+                .paperSizeId(paperPrice.getPaperSizeId())
+                .price(paperPrice.getPrice())
+                .build();
+        paperPriceRepository.save(paperPriceEntity);
     }
 
 

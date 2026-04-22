@@ -26,7 +26,7 @@ public class Roles {
     private String name;
     private String description;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "role")
     private List<Account> accounts;
 
 

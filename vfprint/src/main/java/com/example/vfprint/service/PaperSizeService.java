@@ -6,7 +6,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.example.vfprint.repository.PaperPriceRepository;
 import com.example.vfprint.dto.PaperSizeDTO;
 import com.example.vfprint.entity.PaperSize;
 import com.example.vfprint.repository.PaperRepository;
@@ -20,6 +20,9 @@ public class PaperSizeService {
 
     @Autowired
     private PaperRepository paperRepository;
+
+    @Autowired
+    private PaperPriceRepository paperPriceRepository;
 
 
 
@@ -76,7 +79,9 @@ public class PaperSizeService {
 
     @Transactional
     public void deletePaperSize(Long id){
+        paperPriceRepository.deleteByPaperSizeId(id);
         paperSizeRepository.deleteById(id);
+        
     }
 
     @Transactional(readOnly = true)

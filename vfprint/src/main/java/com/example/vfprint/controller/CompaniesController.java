@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import com.example.vfprint.dto.CompaniesDto;
-import com.example.vfprint.entity.Companies;
-import com.example.vfprint.repository.CompaniesRepository;
 import com.example.vfprint.service.CompaniesService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;

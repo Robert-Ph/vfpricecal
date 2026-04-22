@@ -6,5 +6,6 @@ import com.example.vfprint.entity.PaperPrice;
 
 @Repository
 public interface PaperPriceRepository extends JpaRepository<PaperPrice, Long>    {
-    
+    boolean existsByPaperSizeId(Long paperSizeId);
+    void deleteByPaperSizeId(Long paperSizeId);
 }
