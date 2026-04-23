@@ -35,6 +35,7 @@ public class PaperPriceService {
     @Transactional
     public void deletePaperPrice(Long id){
         paperPriceRepository.deleteById(id);
+        
     }
 
 
