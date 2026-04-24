@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.vfprint.dto.PaperPriceDTO;
+import com.example.vfprint.entity.Paper;
 import com.example.vfprint.entity.PaperPrice;
 import com.example.vfprint.repository.PaperPriceRepository;
 
@@ -42,6 +43,11 @@ public class PaperPriceService {
     @Transactional
     public List<PaperPrice> getAllPaperPrices(){
         return paperPriceRepository.findAll();
+    }
+
+    @Transactional
+    public PaperPrice getPaperPriceDTO(Long paperSizeId){
+       return paperPriceRepository.findByPaperSizeId(paperSizeId);
     }
 
 }

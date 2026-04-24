@@ -27,8 +27,8 @@ public class PaperSize {
 
     @Column(name = "paper_id")
     private Long paperId;
-    private Float width;
-    private Float height;
+    private int width;
+    private int height;
 
     @Column(name = "is_active")
     private Boolean isActive;

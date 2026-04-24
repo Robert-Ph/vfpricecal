@@ -14,7 +14,7 @@ public interface PaperSizeRepository  extends JpaRepository<PaperSize, Long> {
     List<PaperSize> findByPaperId(Long paperId);
     void deleteByPaperId(Long paperId);
     boolean existsByPaperId(Long paperId);
-    boolean existsByPaperIdAndWidthAndHeight(Long paperId, Float width, Float height);
+    boolean existsByPaperIdAndWidthAndHeight(Long paperId, int width, int height);
 
     @Modifying
     @Query("""

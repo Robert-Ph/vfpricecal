@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class PaperSizeDTO {
     private Long paperId;
-    private Float width;
-    private Float height;
+    private int width;
+    private int height;
 
 }

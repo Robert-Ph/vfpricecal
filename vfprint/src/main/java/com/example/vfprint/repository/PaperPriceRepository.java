@@ -1,6 +1,7 @@
 package com.example.vfprint.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Repository;
 import com.example.vfprint.entity.PaperPrice;
 
@@ -8,4 +9,5 @@ import com.example.vfprint.entity.PaperPrice;
 public interface PaperPriceRepository extends JpaRepository<PaperPrice, Long>    {
     boolean existsByPaperSizeId(Long paperSizeId);
     void deleteByPaperSizeId(Long paperSizeId);
+    PaperPrice findByPaperSizeId(Long paperSizeId);
 }
