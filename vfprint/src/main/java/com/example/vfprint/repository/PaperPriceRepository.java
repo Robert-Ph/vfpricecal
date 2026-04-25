@@ -1,7 +1,6 @@
 package com.example.vfprint.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Repository;
 import com.example.vfprint.entity.PaperPrice;
 

@@ -6,12 +6,7 @@ import com.example.vfprint.dto.PaperDTO;
 import com.example.vfprint.dto.PaperPriceDTO;
 import com.example.vfprint.dto.InfoPriceDTO;
 import com.example.vfprint.dto.PaperSizeDTO;
-import com.example.vfprint.entity.Paper;
 import com.example.vfprint.entity.PaperPrice;
-import com.example.vfprint.entity.PaperSize;
-import com.example.vfprint.repository.PaperPriceRepository;
-import com.example.vfprint.repository.PaperSizeRepository;
-
 @Service
 public class CalculatorService {
     
@@ -25,15 +20,6 @@ public class CalculatorService {
     @Autowired
     private PaperPriceService paperPriceService;
 
-    @Autowired
-    private PaperSizeRepository paperSizeRepository;
-
-    @Autowired
-    private PaperPriceRepository paperPriceRepository;
-
-    @Autowired
-    private PaperPrice paperPrice;
-
 
     // Ham tinh gia in an theo kich thuoc san pham va loai giay
     public double calculatePrintingCost(InfoPriceDTO infoPriceDTO) {
@@ -46,7 +32,7 @@ public class CalculatorService {
             throw new RuntimeException("Paper không tồn tại với ID: " + infoPriceDTO.getPaperId());
         }
 
-        PaperPrice pricePerSheet = paperPriceService.getPaperPriceDTO(infoPriceDTO.getPaperSizeId());
+        PaperPriceDTO pricePerSheet = paperPriceService.getPaperPriceDTO(infoPriceDTO.getPaperSizeId());
         if (pricePerSheet == null) {
             throw new RuntimeException("Paper price không tồn tại cho PaperSize ID: " + infoPriceDTO.getPaperSizeId());
         }
@@ -103,15 +89,7 @@ public class CalculatorService {
 
 
     public static void main(String[] args) {
-        CalculatorService calculatorService = new CalculatorService();
-        int widthProduct = 290; // Kich thuoc san pham
-        int heightProduct = 100;
-        int widthPaper = 300; // Kich thuoc to giay
-        int heightPaper = 400;
-        int quantity = 10; // So luong san pham
+      
 
-        int sheetsNeeded = calculatorService.calculatePaperSheets(widthProduct, heightProduct, widthPaper, heightPaper, quantity);
-        System.out.println("So luong to giay can thiet: " + sheetsNeeded);
-        System.out.println("So san pham tren moi to giay: " + calculatorService.calculateProductsPerSheet(widthProduct, heightProduct, widthPaper, heightPaper, false));
     }
 }

@@ -17,7 +17,7 @@ import lombok.Setter;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "paper_type")
+@Table(name = "paper_price")
 @Builder
 public class PaperPrice {
     @Id

@@ -46,8 +46,15 @@ public class PaperPriceService {
     }
 
     @Transactional
-    public PaperPrice getPaperPriceDTO(Long paperSizeId){
-       return paperPriceRepository.findByPaperSizeId(paperSizeId);
+    public PaperPriceDTO getPaperPriceDTO(Long paperSizeId){
+        PaperPrice paperPrice = paperPriceRepository.findByPaperSizeId(paperSizeId);
+        if (paperPrice == null) {
+            throw new RuntimeException("Paper price not found for PaperSize ID: " + paperSizeId);
+        }
+        PaperPriceDTO dto = new PaperPriceDTO();
+        dto.setPaperSizeId(paperPrice.getPaperSizeId());
+        dto.setPrice(paperPrice.getPrice());
+        return dto;
     }
 
 }
