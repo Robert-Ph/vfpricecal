@@ -1,0 +1,27 @@
+package com.example.vfprint.dto.request;
+
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
+import io.micrometer.common.lang.NonNull;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.*;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@ToString
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class LoginRequet {
+    @NotNull(message = "Username không được null")
+    @NotEmpty(message = "Username không được để trống")
+    String username;
+
+    @NotNull(message = "Password không được null")
+    @NotEmpty(message = "Password không được để trống")
+    String password;
+}

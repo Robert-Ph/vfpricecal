@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.example.vfprint.repository.ProcessingRepository;
 import com.example.vfprint.dto.ProcessingDTO;
 import com.example.vfprint.entity.Processing;
+import java.util.List;
 
 @Service
 public class ProcessingService {
@@ -29,6 +30,8 @@ public class ProcessingService {
         return processingRepository.existsByName(name);
     }
 
+
+    // tạo mới processing, nếu categoryId không tồn tại thì throw exception, nếu name đã tồn tại thì throw exception
     @Transactional
     public void createProcessing(ProcessingDTO processingDTO){
         if (categoryRepository.findById(processingDTO.getCategoryId()).isEmpty()) {
@@ -45,11 +48,44 @@ public class ProcessingService {
                 .build());
     }
 
+    //tạo mới processing theo categoryId, với đầu vào là 1 danh sách các processingDTO, nếu categoryId không tồn tại thì throw exception, nếu name đã tồn tại thì throw exception
+    @Transactional
+    public void createProcessingByCategoryId( List<ProcessingDTO> processingDTOList){
+        for (ProcessingDTO processingDTO : processingDTOList) {
+            if (categoryRepository.findById(processingDTO.getCategoryId()).isEmpty()) {
+                throw new RuntimeException("Category with the given ID does not exist");
+            }
+            if (processingRepository.existsByName(processingDTO.getName())) {
+                throw new RuntimeException("Processing with the given name already exists");
+            }
+            processingRepository.save(Processing.builder()
+                    .categoryId(processingDTO.getCategoryId())
+                    .name(processingDTO.getName())
+                    .price(processingDTO.getPrice())
+                    .is_active(true)
+                    .build());
+        }
+    }
+
+    // get thông tin processing theo name, trả về DTO
     @Transactional
     public ProcessingDTO getProcessingByName(String name){
         Processing processing = processingRepository.findByName(name);
         if (processing == null) {
             throw new RuntimeException("Processing with the given name does not exist");
+        }
+        ProcessingDTO dto = new ProcessingDTO();
+        dto.setCategoryId(processing.getCategoryId());
+        dto.setName(processing.getName());
+        dto.setPrice(processing.getPrice());
+        return dto;
+    }
+
+    @Transactional
+    public ProcessingDTO getProcessingById(Long id){
+        Processing processing = processingRepository.findById(id).orElse(null);
+        if (processing == null) {
+            throw new RuntimeException("Processing with the given ID does not exist");
         }
         ProcessingDTO dto = new ProcessingDTO();
         dto.setCategoryId(processing.getCategoryId());

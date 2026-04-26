@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import java.util.List;
 import com.example.vfprint.dto.ProcessingDTO;
 import com.example.vfprint.service.ProcessingService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +28,11 @@ public class ProcessingController {
         return ResponseEntity.ok("Processing created successfully");
     }
     
+    @PostMapping("/list")
+    public ResponseEntity<String> postMethodName(@RequestBody List<ProcessingDTO> processingDTOList) {
+        processingService.createProcessingByCategoryId(processingDTOList);
+        return ResponseEntity.ok("Processing list created successfully");
+    }
     
     @GetMapping
     public ProcessingDTO getProcessingByName(@RequestParam String name) {

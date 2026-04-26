@@ -7,6 +7,9 @@ import com.example.vfprint.dto.PaperPriceDTO;
 import com.example.vfprint.dto.InfoPriceDTO;
 import com.example.vfprint.dto.PaperSizeDTO;
 import com.example.vfprint.entity.PaperPrice;
+import com.example.vfprint.service.PaperService;
+import com.example.vfprint.service.PaperSizeService;
+import java.util.List;
 @Service
 public class CalculatorService {
     
@@ -20,27 +23,38 @@ public class CalculatorService {
     @Autowired
     private PaperPriceService paperPriceService;
 
+    @Autowired
+    private ProcessingService processingService;
+
 
     // Ham tinh gia in an theo kich thuoc san pham va loai giay
     public double calculatePrintingCost(InfoPriceDTO infoPriceDTO) {
+
+        // Kiem tra xem paper size va paper co ton tai hay khong
         PaperSizeDTO paperSizeDTO = paperSizeService.getPaperSizeById(infoPriceDTO.getPaperSizeId());
         if (paperSizeDTO == null) {
             throw new RuntimeException("Paper size không tồn tại với ID: " + infoPriceDTO.getPaperSizeId());
         }
+
+        // Kiem tra xem paper co ton tai hay khong
         PaperDTO paper = paperService.getPaperById(infoPriceDTO.getPaperId(), infoPriceDTO.getCompanyId());
         if (paper == null) {
             throw new RuntimeException("Paper không tồn tại với ID: " + infoPriceDTO.getPaperId());
         }
 
+        // Kiem tra xem paper price co ton tai hay khong
         PaperPriceDTO pricePerSheet = paperPriceService.getPaperPriceDTO(infoPriceDTO.getPaperSizeId());
         if (pricePerSheet == null) {
             throw new RuntimeException("Paper price không tồn tại cho PaperSize ID: " + infoPriceDTO.getPaperSizeId());
         }
 
+        // Tinh so luong to giay can thiet de in an san pham
         int sheetsNeeded = calculatePaperSheets(infoPriceDTO.getWidthProduct(), infoPriceDTO.getHeightProduct(),
                 paperSizeDTO.getWidth(), paperSizeDTO.getHeight(), infoPriceDTO.getQuantity());
         
-        return sheetsNeeded * pricePerSheet.getPrice();
+        double totalProcessingCost = calculateTotalProcessingCost(infoPriceDTO.getProcessingIds());
+                // Tinh tong chi phi in an
+        return sheetsNeeded * (pricePerSheet.getPrice() + totalProcessingCost);
 
 
     }
@@ -67,7 +81,23 @@ public class CalculatorService {
         return (int) Math.ceil((double) quantity / sheetsNeeded);
     }
 
+    //ham tinh kiemr tra processing tong tien cua processingIds:
+    // Neu processingIds rong thi tra ve 0, neu processingId khong ton tai thi bo qua processing do,
+    //  neu processingId ton tai thi cong gia processing do vao tong tien  
+    public double calculateTotalProcessingCost(List<Long> processingIds) {
+        double totalCost = 0.0;
+        if (processingIds.isEmpty()) {
+            return totalCost;
+        }
+        for (Long processingId : processingIds) {
+            if (processingService.getProcessingById(processingId) != null) {
+                 totalCost += processingService.getProcessingById(processingId).getPrice();
+            }   
+        }
+        return totalCost;
+    }
 
+    //tinh so luong san pham tren 1 to giay, co cat canh hay khong cat canh
     public int calculateProductsPerSheet(int widthProduct, int heightProduct, int widthPaper, int heightPaper, boolean cutting) {
         if (cutting) {
             widthPaper += 2;
@@ -87,9 +117,4 @@ public class CalculatorService {
         return totalProductsPerSheetbyHeight;
     }
 
-
-    public static void main(String[] args) {
-      
-
-    }
 }
