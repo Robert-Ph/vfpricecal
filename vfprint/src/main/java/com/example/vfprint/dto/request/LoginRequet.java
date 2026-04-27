@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
-import io.micrometer.common.lang.NonNull;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import jakarta.validation.constraints.*;
