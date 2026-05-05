@@ -1,20 +1,40 @@
 package com.example.vfprint.service;
 
-import java.time.format.SignStyle;
 import java.util.Date;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
-
-import ch.qos.logback.core.subst.Token;
+import com.example.vfprint.entity.Account;
 import com.example.vfprint.entity.Token;
+import com.example.vfprint.repository.AccountRepository;
 import com.example.vfprint.repository.TokenRepository;
 import com.nimbusds.jose.JOSEException;
 import java.text.ParseException;
+import com.example.vfprint.dto.request.LoginRequest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.method.P;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthencaitonService {
+
+    @Autowired
+    private TokenRepository tokenRepository;
     
+    @Autowired
+    private AccountRepository accountRepository;
+
+    public boolean authenticate(LoginRequest loginRequest) {
+        // Thực hiện xác thực người dùng (ví dụ: kiểm tra username và password trong cơ sở dữ liệu)
+        // Trả về true nếu xác thực thành công, ngược lại trả về false
+        var account = accountRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // Khởi tạo PasswordEncoder (ví dụ: BCryptPasswordEncoder)
+
+
+        return passwordEncoder.matches(loginRequest.getPassword(), account.getPassword()); // Giả sử luôn xác thực thành công
+    }
 
     //logout token
     public void logout(String token) throws JOSEException, ParseException {
@@ -38,5 +58,8 @@ public class AuthencaitonService {
                 .token(token)
                 .exDate(expirationTime)
                 .build();
+        // Lưu token vào cơ sở dữ liệu
+        tokenRepository.save(tokenEntity);
+
     }
 }

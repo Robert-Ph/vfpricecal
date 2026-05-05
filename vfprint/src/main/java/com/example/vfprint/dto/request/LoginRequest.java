@@ -15,7 +15,7 @@ import jakarta.validation.constraints.*;
 @Builder
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class LoginRequet {
+public class LoginRequest {
     @NotNull(message = "Username không được null")
     @NotEmpty(message = "Username không được để trống")
     String username;
