@@ -7,6 +7,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import java.util.List;
 
 
 @Configuration
@@ -19,13 +23,39 @@ public class SecurityConfig {
     }
 
 
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-            .csrf(csrf -> csrf.disable()) // Tắt CSRF để gọi API từ Postman dễ hơn
-            .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll() // Cho phép tất cả các request không cần đăng nhập
-            );
-        return http.build();
-    }
+   @Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+        // 1. Kích hoạt cấu hình CORS
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+        
+        // 2. Tắt CSRF (Bắt buộc để gọi POST/PUT/DELETE từ bên ngoài)
+        .csrf(csrf -> csrf.disable()) 
+        
+        // 3. Quản lý quyền truy cập
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/api/auth/**").permitAll() // Cho phép công khai API login
+            .anyRequest().permitAll() // Tạm thời cho phép tất cả để debug
+        );
+
+    return http.build();
+}
+
+// Hàm bổ trợ để định nghĩa chi tiết luật CORS
+@Bean
+public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration configuration = new CorsConfiguration();
+    // Danh sách các domain FE của bạn
+    configuration.setAllowedOrigins(List.of(
+        "http://localhost:5174" // Local development
+    ));
+    configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+    configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));
+    configuration.setAllowCredentials(true);
+    configuration.setMaxAge(3600L);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", configuration); // Áp dụng cho tất cả các endpoint
+    return source;
+}
 }

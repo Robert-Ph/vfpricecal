@@ -55,7 +55,7 @@ public class AuthencaitonService {
         }
 
         Token tokenEntity = Token.builder()
-                .token(token)
+                .id(token)
                 .exDate(expirationTime)
                 .build();
         // Lưu token vào cơ sở dữ liệu

@@ -1,7 +1,6 @@
 package com.example.vfprint.entity;
 
-import org.springframework.data.annotation.Id;
-
+import jakarta.persistence.Id;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -20,6 +19,6 @@ import java.util.Date;
 @Table(name = "tokens")
 public class Token {
     @Id
-    private String token;
+    private String id;
     private Date exDate;
 }

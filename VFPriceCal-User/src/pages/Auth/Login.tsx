@@ -2,18 +2,34 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./login.scss";
+import { useAuth } from "../../hooks/userAuth";
+import { toast } from "react-toastify";
 
 const Login = () => {
 
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [error, setError] = useState("");
+     const { loginUser, logoutUser } = useAuth(); 
+    // const [loginuser, logoutuser] = useState("");
     const [showPass, setShowPass] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogin = () => {
+    const handleLogin = async (e: React.FormEvent) => {
+        e.preventDefault();
         // giả lập đăng nhập thành công và lưu token
         // localStorage.setItem("token", "fake-jwt-token");
-
+        // setError("");
+        try{
+            // Gọi API đăng nhập
+            await loginUser(username, password);
+            // Lưu token vào localStorage
+            navigate("/");
+        }
         // chuyển trang
-        navigate("/");
+        catch (err: any) {
+            toast.error("Đăng nhập thất bại. Vui lòng kiểm tra lại tài khoản và mật khẩu.");
+        }
     }
 
     const handleForgotPassword = () => {
@@ -30,15 +46,20 @@ const Login = () => {
                 </div>
             </div>
 
-            <div className="login__right">
-
-                <div className="login__form">
+    <div className="login__right">
+            <form  onSubmit={handleLogin}>
+                 <div className="login__form">
 
                     <h2>Đăng nhập</h2>
 
                     <div className="form-group">
                         <label>Tài khoản</label>
-                        <input type="text" placeholder="Nhập tài khoản" />
+                        <input
+                            type="text"
+                            placeholder="Nhập tài khoản"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
                     </div>
 
                     <div className="form-group">
@@ -48,6 +69,8 @@ const Login = () => {
                             <input
                                 type={showPass ? "text" : "password"}
                                 placeholder="Nhập mật khẩu"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
 
                             <span
@@ -60,7 +83,7 @@ const Login = () => {
 
                     </div>
 
-                    <button className="login-btn" onClick={handleLogin}>
+                    <button className="login-btn" type="submit">
                         Đăng nhập
                     </button>
 
@@ -69,8 +92,11 @@ const Login = () => {
                     </div>
 
                 </div>
+                 </form>
+               
 
             </div>
+            
 
         </div>
     );

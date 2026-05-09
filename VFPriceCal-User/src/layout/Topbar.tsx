@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Topbar = () => {
     const [openDropdown, setOpenDropdown] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const username = localStorage.getItem("username");
     const navigate = useNavigate();
 
     // Click ngoài sẽ đóng menu
@@ -33,7 +34,7 @@ const Topbar = () => {
 
             <div className="container" onClick={() => setOpenDropdown(!openDropdown)}>
                 <FaCog className="menu-icon" />
-                <span>Nguyễn Văn A</span>
+                <span>{username}</span>
             </div>
             {openDropdown && (
                 <div className="dropdown" ref={dropdownRef}>
