@@ -38,6 +38,9 @@ public class Account {
     @JoinColumn(name = "company_id",foreignKey = @ForeignKey(name = "fk_account_company"))
     private Companies company;
 
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
     @Column(name = "username", nullable = false, unique = true)
     private String username;
 

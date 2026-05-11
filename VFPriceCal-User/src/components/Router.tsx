@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
 import QuotationPage from "../pages/QuotationPage/QuotationPage";
 import ProductPage from "../pages/ProductPage/ProductPage";
@@ -7,6 +7,7 @@ import ComponentPaper from "../pages/PriceComponent/Paper/ComponentPaper";
 import Processing from "../pages/PriceComponent/Processing/Processing";
 import ProcessingDetail from "../pages/PriceComponent/Processing/ProcessingDetail";
 import PaperDetail from "../pages/PriceComponent/Paper/PaperDetail/PaperDetail";
+import PaperAdd from "../pages/PriceComponent/Paper/add/PaperAdd";
 import Login from "../pages/Auth/Login";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 import UserManagement from "../pages/SystemPage/User/UserManagement";
@@ -14,7 +15,6 @@ import PrintCost from "../pages/PriceComponent/PrintCost/PrintCost";
 import SystemSetting from "../pages/SystemPage/Setting/SystemSetting";
 import SystemBackup from "../pages/SystemPage/Backup/SystemBackup"
 import NewProduct from "../pages/ProductPage/NewProduct";
-
 
 export const router = createBrowserRouter([
   {
@@ -29,18 +29,29 @@ export const router = createBrowserRouter([
     path: "/",
     element: <MainLayout />,
     children: [
-      { path: "/", element: <QuotationPage /> },
-      { path: "/product", element: <ProductPage /> },
-      { path: "/product/new", element: <NewProduct /> },
-      { path: "/product/:id", element: <ProductDetail /> },
-      { path: "/component/papers", element: <ComponentPaper /> },
-      { path: "/component/processing", element: <Processing /> },
-      { path: "/component/processing/:id", element: <ProcessingDetail /> },
-      { path: "/component/papers/:id", element: <PaperDetail /> },
-      { path: "/system/users", element: <UserManagement /> },
-      { path: "/component/printcost", element: <PrintCost /> },
-      { path: "/system/settings", element: <SystemSetting /> },
-      { path: "/system/backup", element: <SystemBackup /> }
+      // Thay đổi ở đây: Khi vào "/" sẽ tự động điều hướng sang "/login"
+      { 
+        index: true, 
+        element: <Navigate to="/login" replace /> 
+      },
+      { path: "quotation", element: <QuotationPage /> }, // Chuyển Quotation sang một path cụ thể
+      { path: "product", element: <ProductPage /> },
+      { path: "product/new", element: <NewProduct /> },
+      { path: "product/:id", element: <ProductDetail /> },
+      { path: "component/papers", element: <ComponentPaper /> },
+      {path: "component/paper/add", element: <PaperAdd /> },
+      { path: "component/processing", element: <Processing /> },
+      { path: "component/processing/:id", element: <ProcessingDetail /> },
+      { path: "component/papers/:id", element: <PaperDetail /> },
+      { path: "system/users", element: <UserManagement /> },
+      { path: "component/printcost", element: <PrintCost /> },
+      { path: "system/settings", element: <SystemSetting /> },
+      { path: "system/backup", element: <SystemBackup /> }
     ],
+  },
+  // Thêm một route "catch-all" nếu muốn mọi đường dẫn lạ đều về login
+  {
+    path: "*",
+    element: <Navigate to="/login" replace />,
   },
 ]);

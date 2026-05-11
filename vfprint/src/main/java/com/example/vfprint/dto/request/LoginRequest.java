@@ -16,9 +16,9 @@ import jakarta.validation.constraints.*;
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginRequest {
-    @NotNull(message = "Username không được null")
-    @NotEmpty(message = "Username không được để trống")
-    String username;
+    @NotNull(message = "Email không được null")
+    @NotEmpty(message = "Email không được để trống")
+    String email;
 
     @NotNull(message = "Password không được null")
     @NotEmpty(message = "Password không được để trống")

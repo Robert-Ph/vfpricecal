@@ -41,9 +41,14 @@ $text-light: #313030;
     display: flex;
     margin: auto;
     gap: 15px;
-    padding-top: 20px;
+    padding-top: 18px;
     margin-right: 50px;
     float: right;
+
+    span{
+      font-size: 14px;
+      font-weight: 500;
+    }
   }
 
   /* Dropdown */

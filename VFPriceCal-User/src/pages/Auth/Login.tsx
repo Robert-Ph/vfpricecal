@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 
 const Login = () => {
 
-    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
      const { loginUser, logoutUser } = useAuth(); 
@@ -22,13 +22,13 @@ const Login = () => {
         // setError("");
         try{
             // Gọi API đăng nhập
-            await loginUser(username, password);
+            await loginUser(email, password);
             // Lưu token vào localStorage
-            navigate("/");
+            navigate("/quotation");
         }
         // chuyển trang
         catch (err: any) {
-            toast.error("Đăng nhập thất bại. Vui lòng kiểm tra lại tài khoản và mật khẩu.");
+            toast.error("Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.");
         }
     }
 
@@ -53,12 +53,12 @@ const Login = () => {
                     <h2>Đăng nhập</h2>
 
                     <div className="form-group">
-                        <label>Tài khoản</label>
+                        <label>Email</label>
                         <input
                             type="text"
-                            placeholder="Nhập tài khoản"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Nhập email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
 

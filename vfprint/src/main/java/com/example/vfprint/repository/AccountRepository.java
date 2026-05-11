@@ -15,13 +15,13 @@ public interface AccountRepository extends JpaRepository<Account, Long>{
    @Query("""
         SELECT a FROM Account a 
         LEFT JOIN a.company c 
-        WHERE (:param IS NULL OR a.username LIKE %:param%) 
+        WHERE (:param IS NULL OR a.email LIKE %:param%) 
      OR (:param IS NULL OR c.name LIKE %:param%)
     """)
     List<Account> search(@Param("param") String param);
-    Optional<Account> findByUsername(String name);
+    Optional<Account> findByEmail(String email);
     List<Account> findByCompanyId(Long id);
-    boolean existsByUsername(String username);
+    boolean existsByEmail(String email);
 
     
 } 

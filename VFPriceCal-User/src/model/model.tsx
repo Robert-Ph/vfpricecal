@@ -48,3 +48,16 @@ export type company = {
     email: string;
     type: string;
 }
+
+export type paperResponse = {
+    id: number | null;
+    companyId: number;
+    name: string;
+    gsm: number;
+    paperSizes: {
+        paperId: number;
+        width: number;
+        height: number;
+        price: number;
+    }[];
+}

@@ -63,8 +63,7 @@ public class PaperSizeService {
     if (!entitiesToSave.isEmpty()) {
         paperSizeRepository.saveAll(entitiesToSave);
     }
-
-    }
+}
 
     @Transactional
     public PaperSize updatePaperSize(PaperSize paperSize){

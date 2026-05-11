@@ -1,0 +1,154 @@
+import "./paperAdd.scss";
+import { FaPlus } from "react-icons/fa";
+import { FiTrash2 } from "react-icons/fi";
+import { useContext, useState } from "react";
+import PaperModel from "../../../../components/PaperModel";
+import { AuthContext } from "../../../../context/AuthContext";
+import axios from "axios"; // Đảm bảo đã import axios
+import { createPaper } from "../../../../service/PaperService";
+import { useAuth } from "../../../../hooks/userAuth";
+
+const PaperAdd = () => {
+    const { user } = useAuth(); 
+    const [activeTab, setActiveTab] = useState("paper");
+    const [openPaperModal, setOpenPaperModal] = useState(false);
+    const [paperList, setPaperList] = useState<any[]>([]); 
+
+    // 1. Khai báo state để quản lý dữ liệu nhập vào
+    const [name, setName] = useState("");
+    const [gsm, setGsm] = useState("");
+
+    const handleAddSize = (newSize: any) => {
+        setPaperList([...paperList, newSize]);
+    };
+
+    // 2. Viết lại hàm API hoàn chỉnh
+    const handleSave = async () => {
+        // Kiểm tra dữ liệu cơ bản trước khi gửi
+        if (!name || !gsm) {
+            alert("Vui lòng nhập tên giấy và GSM");
+            return;
+        }
+
+        if (paperList.length === 0) {
+            alert("Vui lòng thêm ít nhất một kích thước");
+            return;
+        }
+
+        const payload = {
+            companyId: localStorage.getItem("companyId") || undefined, // ID ẩn từ context
+            name: name,
+            gsm: gsm,
+            paperSizes: paperList 
+        };
+
+        try {
+            console.log("Dữ liệu gửi đi:", payload);
+            // Thay đổi URL theo API thực tế của bạn
+            const res = await createPaper(Number(payload.companyId), name, gsm, paperList);
+            
+            if (res.status === 200 || res.status === 201) {
+                alert("Tạo loại giấy thành công!");
+                // Có thể điều hướng về trang danh sách hoặc reset form
+            }
+        } catch (error) {
+            console.error("Lỗi khi lưu:", error);
+            alert("Có lỗi xảy ra khi tạo giấy");
+        }
+    };
+
+    return (
+        <div className="paper-detail">
+            <div className="paper-header">
+                <h3>Thêm mới giấy & Vật liệu</h3>
+            </div>
+            <div className="paper-detail-info">
+                <div className="paper-info-basic">
+                    <div className="paper-image"></div>
+                    
+                    <div className="paper-item">
+                        <label htmlFor="paper-name">Tên giấy/vật liệu:</label>
+                        <input 
+                            type="text" 
+                            id="paper-name"  
+                            placeholder="Nhập tên giấy/vật liệu"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)} // Cập nhật state
+                        />
+                    </div>
+
+                    <div className="paper-item">
+                        <label htmlFor="paper-description">gsm:</label>
+                        <input 
+                            type="text" 
+                            id="paper-description"  
+                            placeholder="Nhập gsm"
+                            value={gsm}
+                            onChange={(e) => setGsm(e.target.value)} // Cập nhật state
+                        />
+                    </div>
+                    
+                    <div className="button-save">
+                        <button className="cancel" onClick={() => window.history.back()}>Quay lại</button>
+                        {/* 3. Gắn hàm handleSave vào đây */}
+                        <button className="save" onClick={handleSave}>
+                            <FaPlus /> Tạo mới
+                        </button>
+                    </div>
+                </div>
+
+                <div className="paper-info-advanced">
+                    <div className="tabs">
+                        <div className={`tab ${activeTab === "paper" ? "active" : ""}`} onClick={() => setActiveTab("paper")}>
+                            Chi tiết kích thước
+                        </div>
+                    </div>
+                    <div className="tab-content">
+                        {activeTab === "paper" && (
+                            <div className="product-paper-list">
+                                <div className="table">
+                                    <table className="paper-list">
+                                        <thead>
+                                            <tr>
+                                                <th>Chiều rộng(mm)</th>
+                                                <th>Chiều cao(mm)</th>
+                                                <th>Giá (VNĐ)</th>
+                                                <th>Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {paperList.map((item, index) => (
+                                                <tr key={index}>
+                                                    <td>{item.width}</td>
+                                                    <td>{item.height}</td>
+                                                    <td>{item.price.toLocaleString()}</td>
+                                                    <td>
+                                                        <button onClick={() => setPaperList(paperList.filter((_, i) => i !== index))}>
+                                                            <FiTrash2 />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <button className="add-paper-btn" onClick={() => setOpenPaperModal(true)}>
+                                    <FaPlus /> Thêm kích thước
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            <PaperModel 
+                open={openPaperModal} 
+                setOpen={setOpenPaperModal} 
+                onAdd={handleAddSize}
+            />
+        </div>
+    );
+}
+
+export default PaperAdd;

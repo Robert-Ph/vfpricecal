@@ -28,7 +28,7 @@ public class AuthencaitonController {
             .builder()
             .code(Code.SUCCESS)
             .message("Login successful")
-            .data(authencaitonService.authenticate(request))
+            .data(authencaitonService.authenticateResponse(request))
             .build()
         );
     }

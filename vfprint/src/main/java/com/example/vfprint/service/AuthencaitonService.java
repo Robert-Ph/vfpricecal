@@ -10,8 +10,9 @@ import com.example.vfprint.repository.TokenRepository;
 import com.nimbusds.jose.JOSEException;
 import java.text.ParseException;
 import com.example.vfprint.dto.request.LoginRequest;
+import com.example.vfprint.dto.response.AuthenticationResponse;
+import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,15 +27,40 @@ public class AuthencaitonService {
     private AccountRepository accountRepository;
 
     public boolean authenticate(LoginRequest loginRequest) {
-        // Thực hiện xác thực người dùng (ví dụ: kiểm tra username và password trong cơ sở dữ liệu)
+        // Thực hiện xác thực người dùng (ví dụ: kiểm tra email và password trong cơ sở dữ liệu)
         // Trả về true nếu xác thực thành công, ngược lại trả về false
-        var account = accountRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
+        var account = accountRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
 
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // Khởi tạo PasswordEncoder (ví dụ: BCryptPasswordEncoder)
 
 
         return passwordEncoder.matches(loginRequest.getPassword(), account.getPassword()); // Giả sử luôn xác thực thành công
     }
+
+    public AuthenticationResponse authenticateResponse(LoginRequest request) {
+    // 1. Logic xác thực (thông qua AuthenticationManager)
+    if (authenticate(request)) {
+         // 2. Tìm user trong DB
+    Account account = accountRepository.findByEmail(request.getEmail())
+            .orElseThrow(() -> new NoSuchElementException("User không tồn tại với email: " + request.getEmail()));
+
+    // 3. Tạo token
+    // var token = jwtService.generateToken(user);
+
+    // 4. Trả về đầy đủ thông tin
+    return AuthenticationResponse.builder()
+            // .token(token)
+            .companyId(account.getCompany().getId())
+            .username(account.getUsername())
+            .email(account.getEmail())
+            .role(account.getRole().getName()) // Gửi role để FE phân quyền Menu
+            .build();
+    }else {
+        throw new RuntimeException("Invalid credentials");
+    }
+
+   
+}
 
     //logout token
     public void logout(String token) throws JOSEException, ParseException {

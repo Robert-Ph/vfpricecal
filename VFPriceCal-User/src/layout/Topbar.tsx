@@ -2,13 +2,17 @@ import "./topbar.scss"
 import { useState, useRef, useEffect } from "react";
 import { FaCog, FaUser, FaChartLine, FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+// import { AuthContext, type AuthContextType } from "../context/AuthContext";
+import { useAuth } from "../hooks/userAuth";
 
 const Topbar = () => {
     const [openDropdown, setOpenDropdown] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
-    const username = localStorage.getItem("username");
     const navigate = useNavigate();
+   // Thêm "as AuthContextType" ở cuối
 
+const { user } = useAuth(); // Lấy thông tin user đang đăng nhập
+console.log("User in Topbar:", user); // Debug: Kiểm tra thông tin user trong Topbar
     // Click ngoài sẽ đóng menu
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
@@ -29,12 +33,13 @@ const Topbar = () => {
         navigate("/login");
     };
 
+    
     return (
         <div className="topbar">
 
             <div className="container" onClick={() => setOpenDropdown(!openDropdown)}>
                 <FaCog className="menu-icon" />
-                <span>{username}</span>
+                <span>{localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!).username : "User"}</span>
             </div>
             {openDropdown && (
                 <div className="dropdown" ref={dropdownRef}>

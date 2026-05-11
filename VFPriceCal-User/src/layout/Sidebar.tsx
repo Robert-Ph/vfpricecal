@@ -16,7 +16,7 @@ const Sidebar = () => {
 
             <hr />
             <nav>
-                <NavLink className="menu-item" to="/">
+                <NavLink className="menu-item" to="/quotation">
                     <FaFileAlt className="menu-icon" />
                     <span>Báo giá</span>
                 </NavLink>

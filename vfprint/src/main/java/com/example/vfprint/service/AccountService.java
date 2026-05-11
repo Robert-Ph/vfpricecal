@@ -36,9 +36,9 @@ public class AccountService {
     // Create a new account with encoded password
     @Transactional
     public void createAccount(AccountDTO accountDto){
-        //1. kiem tra username da ton tai chua
-        if (accountRepository.existsByUsername(accountDto.getUsername())) {
-            throw new RuntimeException("Username already exists");
+        //1. kiem tra email da ton tai chua
+        if (accountRepository.existsByEmail(accountDto.getEmail())) {
+            throw new RuntimeException("Email already exists");
             
         }
 
@@ -53,7 +53,7 @@ public class AccountService {
     
       // 4. Sử dụng Builder (Đúng chuẩn với annotation @Builder bạn đã đặt ở Entity)
         Account account = Account.builder()
-            .username(accountDto.getUsername())
+            .email(accountDto.getEmail())
             .password(passwordEncoder.encode(accountDto.getPassword()))
             .company(company)
             .role(role)
@@ -91,7 +91,7 @@ public class AccountService {
                 .map(account -> {
                     AccountDTO dto = new AccountDTO();
                     dto.setCompanyId(account.getCompany().getId());
-                    dto.setUsername(account.getUsername());
+                    dto.setEmail(account.getEmail());
                     dto.setPassword(account.getPassword());
                     dto.setRoleId(account.getRole().getId());
                     return dto;
@@ -107,6 +107,7 @@ public class AccountService {
                 .map(account -> {
                     AccountDTO dto = new AccountDTO();
                     dto.setCompanyId(account.getCompany().getId());
+                    dto.setEmail(account.getEmail());
                     dto.setUsername(account.getUsername());
                     dto.setPassword(account.getPassword());
                     dto.setRoleId(account.getRole().getId());
@@ -122,6 +123,7 @@ public class AccountService {
                 .map(account -> {
                     AccountDTO dto = new AccountDTO();
                     dto.setCompanyId(account.getCompany().getId());
+                    dto.setEmail(account.getEmail());
                     dto.setUsername(account.getUsername());
                     dto.setRoleId(account.getRole().getId());
                     return dto;
@@ -147,10 +149,10 @@ public class AccountService {
 
 
 
-    // Check if a username already exists
+    // Check if an email already exists
     @Transactional(readOnly = true)
-    public boolean checkUsernameExists(String username){
-        return accountRepository.findByUsername(username).isPresent();
+    public boolean checkEmailExists(String email){
+        return accountRepository.findByEmail(email).isPresent();
     }
 
 

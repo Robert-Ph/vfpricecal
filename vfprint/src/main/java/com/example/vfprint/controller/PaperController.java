@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.vfprint.service.PaperService;
 import com.example.vfprint.dto.PaperDTO;
+import com.example.vfprint.dto.request.PaperRequest;
+import com.example.vfprint.dto.response.ApiResponse;
+import org.springframework.http.HttpStatus;
 import java.util.List;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,15 +36,28 @@ public class PaperController {
     }
 
     @PostMapping
-    public  ResponseEntity<String>  postMethodName(@RequestBody PaperDTO paperDTO) {
-        paperService.createPaper(paperDTO);
-        return ResponseEntity.ok("Paper created successfully");
+    public  ResponseEntity<ApiResponse>  createPaper(@RequestBody PaperRequest paperRequest) {
+        paperService.createPaperRequest(paperRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse
+            .builder()
+            .code(200)
+            .message("Paper created successfully")
+            .data(paperRequest)
+            .build()
+        );
     }
     
     @DeleteMapping
-    public ResponseEntity<String> deletePaper(@RequestParam("paperId") Long paperId) {
+    public ResponseEntity<ApiResponse> deletePaper(@RequestParam("paperId") Long paperId) {
         paperService.deletePaper(paperId);
-        return ResponseEntity.ok("Paper deleted successfully");
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse
+            .builder()
+            .code(200)
+            .message("Paper deleted successfully")
+            .build()
+        );
     }
 
 }

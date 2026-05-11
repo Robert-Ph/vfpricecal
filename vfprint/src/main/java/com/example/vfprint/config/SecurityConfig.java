@@ -47,7 +47,9 @@ public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     // Danh sách các domain FE của bạn
     configuration.setAllowedOrigins(List.of(
-        "http://localhost:5174" // Local development
+        "http://localhost:5174",
+        "http://localhost:5173",
+        "http://localhost:5172"
     ));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));
