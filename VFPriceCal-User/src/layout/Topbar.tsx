@@ -2,8 +2,6 @@ import "./topbar.scss"
 import { useState, useRef, useEffect } from "react";
 import { FaCog, FaUser, FaChartLine, FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-// import { AuthContext, type AuthContextType } from "../context/AuthContext";
-import { useAuth } from "../hooks/userAuth";
 
 const Topbar = () => {
     const [openDropdown, setOpenDropdown] = useState(false);
@@ -11,19 +9,29 @@ const Topbar = () => {
     const navigate = useNavigate();
    // Thêm "as AuthContextType" ở cuối
 
-const { user } = useAuth(); // Lấy thông tin user đang đăng nhập
-console.log("User in Topbar:", user); // Debug: Kiểm tra thông tin user trong Topbar
-    // Click ngoài sẽ đóng menu
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-                setOpenDropdown(false);
+// Khởi tạo state bằng một hàm (Lazy initialization)
+    const [user, setUser] = useState<any>(() => {
+        const savedUser = localStorage.getItem("user");
+        if (savedUser) {
+            try {
+                return JSON.parse(savedUser);
+            } catch (e) {
+                return null;
             }
-        };
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, []);
+        }
+        return null;
+    });
 
+    // useEffect bây giờ chỉ dùng để lắng nghe sự thay đổi từ bên ngoài (nếu cần)
+    useEffect(() => {
+        const handleStorageChange = () => {
+            const data = localStorage.getItem("user");
+            setUser(data ? JSON.parse(data) : null);
+        };
+
+        window.addEventListener('storage', handleStorageChange);
+        return () => window.removeEventListener('storage', handleStorageChange);
+    }, []);
 
     const handleLogout = () => {
         // nếu có token thì xóa
@@ -39,7 +47,7 @@ console.log("User in Topbar:", user); // Debug: Kiểm tra thông tin user trong
 
             <div className="container" onClick={() => setOpenDropdown(!openDropdown)}>
                 <FaCog className="menu-icon" />
-                <span>{localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")!).username : "User"}</span>
+                <span>{user?.username || ""}</span>
             </div>
             {openDropdown && (
                 <div className="dropdown" ref={dropdownRef}>

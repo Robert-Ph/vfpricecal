@@ -56,7 +56,7 @@ public class AuthencaitonService {
             .role(account.getRole().getName()) // Gửi role để FE phân quyền Menu
             .build();
     }else {
-        throw new RuntimeException("Invalid credentials");
+        throw new NoSuchElementException("Invalid credentials");
     }
 
    

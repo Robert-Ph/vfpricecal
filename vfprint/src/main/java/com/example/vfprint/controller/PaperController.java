@@ -26,13 +26,27 @@ public class PaperController {
     private PaperService paperService;
 
     @GetMapping
-    public List<PaperDTO> getAllPapers(@RequestParam("companyId") Long companyId){
-        return paperService.getAllPapersByCompany(companyId);
+    public ResponseEntity<ApiResponse> getAllPapers(@RequestParam("companyId") Long companyId){
+        return ResponseEntity.ok(
+            ApiResponse
+            .builder()
+            .code(200)
+            .message("Papers retrieved successfully")
+            .data(paperService.getAllPapersByCompany(companyId))
+            .build()
+        );
     }
 
     @GetMapping("{id}")
-    public PaperDTO getPapersByCompanyId(@PathVariable Long id, @RequestParam("companyId") Long companyId) {
-        return paperService.getPaperById(id, companyId);
+    public ResponseEntity<ApiResponse> getPapersByCompanyId(@PathVariable Long id, @RequestParam("companyId") Long companyId) {
+        return ResponseEntity.ok(
+            ApiResponse
+            .builder()
+            .code(200)
+            .message("Paper retrieved successfully")
+            .data(paperService.getPaperById(id, companyId))
+            .build()
+        );
     }
 
     @PostMapping

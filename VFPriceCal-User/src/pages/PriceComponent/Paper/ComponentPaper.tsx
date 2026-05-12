@@ -2,10 +2,46 @@ import "./componentPaper.scss";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
+import { useState, useEffect } from "react";
+import { getPapers } from "../../../service/PaperService";
+
 
 
 const ComponentPaper = () => {
     const navigate = useNavigate();
+    const [paperList, setPaperList] = useState<any[]>([]);
+const [user, setUser] = useState<any>(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+        try {
+            return JSON.parse(savedUser);
+        } catch (e) {
+            return null;
+        }
+    }
+    return null;
+});
+
+// THAY THẾ useState bằng useEffect
+useEffect(() => {
+    const fetchPapers = async () => {
+        // Chỉ gọi API khi đã có thông tin user và companyId
+        if (user?.companyId) {
+            try {
+                const papers = await getPapers(user.companyId);
+                console.log("Danh sách giấy/vật liệu:", papers);
+                setPaperList(papers.data); // Cập nhật danh sách vào state để hiển thị
+            } catch (error) {
+                console.error("Lỗi khi lấy giấy/vật liệu:", error);
+            }
+        }
+    };
+
+    fetchPapers();
+}, [user?.companyId]);
+
+
+
 
     return (
         <div className="papers-page">
@@ -40,32 +76,20 @@ const ComponentPaper = () => {
                         <tbody>
                             {/* sản phẩm sẽ được hiển thị ở đây. Mỗi sản phẩm sẽ có thông tin như tên, mã sản phẩm, mô tả . Bạn có thể nhấp vào một sản phẩm để xem chi tiết hoặc chỉnh sửa thông tin của nó. */}
 
-                            {/* giấy/vật liệu A */}
-                            <tr>
-                                <td>Giấy A</td>
-                                <td>GC001</td>
-                                <td>Mô tả giấy/vật liệu A </td>
-                                <td className="action-buttons">
+                            {paperList.map((paper) => (
+                                <tr key={paper.id}>
+                                    <td>{paper.name}</td>
+                                    <td>{paper.code}</td>
+                                    <td>{paper.description}</td>
+                                    <td className="action-buttons">
                                     <button className=" icon edit-btn"
                                         onClick={() => navigate("/component/papers/1")}>
                                         <FiEdit />
                                     </button>
                                     <button className=" icon delete-btn"><FiTrash2 /></button>
                                 </td>
-
-                            </tr>
-
-                            {/* giấy/vật liệu B */}
-                            <tr>
-                                <td>Giấy B</td>
-                                <td>GC002</td>
-                                <td>Mô tả giấy/vật liệu B </td>
-                                <td className="action-buttons">
-                                    <button className=" icon edit-btn"><FiEdit /></button>
-                                    <button className=" icon delete-btn" ><FiTrash2 /></button>
-                                </td>
-
-                            </tr>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>

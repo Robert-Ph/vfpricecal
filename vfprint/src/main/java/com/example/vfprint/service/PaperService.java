@@ -63,6 +63,7 @@ public class PaperService {
                     .paperId(savedPaper.getId())
                     .width(sizeRequest.getWidth())
                     .height(sizeRequest.getHeight())
+                    .isActive(true)
                     .build());
 
             paperPriceRepository.save(PaperPrice.builder()

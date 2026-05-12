@@ -1,15 +1,11 @@
 import "./paperAdd.scss";
 import { FaPlus } from "react-icons/fa";
 import { FiTrash2 } from "react-icons/fi";
-import { useContext, useState } from "react";
+import {  useState } from "react";
 import PaperModel from "../../../../components/PaperModel";
-import { AuthContext } from "../../../../context/AuthContext";
-import axios from "axios"; // Đảm bảo đã import axios
 import { createPaper } from "../../../../service/PaperService";
-import { useAuth } from "../../../../hooks/userAuth";
 
 const PaperAdd = () => {
-    const { user } = useAuth(); 
     const [activeTab, setActiveTab] = useState("paper");
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [paperList, setPaperList] = useState<any[]>([]); 
@@ -21,6 +17,18 @@ const PaperAdd = () => {
     const handleAddSize = (newSize: any) => {
         setPaperList([...paperList, newSize]);
     };
+
+      const [user, setUser] = useState<any>(() => {
+        const savedUser = localStorage.getItem("user");
+        if (savedUser) {
+            try {
+                return JSON.parse(savedUser);
+            } catch (e) {
+                return null;
+            }
+        }
+        return null;
+    });
 
     // 2. Viết lại hàm API hoàn chỉnh
     const handleSave = async () => {
@@ -36,7 +44,7 @@ const PaperAdd = () => {
         }
 
         const payload = {
-            companyId: localStorage.getItem("companyId") || undefined, // ID ẩn từ context
+            companyId: user?.companyId, // ID ẩn từ context
             name: name,
             gsm: gsm,
             paperSizes: paperList 
@@ -45,7 +53,7 @@ const PaperAdd = () => {
         try {
             console.log("Dữ liệu gửi đi:", payload);
             // Thay đổi URL theo API thực tế của bạn
-            const res = await createPaper(Number(payload.companyId), name, gsm, paperList);
+            const res = await createPaper(payload.companyId, name, gsm, paperList);
             
             if (res.status === 200 || res.status === 201) {
                 alert("Tạo loại giấy thành công!");
