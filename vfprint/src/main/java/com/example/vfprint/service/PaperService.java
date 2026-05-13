@@ -3,18 +3,19 @@ package com.example.vfprint.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.vfprint.dto.PaperDTO;
+import com.example.vfprint.dto.PaperSizeDTO;
 import com.example.vfprint.entity.Paper;
-import com.example.vfprint.entity.PaperPrice;
 import com.example.vfprint.entity.PaperSize;
 import com.example.vfprint.dto.request.PaperRequest;
 import com.example.vfprint.dto.request.PaperSizeRequest;
+import com.example.vfprint.dto.response.PaperResponse;
 import com.example.vfprint.repository.PaperRepository;
 import com.example.vfprint.repository.PaperSizeRepository;
-import com.example.vfprint.repository.PaperPriceRepository;
 import com.example.vfprint.repository.CompaniesRepository;
 
 @Service
@@ -25,9 +26,6 @@ public class PaperService {
 
     @Autowired
     private PaperSizeRepository paperSizeRepository;
-
-    @Autowired
-    private PaperPriceRepository paperPriceRepository;
 
     @Autowired
     private CompaniesRepository companyRepository;
@@ -63,12 +61,8 @@ public class PaperService {
                     .paperId(savedPaper.getId())
                     .width(sizeRequest.getWidth())
                     .height(sizeRequest.getHeight())
-                    .isActive(true)
-                    .build());
-
-            paperPriceRepository.save(PaperPrice.builder()
-                    .paperSizeId(savedSize.getId())
                     .price(sizeRequest.getPrice())
+                    .isActive(true)
                     .build());
         }
     }
@@ -98,45 +92,59 @@ public class PaperService {
     }
 
     @Transactional
-    public List<PaperDTO> getPapersByCompanyId(Long companyId) {
+    public List<PaperResponse> getPapersByCompanyId(Long companyId) {
         List<Paper> papers = paperRepository.findAll().stream()
                 .filter(paper -> paper.getCompanyId().equals(companyId))
                 .toList();
         return papers.stream()
                 .map(paper -> {
-                    PaperDTO dto = new PaperDTO();
-                    dto.setCompanyId(paper.getCompanyId());
-                    dto.setName(paper.getName());
-                    dto.setGsm(paper.getGsm());
-                    return dto;
+                    return PaperResponse.builder()
+                            .id(paper.getId())
+                            .companyId(paper.getCompanyId())
+                            .name(paper.getName())
+                            .gsm(paper.getGsm())
+                            .build();
                 })
                 .toList();
     }
 
     @Transactional
-    public PaperDTO getPaperById(Long paperId, Long companyId) {
+    public PaperDTO getPaperById(Long paperId) {
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new IllegalArgumentException("Paper not found with id: " + paperId));
-        if (!paper.getCompanyId().equals(companyId)) {
-            throw new IllegalArgumentException("Paper does not belong to the specified company");
-        }
-        PaperDTO dto = new PaperDTO();
-        dto.setCompanyId(paper.getCompanyId());
-        dto.setName(paper.getName());
-        dto.setGsm(paper.getGsm());
-        return dto;
+        // Lấy danh sách Size kèm theo Price của từng Sizey
+        List<PaperSize> sizes = paperSizeRepository.findByPaperId(paper.getId());
+  
+        
+       return PaperDTO.builder()
+                        .id(paper.getId())
+                        .name(paper.getName())
+                        .gsm(paper.getGsm())
+                        .paperSizes(sizes.stream()
+                                .map(size -> {
+                                    PaperSizeDTO sizeDTO = new PaperSizeDTO();
+                                    sizeDTO.setId(size.getId());
+                                    sizeDTO.setPaperId(size.getPaperId());
+                                    sizeDTO.setWidth(size.getWidth());
+                                    sizeDTO.setHeight(size.getHeight());
+                                    sizeDTO.setPrice(size.getPrice());
+                                    return sizeDTO;
+                                })
+                                .toList())
+                        .build();
     }
 
     @Transactional
-    public List<PaperDTO> getAllPapersByCompany(Long companyId) {
+    public List<PaperResponse> getAllPapersByCompany(Long companyId) {
         return paperRepository.findAll().stream()
                 .filter(paper -> paper.getCompanyId().equals(companyId))
                 .map(paper -> {
-                    PaperDTO dto = new PaperDTO();
-                    dto.setCompanyId(paper.getCompanyId());
-                    dto.setName(paper.getName());
-                    dto.setGsm(paper.getGsm());
-                    return dto;
+                    return PaperResponse.builder()
+                            .id(paper.getId())
+                            .companyId(paper.getCompanyId())
+                            .name(paper.getName())
+                            .gsm(paper.getGsm())
+                            .build();
                 })
                 .toList();
     }

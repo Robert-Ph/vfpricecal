@@ -10,7 +10,7 @@ import { getPapers } from "../../../service/PaperService";
 const ComponentPaper = () => {
     const navigate = useNavigate();
     const [paperList, setPaperList] = useState<any[]>([]);
-const [user, setUser] = useState<any>(() => {
+    const [user, setUser] = useState<any>(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
         try {
@@ -19,26 +19,26 @@ const [user, setUser] = useState<any>(() => {
             return null;
         }
     }
-    return null;
-});
+        return null;
+    });
 
 // THAY THẾ useState bằng useEffect
-useEffect(() => {
-    const fetchPapers = async () => {
-        // Chỉ gọi API khi đã có thông tin user và companyId
-        if (user?.companyId) {
-            try {
-                const papers = await getPapers(user.companyId);
-                console.log("Danh sách giấy/vật liệu:", papers);
-                setPaperList(papers.data); // Cập nhật danh sách vào state để hiển thị
-            } catch (error) {
-                console.error("Lỗi khi lấy giấy/vật liệu:", error);
+    useEffect(() => {
+        const fetchPapers = async () => {
+            // Chỉ gọi API khi đã có thông tin user và companyId
+            if (user?.companyId) {
+                try {
+                    const papers = await getPapers(user.companyId);
+                    console.log("Danh sách giấy/vật liệu:", papers);
+                    setPaperList(papers.data); // Cập nhật danh sách vào state để hiển thị
+                } catch (error) {
+                    console.error("Lỗi khi lấy giấy/vật liệu:", error);
+                }
             }
-        }
-    };
+        };
 
-    fetchPapers();
-}, [user?.companyId]);
+        fetchPapers();
+    }, [user?.companyId]);
 
 
 
@@ -69,7 +69,7 @@ useEffect(() => {
                             <tr>
                                 <th>Tên giấy/vật liệu</th>
                                 <th>Mã giấy/vật liệu</th>
-                                <th>Mô tả</th>
+                                <th>gsm</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -79,11 +79,11 @@ useEffect(() => {
                             {paperList.map((paper) => (
                                 <tr key={paper.id}>
                                     <td>{paper.name}</td>
-                                    <td>{paper.code}</td>
-                                    <td>{paper.description}</td>
+                                    <td>{paper.id}</td>
+                                    <td>{paper.gsm}</td>
                                     <td className="action-buttons">
                                     <button className=" icon edit-btn"
-                                        onClick={() => navigate("/component/papers/1")}>
+                                        onClick={() => navigate(`/component/papers/${paper.id}`)}>
                                         <FiEdit />
                                     </button>
                                     <button className=" icon delete-btn"><FiTrash2 /></button>

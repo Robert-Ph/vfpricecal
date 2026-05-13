@@ -6,7 +6,6 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.example.vfprint.repository.PaperPriceRepository;
 import com.example.vfprint.dto.PaperSizeDTO;
 import com.example.vfprint.entity.PaperSize;
 import com.example.vfprint.repository.PaperRepository;
@@ -20,10 +19,6 @@ public class PaperSizeService {
 
     @Autowired
     private PaperRepository paperRepository;
-
-    @Autowired
-    private PaperPriceRepository paperPriceRepository;
-
 
 
     //Tao moi 1 paper size cho 1 paper, neu da co thi khong tao nua
@@ -55,6 +50,7 @@ public class PaperSizeService {
                     .paperId(dto.getPaperId())
                     .width(dto.getWidth())
                     .height(dto.getHeight())
+                    .price(dto.getPrice())
                     .isActive(true)
                     .build())
             .toList();
@@ -78,7 +74,9 @@ public class PaperSizeService {
 
     @Transactional
     public void deletePaperSize(Long id){
-        paperPriceRepository.deleteByPaperSizeId(id);
+            if (!paperSizeRepository.existsById(id)) {
+                throw new RuntimeException("Paper size not found with ID: " + id);
+            }
         paperSizeRepository.deleteById(id);
         
     }
@@ -96,6 +94,7 @@ public class PaperSizeService {
                     dto.setPaperId(ps.getPaperId());
                     dto.setWidth(ps.getWidth());
                     dto.setHeight(ps.getHeight());
+                    dto.setPrice(ps.getPrice());
                     return dto;
                 })
                 .orElseThrow(() -> new RuntimeException("Paper size not found"));
@@ -111,6 +110,7 @@ public class PaperSizeService {
                     dto.setPaperId(ps.getPaperId());
                     dto.setWidth(ps.getWidth());
                     dto.setHeight(ps.getHeight());
+                    dto.setPrice(ps.getPrice());
                     return dto;
                 })
                 .toList();

@@ -1,6 +1,4 @@
-package com.example.vfprint.dto;
-
-import java.util.List;
+package com.example.vfprint.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PaperDTO {
+public class PaperResponse {
     private Long id;
     private Long companyId;
     private String name;
     private String gsm;
-    private List<PaperSizeDTO> paperSizes;
 }

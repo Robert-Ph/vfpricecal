@@ -37,14 +37,14 @@ public class PaperController {
         );
     }
 
-    @GetMapping("{id}")
-    public ResponseEntity<ApiResponse> getPapersByCompanyId(@PathVariable Long id, @RequestParam("companyId") Long companyId) {
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse> getPapersByCompanyId(@PathVariable Long id) {
         return ResponseEntity.ok(
             ApiResponse
             .builder()
             .code(200)
             .message("Paper retrieved successfully")
-            .data(paperService.getPaperById(id, companyId))
+            .data(paperService.getPaperById(id))
             .build()
         );
     }

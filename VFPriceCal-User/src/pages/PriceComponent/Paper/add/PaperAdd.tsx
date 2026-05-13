@@ -4,6 +4,7 @@ import { FiTrash2 } from "react-icons/fi";
 import {  useState } from "react";
 import PaperModel from "../../../../components/PaperModel";
 import { createPaper } from "../../../../service/PaperService";
+import { toast } from "react-toastify";
 
 const PaperAdd = () => {
     const [activeTab, setActiveTab] = useState("paper");
@@ -18,7 +19,7 @@ const PaperAdd = () => {
         setPaperList([...paperList, newSize]);
     };
 
-      const [user, setUser] = useState<any>(() => {
+    const [user, setUser] = useState<any>(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
             try {
@@ -55,13 +56,20 @@ const PaperAdd = () => {
             // Thay đổi URL theo API thực tế của bạn
             const res = await createPaper(payload.companyId, name, gsm, paperList);
             
-            if (res.status === 200 || res.status === 201) {
-                alert("Tạo loại giấy thành công!");
+            if (res.code === 200 || res.code === 201) {
+                // alert("Tạo loại giấy thành công!");
                 // Có thể điều hướng về trang danh sách hoặc reset form
+                toast.success(`Tạo loại giấy ${name} thành công!`);
+
+                setTimeout(() => {
+                     window.location.reload(); // Hoặc navigate("/component/papers") nếu bạn dùng react-router
+                }, 1000); // Đợi 2 giây trước khi reload hoặc navigate
+               
             }
         } catch (error) {
             console.error("Lỗi khi lưu:", error);
-            alert("Có lỗi xảy ra khi tạo giấy");
+            // alert("Có lỗi xảy ra khi tạo giấy mới. Vui lòng thử lại.");
+            toast.error(`Có lỗi xảy ra khi tạo loại giấy ${name}.`);
         }
     };
 

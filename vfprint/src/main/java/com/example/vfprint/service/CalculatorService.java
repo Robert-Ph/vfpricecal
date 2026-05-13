@@ -3,12 +3,8 @@ package com.example.vfprint.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.vfprint.dto.PaperDTO;
-import com.example.vfprint.dto.PaperPriceDTO;
 import com.example.vfprint.dto.InfoPriceDTO;
 import com.example.vfprint.dto.PaperSizeDTO;
-import com.example.vfprint.entity.PaperPrice;
-import com.example.vfprint.service.PaperService;
-import com.example.vfprint.service.PaperSizeService;
 import java.util.List;
 @Service
 public class CalculatorService {
@@ -20,8 +16,6 @@ public class CalculatorService {
     @Autowired
     private PaperSizeService paperSizeService;
 
-    @Autowired
-    private PaperPriceService paperPriceService;
 
     @Autowired
     private ProcessingService processingService;
@@ -37,24 +31,19 @@ public class CalculatorService {
         }
 
         // Kiem tra xem paper co ton tai hay khong
-        PaperDTO paper = paperService.getPaperById(infoPriceDTO.getPaperId(), infoPriceDTO.getCompanyId());
+        PaperDTO paper = paperService.getPaperById(infoPriceDTO.getPaperId());
         if (paper == null) {
             throw new RuntimeException("Paper không tồn tại với ID: " + infoPriceDTO.getPaperId());
         }
 
-        // Kiem tra xem paper price co ton tai hay khong
-        PaperPriceDTO pricePerSheet = paperPriceService.getPaperPriceDTO(infoPriceDTO.getPaperSizeId());
-        if (pricePerSheet == null) {
-            throw new RuntimeException("Paper price không tồn tại cho PaperSize ID: " + infoPriceDTO.getPaperSizeId());
-        }
-
+    
         // Tinh so luong to giay can thiet de in an san pham
         int sheetsNeeded = calculatePaperSheets(infoPriceDTO.getWidthProduct(), infoPriceDTO.getHeightProduct(),
                 paperSizeDTO.getWidth(), paperSizeDTO.getHeight(), infoPriceDTO.getQuantity());
         
         double totalProcessingCost = calculateTotalProcessingCost(infoPriceDTO.getProcessingIds());
                 // Tinh tong chi phi in an
-        return sheetsNeeded * (pricePerSheet.getPrice() + totalProcessingCost);
+        return sheetsNeeded * (paperSizeDTO.getPrice() + totalProcessingCost);
 
 
     }
