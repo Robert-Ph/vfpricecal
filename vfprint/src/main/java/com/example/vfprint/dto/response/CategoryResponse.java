@@ -1,17 +1,18 @@
-package com.example.vfprint.dto;
+package com.example.vfprint.dto.response;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class ProcessingDTO {
+public class CategoryResponse {
     private Long id;
-    private Long categoryId;
+    private Long companyId;
     private String name;
-    private float price;
+    private List<ProcessingResponse> processings;
 }

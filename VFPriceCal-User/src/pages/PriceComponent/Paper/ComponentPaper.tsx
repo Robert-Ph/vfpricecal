@@ -4,13 +4,14 @@ import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import { getPapers } from "../../../service/PaperService";
+import CategoryModal from "../../../components/categoryModel";
 
 
 
 const ComponentPaper = () => {
     const navigate = useNavigate();
     const [paperList, setPaperList] = useState<any[]>([]);
-    const [user, setUser] = useState<any>(() => {
+    const [user] = useState<any>(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
         try {
@@ -68,7 +69,6 @@ const ComponentPaper = () => {
                         <thead>
                             <tr>
                                 <th>Tên giấy/vật liệu</th>
-                                <th>Mã giấy/vật liệu</th>
                                 <th>gsm</th>
                                 <th></th>
                             </tr>
@@ -79,7 +79,6 @@ const ComponentPaper = () => {
                             {paperList.map((paper) => (
                                 <tr key={paper.id}>
                                     <td>{paper.name}</td>
-                                    <td>{paper.id}</td>
                                     <td>{paper.gsm}</td>
                                     <td className="action-buttons">
                                     <button className=" icon edit-btn"
@@ -94,6 +93,7 @@ const ComponentPaper = () => {
                     </table>
                 </div>
             </div>
+         
         </div>
     );
 }

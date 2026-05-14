@@ -39,7 +39,7 @@ export const router = createBrowserRouter([
       { path: "product/new", element: <NewProduct /> },
       { path: "product/:id", element: <ProductDetail /> },
       { path: "component/papers", element: <ComponentPaper /> },
-      {path: "component/paper/add", element: <PaperAdd /> },
+      { path: "component/paper/add", element: <PaperAdd /> },
       { path: "component/processing", element: <Processing /> },
       { path: "component/processing/:id", element: <ProcessingDetail /> },
       { path: "component/papers/:id", element: <PaperDetail /> },

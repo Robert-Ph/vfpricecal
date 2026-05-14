@@ -59,11 +59,6 @@ const PaperDetail = () => {
                     </div>
 
                     <div className="paper-item">
-                        <label htmlFor="paper-code">Mã giấy/vật liệu:</label>
-                        <input type="text" id="paper-code" value={paperData?.id || ""} disabled />
-                    </div>
-
-                    <div className="paper-item">
                         <label htmlFor="paper-gsm">gsm:</label>
                         <input type="text" id="paper-gsm" value={paperData?.gsm || ""} />
                     </div>

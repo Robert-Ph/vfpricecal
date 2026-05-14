@@ -1,10 +1,43 @@
 import "./processingDetail.scss";
 import { FaPlus } from "react-icons/fa";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getProcessingById } from "../../../service/ProcessingService";
 
 const ProcessingDetail = () => {
     const [activeTab, setActiveTab] = useState("paper");
+    const {id} = useParams();
+    const [processingData, setProcessingData] = useState<any>(null); // State để lưu chi tiết gia công 
+    const [user] = useState<any>(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+        try {
+            return JSON.parse(savedUser);
+        } catch (e) {
+            return null;
+        }
+    }
+        return null;
+    });
+
+    useEffect(() => {
+        // Gọi API để lấy chi tiết gia công theo id
+        // Ví dụ: getProcessingById(id).then(data => setProcessingData(data));
+        const fetchProcessingDetail = async () => {
+            try {
+                // Giả sử bạn có API getProcessingById
+                // const data = await getProcessingById(id); 
+                // setProcessingData(data);
+                // Tạm thời dùng dữ liệu giả để hiển thị
+                const data = await getProcessingById(Number(id));
+                setProcessingData(data.data);
+            } catch (error) {
+                console.error("Lỗi khi lấy chi tiết gia công:", error);
+            }
+            };
+            fetchProcessingDetail();
+    }, [id]);
 
     return (
         <div className="processing-detail">
@@ -19,22 +52,11 @@ const ProcessingDetail = () => {
                     </div>
                     <div className="processing-item">
                         <label htmlFor="processing-name">Tên gia công:</label>
-                        <input type="text" id="processing-name" value="Cán màng" />
+                        <input type="text" id="processing-name" value={processingData?.name || ""} />
                     </div>
-
-                    <div className="processing-item">
-                        <label htmlFor="processing-code">Mã gia công:</label>
-                        <input type="text" id="processing-code" value="GC001" />
-                    </div>
-
-                    <div className="processing-item">
-                        <label htmlFor="processing-description">Mô tả:</label>
-                        <input type="text" id="processing-description" value="Mô tả gia công A" />
-                    </div>
-
                     <div className="processing-item">
                         <label htmlFor="processing-status">Trạng thái:</label>
-                        <input type="text" id="processing-status" value="Đang hoạt động" />
+                        <input type="text" id="processing-status" value= "Đang hoạt động" />
                     </div>
 
                 </div>
@@ -56,43 +78,18 @@ const ProcessingDetail = () => {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>Màng nhiệt bóng</td>
-                                                <td>Tờ</td>
-                                                <td>1.000đ</td>
-                                                <td className="action-buttons">
-                                                    <button className=" icon edit-btn"><FiEdit /></button>
-                                                    <button className=" icon delete-btn" ><FiTrash2 /></button>
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-                                                <td>Màng nhiệt mờ</td>
-                                                <td>Tờ</td>
-                                                <td>1.000đ</td>
-                                                <td className="action-buttons">
-                                                    <button className=" icon edit-btn"><FiEdit /></button>
-                                                    <button className=" icon delete-btn" ><FiTrash2 /></button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Màng ánh kim</td>
-                                                <td>Tờ</td>
-                                                <td>1.000đ</td>
-                                                <td className="action-buttons">
-                                                    <button className=" icon edit-btn"><FiEdit /></button>
-                                                    <button className=" icon delete-btn" ><FiTrash2 /></button>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Màng keo bóng</td>
-                                                <td>Tờ</td>
-                                                <td>1.000đ</td>
-                                                <td className="action-buttons">
-                                                    <button className=" icon edit-btn"><FiEdit /></button>
-                                                    <button className=" icon delete-btn" ><FiTrash2 /></button>
-                                                </td>
-                                            </tr>
+                                            {/* Ví dụ về một sản phẩm */}
+                                            {processingData?.processings.map((material) => (
+                                                <tr key={material.id}>
+                                                    <td>{material.name}</td>
+                                                    <td>Tờ</td>
+                                                    <td>{material.price}</td>
+                                                    <td className="action-buttons">
+                                                        <button className=" icon edit-btn"><FiEdit /></button>
+                                                        <button className=" icon delete-btn" ><FiTrash2 /></button>
+                                                    </td>
+                                                </tr>
+                                            ))}
                                         </tbody>
 
                                     </table>

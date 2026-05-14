@@ -1,15 +1,18 @@
 package com.example.vfprint.controller;
 
+import com.example.vfprint.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import com.example.vfprint.dto.ProcessingDTO;
+import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.service.ProcessingService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -18,8 +21,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("/api/processing")
 public class ProcessingController {
     
+    
     @Autowired
     private ProcessingService processingService;
+
+    @Autowired
+    private CategoryService categoryService;
+
+
+
 
 
     @PostMapping
@@ -49,6 +59,22 @@ public class ProcessingController {
         processingService.deleteProcessingByName(name);
         return ResponseEntity.ok("Processing with name '" + name + "' has been deleted.");
      }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse> getProcessingById(@PathVariable Long id) {
+        return ResponseEntity.ok(
+            ApiResponse
+            .builder()
+            .code(200)
+            .message("Processing retrieved successfully")
+            .data(categoryService.getAllProcessingByCategories(id))
+            .build()
+        );
+       
+     }
+
+    
+    
     
 
 }

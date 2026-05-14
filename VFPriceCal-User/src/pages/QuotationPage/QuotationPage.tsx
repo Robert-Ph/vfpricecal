@@ -1,6 +1,74 @@
+import ProcessingsCalModel from "../../components/ProcessingsCalModel";
+import { getPaperById, getPapers } from "../../service/PaperService";
 import "./quotationPage.scss";
+import { useEffect, useState } from "react";
+import { FiTrash2 } from "react-icons/fi";
 
 const QuotationPage = () => {
+
+    const [openPaperModal, setOpenPaperModal] = useState(false);
+    const [processingList, setProcessingList] = useState<any[]>([]); 
+    // const [quotationData, setQuotationData] = useState<any>(null); // State để lưu thông tin báo giá
+    // const [activeTab, setActiveTab] = useState("general"); // State để quản lý tab đang hoạt động
+    // const [productList, setProductList] = useState<any[]>([]); // State để quản lý danh sách sản phẩm trong báo giá
+    // const [processingList, setProcessingList] = useState<any[]>([]); // State để quản lý danh sách gia công trong báo giá
+    const [paperList, setPaperList] = useState<any[]>([]); // State để quản lý danh sách giấy/vật liệu trong báo giá
+    const [paperSizeList, setPaperSizeList] = useState<any[]>([]); // State để quản lý danh sách kích thước giấy/vật liệu trong báo giá
+    const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
+
+    const [user] = useState<any>(() => {
+            const savedUser = localStorage.getItem("user");
+            if (savedUser) {
+                try {
+                    return JSON.parse(savedUser);
+                } catch (e) {
+                    return null;
+                }
+            }
+            return null;
+    });
+
+       const handleAddProcessing = (newProcessing: any) => {
+        setProcessingList([...processingList, newProcessing]);
+    };
+    
+    useEffect(() => {
+        // Gọi API để lấy thông tin báo giá nếu cần thiết
+        // Ví dụ: getQuotationData().then(data => setQuotationData(data));
+        // Gọi API để lấy danh sách sản phẩm, gia công và giấy/vật liệu nếu cần thiết
+        // Ví dụ: getProducts().then(data => setProductList(data));
+        // Ví dụ: getProcessings().then(data => setProcessingList(data));
+        // const fetchProcessingList = async () => {
+        //     try {                const data = await getProcessings(user.companyId); 
+        //         setProcessingList(data.data);
+        //     } catch (error) {
+        //         console.error("Lỗi khi lấy danh sách gia công:", error);
+        //     }  
+        // Ví dụ: getPapers().then(data => setPaperList(data));
+        const fetchPaperList = async () => {
+            try {
+                const data = await getPapers(user.companyId); 
+                setPaperList(data.data);
+            } catch (error) {
+                console.error("Lỗi khi lấy danh sách giấy/vật liệu:", error);
+            }
+        };
+        const fetchPaperSizeList = async () => {
+            try {
+                const data = await getPaperById(Number(selectedPaperId));
+                setPaperSizeList(data.data.paperSizes);
+            } catch (error) {
+                console.error("Lỗi khi lấy danh sách kích thước giấy/vật liệu:", error);
+            }
+        };
+        // fetchProcessingList();
+        fetchPaperList();
+        fetchPaperSizeList();
+    }, [selectedPaperId]);
+
+
+
+
     return (
         <div className="body">
             <div className="info">
@@ -66,11 +134,29 @@ const QuotationPage = () => {
                         {/* LOẠI GIÂY IN: GIẤY COATED, GIẤY OFFSET, GIẤY SPECIALTY */}
                         <div className="form-product-paper-type">
                             <label htmlFor="product-paper-type">Loại giấy in:</label>
-                            <select id="product-paper-type" name="product-paper-type">
-                                <option value="coated">Giấy coated</option>
+                            <select id="product-paper-type" name="product-paper-type"
+                             onChange={(e) => setSelectedPaperId(Number(e.target.value))}
+                            >
+                                <option value="">Chọn giấy</option>
+                                {paperList.map((paper) => (
+                                    <option key={paper.id} value={paper.id}>
+                                        {paper.name}
+                                    </option>
+                                ))}
+                                {/* <option value="coated">Giấy coated</option>
                                 <option value="offset">Giấy offset</option>
                                 <option value="specialty">Giấy specialty</option>
-                                <option value="bw-2side">Trắng đen 2 mặt</option>
+                                <option value="bw-2side">Trắng đen 2 mặt</option> */}
+                            </select>
+                        </div>
+                        <div className="form-product-paper-type">
+                            <label htmlFor="product-paper-type">Khổ giấy in:</label>
+                            <select id="product-paper-type" name="product-paper-type">
+                                {paperSizeList.map((size) => (
+                                    <option key={size.id} value={size.id}>
+                                        {size.width}mm x {size.height}mm
+                                    </option>
+                                ))}
                             </select>
                         </div>
 
@@ -92,51 +178,32 @@ const QuotationPage = () => {
                     </div>
 
                     {/* GIA CÔNG CƠ BẢN: CÁN MÀNG, BẾ TEM */}
-                    <div className="item-content">
-                        <div className="form-film-lamination">
-                            <label htmlFor="">Cán màng:</label>
-                            <select name="film-lamination" id="film-lamination">
-                                <option value="none">Không</option>
-                                <option value="matte">Màng mờ</option>
-                                <option value="glossy">Màng bóng</option>
-                                <option value="metallic">Màng ánh kim</option>
-                                <option value="special">Màng đặc biệt</option>
-                            </select>
-                        </div>
-                        <div className="form-die-cutting">
-                            <label htmlFor="">Bế tem:</label>
-                            <select name="die-cutting" id="die-cutting">
-                                <option value="none">Không</option>
-                                <option value="quadrilateral">Hình tứ giác/bế demi</option>
-                                <option value="circle">Hình tròn/oval</option>
-                                <option value="special">Hình đặt biệt</option>
-                            </select>
-                        </div>
-
-
-                        {/* GIA CÔNG ĐẶC BIỆT: ÉP KIM, DẬP NỔI, SỐ NHẢY */}
-                        <div className="form-processing">
-                            <h4>Gia công đặc biệt:</h4>
-                            <div className="form-processing-list">
-                                <div className="form-processing-item">
-                                    <input type="checkbox" id="processing-1" name="processing" value="processing-1" />
-                                    <label htmlFor="processing-1">Ép kim</label>
-                                </div>
-
-                                <div className="form-processing-item">
-                                    <input type="checkbox" id="processing-2" name="processing" value="processing-2" />
-                                    <label htmlFor="processing-2">Dập nổi</label>
-                                </div>
-
-                                <div className="form-processing-item">
-                                    <input type="checkbox" id="processing-3" name="processing" value="processing-3" />
-                                    <label htmlFor="processing-3">Số nhảy</label>
-                                </div>
-
-                            </div>
-
-                        </div>
+                    <div className="item-content tab-content">
+                            <table className="paper-list">
+                                        <thead>
+                                            <tr>
+                                                {/* <th>Tên gia công</th> */}
+                                                <th>Loại</th>
+                                                <th>Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {processingList.map((item, index) => (
+                                                <tr key={index}>
+                                                    {/* <td>{item.ProcessingName}</td> */}
+                                                    <td>{item.type}</td>
+                                                    <td>
+                                                        <button onClick={() => setPaperList(paperList.filter((_, i) => i !== index))}>
+                                                            <FiTrash2 />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                            </table>
                     </div>
+
+                    <button onClick={() => setOpenPaperModal(true)}>Thêm gia công</button>
 
                 </div>
             </div>
@@ -181,6 +248,8 @@ const QuotationPage = () => {
 
 
             </div>
+
+            <ProcessingsCalModel open={openPaperModal} setOpen={setOpenPaperModal} onAdd={handleAddProcessing} />
 
         </div>
     );

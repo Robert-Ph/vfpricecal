@@ -19,7 +19,7 @@ const PaperAdd = () => {
         setPaperList([...paperList, newSize]);
     };
 
-    const [user, setUser] = useState<any>(() => {
+    const [user] = useState<any>(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
             try {
@@ -58,13 +58,13 @@ const PaperAdd = () => {
             
             if (res.code === 200 || res.code === 201) {
                 // alert("Tạo loại giấy thành công!");
-                // Có thể điều hướng về trang danh sách hoặc reset form
-                toast.success(`Tạo loại giấy ${name} thành công!`);
+               
 
                 setTimeout(() => {
                      window.location.reload(); // Hoặc navigate("/component/papers") nếu bạn dùng react-router
-                }, 1000); // Đợi 2 giây trước khi reload hoặc navigate
-               
+                }, 500); // Đợi 2 giây trước khi reload hoặc navigate
+                // Có thể điều hướng về trang danh sách hoặc reset form
+                toast.success(`Tạo loại giấy ${name} thành công!`);
             }
         } catch (error) {
             console.error("Lỗi khi lưu:", error);

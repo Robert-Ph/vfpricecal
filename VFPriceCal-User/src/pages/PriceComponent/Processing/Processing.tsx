@@ -2,16 +2,53 @@ import "./processing.scss";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
+import { useEffect, useState } from "react";
+import { getCategories } from "../../../service/ProcessingService";
+import CategoryModal from "../../../components/categoryModel";
 
 const Processing = () => {
     const navigate = useNavigate();
+    const [openPaperModal, setOpenPaperModal] = useState(false);
+    const [category, setCategory] = useState<any[]>([]); // State để quản lý danh mục lọc
+
+    const [user] = useState<any>(() => {
+        const savedUser = localStorage.getItem("user");
+        if (savedUser) {
+            try {
+                return JSON.parse(savedUser);
+            } catch (e) {
+                return null;
+            }
+        }
+        return null;
+    });
+
+    useEffect(() => {
+        // Gọi API để lấy danh mục lọc (nếu có)
+        // Ví dụ: getCategories().then(data => setCategory(data));
+        const fetchCategories = async () => {
+            try {
+                // Giả sử bạn có API getCategories
+                const data = await getCategories(user.companyId); 
+                setCategory(data.data);
+            } catch (error) {
+                console.error("Lỗi khi lấy danh mục lọc:", error);
+            }
+        };
+
+        fetchCategories();
+    }, [user?.companyId]);
+
+            
 
     return (
         <div className="processing-page">
             <div className="processing-header">
                 <h3>Gia công</h3>
 
-                <button className="add-processing-btn"> <FaPlus /> Thêm gia công</button>
+                <button className="add-processing-btn" onClick={() => setOpenPaperModal(true)}>
+                    <FaPlus /> Thêm gia công
+                </button>
             </div>
 
             <div className="processing-info">
@@ -30,43 +67,34 @@ const Processing = () => {
                             <tr>
                                 <th>Tên gia công</th>
                                 <th>Mã gia công</th>
-                                <th>Mô tả</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             {/* sản phẩm sẽ được hiển thị ở đây. Mỗi sản phẩm sẽ có thông tin như tên, mã sản phẩm, mô tả . Bạn có thể nhấp vào một sản phẩm để xem chi tiết hoặc chỉnh sửa thông tin của nó. */}
-
-                            {/* gia công A */}
-                            <tr>
-                                <td>Cán màng</td>
-                                <td>GC001</td>
-                                <td>Mô tả gia công A </td>
-                                <td className="action-buttons">
+                            {/* Ví dụ về một sản phẩm */}
+                            {category.map((item) => (
+                                <tr key={item.id}>
+                                    <td>{item.name}</td>
+                                    <td>{item.id}</td>
+                                    <td className="action-buttons">
                                     <button className=" icon edit-btn"
-                                        onClick={() => navigate("/component/processing/1")}>
+                                        onClick={() => navigate(`/component/processing/${item.id}`)}>
                                         <FiEdit />
                                     </button>
                                     <button className=" icon delete-btn"><FiTrash2 /></button>
                                 </td>
-
-                            </tr>
-
-                            {/* gia công B */}
-                            <tr>
-                                <td>Gia công B</td>
-                                <td>GC002</td>
-                                <td>Mô tả gia công B </td>
-                                <td className="action-buttons">
-                                    <button className=" icon edit-btn"><FiEdit /></button>
-                                    <button className=" icon delete-btn" ><FiTrash2 /></button>
-                                </td>
-
-                            </tr>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
             </div>
+
+        <CategoryModal
+            open={openPaperModal}
+            setOpen={setOpenPaperModal}
+        />
 
         </div>
     );

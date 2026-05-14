@@ -244,3 +244,71 @@
         }
     }
 }
+
+.tab-content {
+                table {
+                    width: 100%;
+                    align-content: center;
+                    margin-bottom: 20px;
+                    border-collapse: collapse;
+
+                    thead {
+                        background-color: #f3f4f6;
+
+                        th {
+                            padding: 12px;
+                            text-align: left;
+                            font-size: 14px;
+                            color: #3c414d;
+                        }
+                    }
+
+                    tbody {
+                        tr {
+                            border-bottom: 1px solid #e5e7eb;
+                            text-align: left;
+
+                            &:hover {
+                                background-color: #739bf0;
+                            }
+
+                            td {
+                                padding: 5px;
+                                font-size: 14px;
+                                color: #374151;
+                            }
+
+                            .action-buttons {
+                                display: flex;
+                                gap: 5px;
+                                align-items: center;
+                                justify-content: right;
+                            }
+
+                            .icon {
+                                cursor: pointer;
+                                font-size: 18px;
+                                transition: 0.2s;
+                            }
+
+                            .icon.edit-btn {
+                                color: #2563eb;
+                            }
+
+                            .icon.edit-btn:hover {
+                                color: #1d4ed8;
+                                transform: scale(1.1);
+                            }
+
+                            .icon.delete-btn {
+                                color: #ef4444;
+                            }
+
+                            .icon.delete-btn:hover {
+                                color: #dc2626;
+                                transform: scale(1.1);
+                            }
+                        }
+                    }
+                }
+            }
