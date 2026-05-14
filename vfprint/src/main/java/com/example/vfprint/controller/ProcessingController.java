@@ -2,6 +2,7 @@ package com.example.vfprint.controller;
 
 import com.example.vfprint.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,10 +34,19 @@ public class ProcessingController {
 
 
     @PostMapping
-    public ResponseEntity<String> createProcessingbyCategory(@RequestBody ProcessingDTO processingDTO){
+    public ResponseEntity<ApiResponse> createProcessingbyCategory(@RequestBody ProcessingDTO processingDTO){
         processingService.createProcessing(processingDTO);
-        return ResponseEntity.ok("Processing created successfully");
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse
+            .builder()
+            .code(200)
+            .data(processingDTO)
+            .message("Paper created successfully")
+            .build()
+        );
     }
+
+
     
     @PostMapping("/list")
     public ResponseEntity<String> postMethodName(@RequestBody List<ProcessingDTO> processingDTOList) {

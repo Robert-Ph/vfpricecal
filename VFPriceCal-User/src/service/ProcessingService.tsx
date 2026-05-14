@@ -1,5 +1,5 @@
 import { apiClient } from "../api/APIConfig";
-import { type category } from "../model/model";
+import { type category, type processing } from "../model/model";
 
 export const createCategory = async (data: category): Promise<category> => {
     try {
@@ -8,6 +8,17 @@ export const createCategory = async (data: category): Promise<category> => {
     }
     catch (error) {
         console.error('Failed to create category:', error);
+        throw error;
+    }
+};
+
+export const createProcessingByCategory = async (data: processing): Promise<processing> =>{
+    try{
+        const response = await apiClient.post('/processing', data);
+        return response.data;
+
+    }catch (error){
+        console.error('Failed to create processing by category: ', error);
         throw error;
     }
 };

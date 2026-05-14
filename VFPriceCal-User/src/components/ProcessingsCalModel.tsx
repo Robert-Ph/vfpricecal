@@ -20,12 +20,14 @@ interface Props {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onAdd: (data: any) => void;
+    data: any[];
 }
 
 const ProcessingsCalModel = ({
     open,
     setOpen,
     onAdd,
+    data
 }: Props) => {
 
     const [processingNameList, setProcessingNameList] = useState<ProcessingItem[]>([]);
@@ -112,9 +114,33 @@ const ProcessingsCalModel = ({
             return;
         }
 
+        const selectedProcessing = processingNameList.find(
+            (item) => item.id === processingName
+        );
+        // Tên processing
+        const processingText = selectedProcessing?.name || "";
+        // Kiểm tra trùng
+       // Kiểm tra trùng
+    const isDuplicate = data.some(
+    (item) =>
+        String(item.processing).toLowerCase() ===
+            processingText.toLowerCase() &&
+        String(item.type).toLowerCase() ===
+            type.toLowerCase()
+);
+
+    if (isDuplicate) {
+        setError("Dữ liệu đã tồn tại.");
+
+        toast.error("Dữ liệu đã tồn tại.");
+
+        return;
+    }
+
+
         const newData = {
             id: uuidv4(),
-            processing: processingName,
+            processing: processingText,
             type: type,
         };
 

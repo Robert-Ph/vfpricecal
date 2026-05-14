@@ -142,7 +142,13 @@
         background: green;
     }
     .info-quantity {
-        background: blue;
+        background: white;
+        
+        .button-processing{
+            background-color: #3b82f6;
+            color: white;
+            margin-bottom: 10px;
+        }
     }
 }
 .quotation {

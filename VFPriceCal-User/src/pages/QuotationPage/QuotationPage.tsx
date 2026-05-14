@@ -203,7 +203,7 @@ const QuotationPage = () => {
                             </table>
                     </div>
 
-                    <button onClick={() => setOpenPaperModal(true)}>Thêm gia công</button>
+                    <button className="button-processing" onClick={() => setOpenPaperModal(true)}>Thêm gia công</button>
 
                 </div>
             </div>
@@ -249,7 +249,12 @@ const QuotationPage = () => {
 
             </div>
 
-            <ProcessingsCalModel open={openPaperModal} setOpen={setOpenPaperModal} onAdd={handleAddProcessing} />
+            <ProcessingsCalModel 
+            open={openPaperModal} 
+            setOpen={setOpenPaperModal} 
+            onAdd={handleAddProcessing}
+            data = {processingList} 
+            />
 
         </div>
     );

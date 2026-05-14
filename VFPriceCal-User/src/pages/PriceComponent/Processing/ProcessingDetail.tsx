@@ -4,9 +4,11 @@ import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProcessingById } from "../../../service/ProcessingService";
+import ProcessingAddModel from "../../../components/ProcessingAdd";
 
 const ProcessingDetail = () => {
     const [activeTab, setActiveTab] = useState("paper");
+    const [openPaperModal, setOpenPaperModal] = useState(false);
     const {id} = useParams();
     const [processingData, setProcessingData] = useState<any>(null); // State để lưu chi tiết gia công 
     const [user] = useState<any>(() => {
@@ -79,7 +81,7 @@ const ProcessingDetail = () => {
                                         </thead>
                                         <tbody>
                                             {/* Ví dụ về một sản phẩm */}
-                                            {processingData?.processings.map((material) => (
+                                            {processingData?.processings.map((material: any) => (
                                                 <tr key={material.id}>
                                                     <td>{material.name}</td>
                                                     <td>Tờ</td>
@@ -95,13 +97,17 @@ const ProcessingDetail = () => {
                                     </table>
                                 </div>
 
-                                <button className="add-processing-btn"><FaPlus /> Thêm mới</button>
+                                <button className="add-processing-btn" onClick={() => setOpenPaperModal(true)}><FaPlus /> Thêm mới</button>
                             </div>
 
                         }
                     </div>
                 </div>
             </div>
+            <ProcessingAddModel
+            open={openPaperModal}
+            setOpen={setOpenPaperModal}
+            />
         </div>
     );
 };
