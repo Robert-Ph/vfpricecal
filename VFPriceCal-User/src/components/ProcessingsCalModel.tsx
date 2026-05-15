@@ -119,7 +119,6 @@ const ProcessingsCalModel = ({
         );
         // Tên processing
         const processingText = selectedProcessing?.name || "";
-        // Kiểm tra trùng
        // Kiểm tra trùng
     const isDuplicate = data.some(
     (item) =>

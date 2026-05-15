@@ -50,6 +50,10 @@ const Sidebar = () => {
                         <NavLink to="/component/printcost" className="submenu-item">
                             Giá in
                         </NavLink>
+
+                        <NavLink to="/component/profit" className="submenu-item">
+                            Biên lợi nhuận
+                        </NavLink>
                     </div>
                 )
                 }

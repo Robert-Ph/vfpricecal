@@ -9,6 +9,7 @@ import ProcessingDetail from "../pages/PriceComponent/Processing/ProcessingDetai
 import PaperDetail from "../pages/PriceComponent/Paper/PaperDetail/PaperDetail";
 import PaperAdd from "../pages/PriceComponent/Paper/add/PaperAdd";
 import Login from "../pages/Auth/Login";
+import Profit from "../pages/PriceComponent/profit/Profit";
 import ForgotPassword from "../pages/Auth/ForgotPassword";
 import UserManagement from "../pages/SystemPage/User/UserManagement";
 import PrintCost from "../pages/PriceComponent/PrintCost/PrintCost";
@@ -46,7 +47,9 @@ export const router = createBrowserRouter([
       { path: "system/users", element: <UserManagement /> },
       { path: "component/printcost", element: <PrintCost /> },
       { path: "system/settings", element: <SystemSetting /> },
-      { path: "system/backup", element: <SystemBackup /> }
+      { path: "system/backup", element: <SystemBackup /> },
+      { path: "component/profit", element: <Profit />}
+
     ],
   },
   // Thêm một route "catch-all" nếu muốn mọi đường dẫn lạ đều về login

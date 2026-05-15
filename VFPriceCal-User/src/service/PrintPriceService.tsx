@@ -1,0 +1,24 @@
+
+import { apiClient } from "../api/APIConfig";
+import { type printPrice } from "../model/model";
+
+export const create = async (data: printPrice): Promise<printPrice> => {
+    try{
+        const response = await apiClient.post('/profit', data);
+        return response.data;
+
+    }catch(error){
+        console.error('Failed to create print price:', error);
+        throw error;
+    }
+}
+
+export const getAllByCompany = async (companyId: number)=>{
+    try{
+        const response = await apiClient.get(`/profit?companyId=${companyId}`);
+        return response.data;
+    }catch(error){
+        console.error('Failed get all by company', error);
+        throw error;
+    }
+}

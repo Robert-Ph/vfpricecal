@@ -1,5 +1,6 @@
 import ProcessingsCalModel from "../../components/ProcessingsCalModel";
 import { getPaperById, getPapers } from "../../service/PaperService";
+import {getAllByCompany} from "../../service/PrintPriceService";
 import "./quotationPage.scss";
 import { useEffect, useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
@@ -8,6 +9,12 @@ const QuotationPage = () => {
 
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [processingList, setProcessingList] = useState<any[]>([]); 
+    const [printPriceList, setPrintPriceList] = useState<any[]>([]);
+    const [wight, setWight] = useState<number | null>(null);
+    const [heigth, setHeigth] = useState<number | null>(null);
+    const [printPrice, setPrintPrice] = useState<number | null>(null);
+    const [paperSize, setPaperSize] = useState<number | null>(null);
+    const [quantity, setQuantity] = useState<number | null>(null);
     // const [quotationData, setQuotationData] = useState<any>(null); // State để lưu thông tin báo giá
     // const [activeTab, setActiveTab] = useState("general"); // State để quản lý tab đang hoạt động
     // const [productList, setProductList] = useState<any[]>([]); // State để quản lý danh sách sản phẩm trong báo giá
@@ -66,7 +73,22 @@ const QuotationPage = () => {
         fetchPaperSizeList();
     }, [selectedPaperId]);
 
-
+ useEffect(() => {
+            const fetchPrintPrice = async () => {
+                        // Chỉ gọi API khi đã có thông tin user và companyId
+                        if (user?.companyId) {
+                            try {
+                                const papers = await getAllByCompany(user.companyId);
+                                console.log("Danh sách giấy/vật liệu:", papers);
+                                setPrintPriceList(papers.data); // Cập nhật danh sách vào state để hiển thị
+                            } catch (error) {
+                                console.error("Lỗi khi lấy giấy/vật liệu:", error);
+                            }
+                        }
+                    };
+            
+            fetchPrintPrice();
+    }, [user?.companyId]);
 
 
     return (
@@ -114,20 +136,21 @@ const QuotationPage = () => {
                         {/* KÍCH THƯỚC SẢN PHẨM: */}
                         <div className="form-product-size">
                             <label htmlFor="product-size">Kích thước sản phẩm:</label>
-                            <input type="number" id="product-size-width" name="product-size" />
+                            <input type="number" id="product-size-width" name="product-size" onChange={(e) => setWight(Number(e.target.value))}/>
                             <span>x</span>
-                            <input type="number" id="product-size-height" name="product-size" />
+                            <input type="number" id="product-size-height" name="product-size"  onChange={(e) => setHeigth(Number(e.target.value))}/>
                             <span>mm</span>
                         </div>
 
                         {/* LOẠI HÌNH IN: 4 MÀU 1 MẮT, 4 MÀU 2 MẶT, TRẮNG ĐEN 1 MẶT, TRẮNG ĐEN 2 MẶT */}
                         <div className="form-product-print-type">
                             <label htmlFor="product-print-type">Loại hình in:</label>
-                            <select id="product-print-type" name="product-print-type">
-                                <option value="4color-1side">4 màu 1 mặt</option>
-                                <option value="4color-2side">4 màu 2 mặt</option>
-                                <option value="bw-1side">Trắng đen 1 mặt</option>
-                                <option value="bw-2side">Trắng đen 2 mặt</option>
+                            <select id="product-print-type" name="product-print-type" onChange={(e) => setPrintPrice(Number(e.target.value))}>
+                                <option value="">Chọn loại</option>
+                                {printPriceList.map((item)=>(
+                                    <option value={item.id}>{item.name}</option>
+                                ))}
+                        
                             </select>
                         </div>
 
@@ -143,15 +166,11 @@ const QuotationPage = () => {
                                         {paper.name}
                                     </option>
                                 ))}
-                                {/* <option value="coated">Giấy coated</option>
-                                <option value="offset">Giấy offset</option>
-                                <option value="specialty">Giấy specialty</option>
-                                <option value="bw-2side">Trắng đen 2 mặt</option> */}
                             </select>
                         </div>
                         <div className="form-product-paper-type">
                             <label htmlFor="product-paper-type">Khổ giấy in:</label>
-                            <select id="product-paper-type" name="product-paper-type">
+                            <select id="product-paper-type" name="product-paper-type" onChange={(e) => setPaperSize(Number(e.target.value))}>
                                 {paperSizeList.map((size) => (
                                     <option key={size.id} value={size.id}>
                                         {size.width}mm x {size.height}mm
@@ -164,7 +183,7 @@ const QuotationPage = () => {
                         {/* SỐ LƯỢNG: */}
                         <div className="form-product-quantity">
                             <label htmlFor="product-quantity">Số lượng:</label>
-                            <input type="number" id="product-quantity" name="product-quantity" />
+                            <input type="number" id="product-quantity" name="product-quantity" onChange={(e) => setQuantity(Number(e.target.value))}/>
                         </div>
 
                     </div>

@@ -61,3 +61,22 @@ export type paperResponse = {
         price: number;
     }[];
 }
+
+export type printPrice = {
+    id: number | null;
+    companyId: number;
+    name: string;
+    price: number;
+    isActive: boolean;
+}
+
+export type calculate = {
+    widthProduct: number | null;
+    heightProduct: number | null;
+    quantity: number | null;
+    processingIds: number[];
+    paperId: number | null;
+    paperSizeId: number | null;
+    companyId: number | null;
+    printPrice: number | null;
+}
