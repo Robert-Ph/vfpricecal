@@ -1,6 +1,7 @@
 import ProcessingsCalModel from "../../components/ProcessingsCalModel";
 import { getPaperById, getPapers } from "../../service/PaperService";
 import {getAllByCompany} from "../../service/PrintPriceService";
+import {calculatePrint} from "../../service/CalculateService";
 import "./quotationPage.scss";
 import { useEffect, useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
@@ -22,6 +23,7 @@ const QuotationPage = () => {
     const [paperList, setPaperList] = useState<any[]>([]); // State để quản lý danh sách giấy/vật liệu trong báo giá
     const [paperSizeList, setPaperSizeList] = useState<any[]>([]); // State để quản lý danh sách kích thước giấy/vật liệu trong báo giá
     const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
+    const [result, setResult] = useState<any>(null);
 
     const [user] = useState<any>(() => {
             const savedUser = localStorage.getItem("user");
@@ -40,18 +42,6 @@ const QuotationPage = () => {
     };
     
     useEffect(() => {
-        // Gọi API để lấy thông tin báo giá nếu cần thiết
-        // Ví dụ: getQuotationData().then(data => setQuotationData(data));
-        // Gọi API để lấy danh sách sản phẩm, gia công và giấy/vật liệu nếu cần thiết
-        // Ví dụ: getProducts().then(data => setProductList(data));
-        // Ví dụ: getProcessings().then(data => setProcessingList(data));
-        // const fetchProcessingList = async () => {
-        //     try {                const data = await getProcessings(user.companyId); 
-        //         setProcessingList(data.data);
-        //     } catch (error) {
-        //         console.error("Lỗi khi lấy danh sách gia công:", error);
-        //     }  
-        // Ví dụ: getPapers().then(data => setPaperList(data));
         const fetchPaperList = async () => {
             try {
                 const data = await getPapers(user.companyId); 
@@ -89,6 +79,27 @@ const QuotationPage = () => {
             
             fetchPrintPrice();
     }, [user?.companyId]);
+
+    const handSumitCalculate = async () =>{
+        try{
+            const data ={
+                widthProduct: wight,
+                heightProduct: heigth,
+                quantity: quantity,
+                processingIds: processingList,
+                paperId: selectedPaperId,
+                paperSizeId: Number(paperSize),
+                companyId: Number(user?.companyId),
+                printPrice: printPrice
+            }
+
+            const response = await calculatePrint(data);
+            setResult(response);
+
+        }catch(error){
+            console.error("Lỗi báo giá vui lòng kiểm tra lại thông tin:", error);
+        }
+    }
 
 
     return (
@@ -148,7 +159,9 @@ const QuotationPage = () => {
                             <select id="product-print-type" name="product-print-type" onChange={(e) => setPrintPrice(Number(e.target.value))}>
                                 <option value="">Chọn loại</option>
                                 {printPriceList.map((item)=>(
-                                    <option value={item.id}>{item.name}</option>
+                                    <option
+                                        key={item.id} 
+                                        value={item.id}>{item.name}</option>
                                 ))}
                         
                             </select>
@@ -158,7 +171,13 @@ const QuotationPage = () => {
                         <div className="form-product-paper-type">
                             <label htmlFor="product-paper-type">Loại giấy in:</label>
                             <select id="product-paper-type" name="product-paper-type"
-                             onChange={(e) => setSelectedPaperId(Number(e.target.value))}
+                             onChange={(e) => {
+                                const value = e.target.value;
+
+                                setSelectedPaperId(
+                                    value ? Number(value) : null
+                                );
+                             }}
                             >
                                 <option value="">Chọn giấy</option>
                                 {paperList.map((paper) => (
@@ -170,7 +189,11 @@ const QuotationPage = () => {
                         </div>
                         <div className="form-product-paper-type">
                             <label htmlFor="product-paper-type">Khổ giấy in:</label>
-                            <select id="product-paper-type" name="product-paper-type" onChange={(e) => setPaperSize(Number(e.target.value))}>
+                            <select id="product-paper-type" name="product-paper-type" onChange={(e) => {
+                                                                                    const value = e.target.value;
+                                                                                    setPaperSize(value ? Number(value) :  null)
+                                                                                    }}>
+                                <option value="">Chọn kích thước</option>
                                 {paperSizeList.map((size) => (
                                     <option key={size.id} value={size.id}>
                                         {size.width}mm x {size.height}mm
@@ -210,7 +233,7 @@ const QuotationPage = () => {
                                             {processingList.map((item, index) => (
                                                 <tr key={index}>
                                                     {/* <td>{item.ProcessingName}</td> */}
-                                                    <td>{item.type}</td>
+                                                    <td>{item.name}</td>
                                                     <td>
                                                         <button onClick={() => setPaperList(paperList.filter((_, i) => i !== index))}>
                                                             <FiTrash2 />
@@ -237,29 +260,29 @@ const QuotationPage = () => {
                     <div className="item-content">
                         <div className="form-sheets-page">
                             <label htmlFor="sheets-page">Số tờ in:</label>
-                            <span className="sheets-page-value">20</span>
+                            <span className="sheets-page-value">{result?.data.quantityPaper}</span>
                         </div>
                         <div className="form-printing-price">
                             <label htmlFor="quotation-price">Giá in:</label>
-                            <span className="printing-price-value">100.000đ</span>
+                            <span className="printing-price-value">0đ</span>
                         </div>
                         <div className="form-processing-price">
                             <label htmlFor="return-rate">Giá gia công:</label>
-                            <span className="processing-price-value">50.000đ</span>
+                            <span className="processing-price-value">0đ</span>
                         </div>
                         <div className="form-discount">
                             <label htmlFor="discount">Giảm:</label>
-                            <span className="discount-value">5000đ</span>
+                            <span className="discount-value">0đ</span>
                         </div>
                     </div>
                     <hr />
                     <div className="total-price">
                         <label htmlFor="total-price">Tổng giá:</label>
-                        <span className="total-price-value">145.000đ</span>
+                        <span className="total-price-value">{result?.data.price | 0}đ</span>
                     </div>
 
                     <div className="action-buttons">
-                        <button className="btn btn-primary">Lưu báo giá</button>
+                        <button className="btn btn-primary" onClick={handSumitCalculate}>Tính báo giá</button>
                         <button className="btn btn-secondary">In báo giá</button>
                     </div>
 

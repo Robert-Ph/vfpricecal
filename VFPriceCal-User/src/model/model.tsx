@@ -74,7 +74,7 @@ export type calculate = {
     widthProduct: number | null;
     heightProduct: number | null;
     quantity: number | null;
-    processingIds: number[];
+    processingIds: any[];
     paperId: number | null;
     paperSizeId: number | null;
     companyId: number | null;

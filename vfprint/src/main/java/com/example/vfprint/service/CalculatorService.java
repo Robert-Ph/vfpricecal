@@ -5,6 +5,11 @@ import org.springframework.stereotype.Service;
 import com.example.vfprint.dto.PaperDTO;
 import com.example.vfprint.dto.InfoPriceDTO;
 import com.example.vfprint.dto.PaperSizeDTO;
+import com.example.vfprint.dto.request.CalculateRequest;
+import com.example.vfprint.dto.response.CalculateResponse;
+import com.example.vfprint.entity.Processing;
+import com.example.vfprint.repository.ProcessingRepository;
+
 import java.util.List;
 @Service
 public class CalculatorService {
@@ -20,9 +25,12 @@ public class CalculatorService {
     @Autowired
     private ProcessingService processingService;
 
+    @Autowired
+    private ProcessingRepository processingRepository;
+
 
     // Ham tinh gia in an theo kich thuoc san pham va loai giay
-    public double calculatePrintingCost(InfoPriceDTO infoPriceDTO) {
+    public CalculateResponse calculatePrintingCost(InfoPriceDTO infoPriceDTO) {
 
         // Kiem tra xem paper size va paper co ton tai hay khong
         PaperSizeDTO paperSizeDTO = paperSizeService.getPaperSizeById(infoPriceDTO.getPaperSizeId());
@@ -43,9 +51,10 @@ public class CalculatorService {
         
         double totalProcessingCost = calculateTotalProcessingCost(infoPriceDTO.getProcessingIds());
                 // Tinh tong chi phi in an
-        return sheetsNeeded * (paperSizeDTO.getPrice() + totalProcessingCost);
-
-
+        return CalculateResponse.builder()
+                .price(sheetsNeeded * (paperSizeDTO.getPrice() + totalProcessingCost))
+                .quantityPaper(sheetsNeeded)
+                .build();
     }
 
 
@@ -73,15 +82,18 @@ public class CalculatorService {
     //ham tinh kiemr tra processing tong tien cua processingIds:
     // Neu processingIds rong thi tra ve 0, neu processingId khong ton tai thi bo qua processing do,
     //  neu processingId ton tai thi cong gia processing do vao tong tien  
-    public double calculateTotalProcessingCost(List<Long> processingIds) {
+    public double calculateTotalProcessingCost(List<CalculateRequest> processingIds) {
         double totalCost = 0.0;
         if (processingIds.isEmpty()) {
             return totalCost;
         }
-        for (Long processingId : processingIds) {
-            if (processingService.getProcessingById(processingId) != null) {
-                 totalCost += processingService.getProcessingById(processingId).getPrice();
-            }   
+        for (CalculateRequest processingId : processingIds) {
+            List<Processing> processingList = processingRepository.findByCategoryId(processingId.getId());
+            for (Processing item : processingList){
+                if (item.equals(processingId.getName())) {
+                    totalCost += item.getPrice();
+                }
+            }
         }
         return totalCost;
     }

@@ -2,6 +2,8 @@ package com.example.vfprint.dto;
 
 import java.util.List;
 
+import com.example.vfprint.dto.request.CalculateRequest;
+
 import lombok.Data;
 
 @Data
@@ -9,9 +11,10 @@ public class InfoPriceDTO {
     private int widthProduct;
     private int heightProduct;
     private Integer quantity;
-    private List<Long> processingIds;
+    private List<CalculateRequest> processingIds;
     private Long paperId;
     private Long paperSizeId;
     private Long companyId;
+    private Long printPrice;
 
 }

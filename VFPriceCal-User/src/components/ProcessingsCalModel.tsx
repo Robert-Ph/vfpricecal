@@ -138,9 +138,8 @@ const ProcessingsCalModel = ({
 
 
         const newData = {
-            id: uuidv4(),
-            processing: processingText,
-            type: type,
+            id: processingName,
+            name: type,
         };
 
         onAdd(newData);
