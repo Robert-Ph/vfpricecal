@@ -54,6 +54,10 @@ const Sidebar = () => {
                         <NavLink to="/component/profit" className="submenu-item">
                             Biên lợi nhuận
                         </NavLink>
+
+                        <NavLink to="/component/discount" className="submenu-item">
+                            Chiếc khấu khách hàng
+                        </NavLink>
                     </div>
                 )
                 }

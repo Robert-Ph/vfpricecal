@@ -2,9 +2,14 @@ import ProcessingsCalModel from "../../components/ProcessingsCalModel";
 import { getPaperById, getPapers } from "../../service/PaperService";
 import {getAllByCompany} from "../../service/PrintPriceService";
 import {calculatePrint} from "../../service/CalculateService";
+import { getAllProfitByCompany } from "../../service/ProfitService";
 import "./quotationPage.scss";
 import { useEffect, useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
+import { formatMoney } from "../../utils/formatMoney";
+import { numberToVietnameseText } from "../../utils/MoneyModel";
+
+
 
 const QuotationPage = () => {
 
@@ -22,9 +27,13 @@ const QuotationPage = () => {
     // const [processingList, setProcessingList] = useState<any[]>([]); // State để quản lý danh sách gia công trong báo giá
     const [paperList, setPaperList] = useState<any[]>([]); // State để quản lý danh sách giấy/vật liệu trong báo giá
     const [paperSizeList, setPaperSizeList] = useState<any[]>([]); // State để quản lý danh sách kích thước giấy/vật liệu trong báo giá
+    const [profitList, setProfitList] = useState<any[]>([]);
+    const [profit, setProfit] = useState<number | null>(null);
     const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
     const [result, setResult] = useState<any>(null);
 
+
+    
     const [user] = useState<any>(() => {
             const savedUser = localStorage.getItem("user");
             if (savedUser) {
@@ -52,8 +61,11 @@ const QuotationPage = () => {
         };
         const fetchPaperSizeList = async () => {
             try {
-                const data = await getPaperById(Number(selectedPaperId));
-                setPaperSizeList(data.data.paperSizes);
+                if(Number(selectedPaperId) !== 0){
+                    const data = await getPaperById(Number(selectedPaperId));
+                    setPaperSizeList(data.data.paperSizes);
+                }
+                
             } catch (error) {
                 console.error("Lỗi khi lấy danh sách kích thước giấy/vật liệu:", error);
             }
@@ -63,7 +75,7 @@ const QuotationPage = () => {
         fetchPaperSizeList();
     }, [selectedPaperId]);
 
- useEffect(() => {
+    useEffect(() => {
             const fetchPrintPrice = async () => {
                         // Chỉ gọi API khi đã có thông tin user và companyId
                         if (user?.companyId) {
@@ -75,10 +87,22 @@ const QuotationPage = () => {
                                 console.error("Lỗi khi lấy giấy/vật liệu:", error);
                             }
                         }
-                    };
+            };
+
+
+            const fetchProfitList = async () => {
+                            try {
+                                const response = await getAllProfitByCompany(user.companyId);
+                                setProfitList(response.data); // Cập nhật danh sách vào state để hiển thị
+                            } catch (error) {
+                                console.error("Lỗi khi lấy biên lợi nhuận:", error);
+                            }
+            }
             
             fetchPrintPrice();
+            fetchProfitList();
     }, [user?.companyId]);
+    
 
     const handSumitCalculate = async () =>{
         try{
@@ -90,7 +114,8 @@ const QuotationPage = () => {
                 paperId: selectedPaperId,
                 paperSizeId: Number(paperSize),
                 companyId: Number(user?.companyId),
-                printPrice: printPrice
+                printPrice: Number(printPrice),
+                profit: Number(profit)
             }
 
             const response = await calculatePrint(data);
@@ -136,11 +161,13 @@ const QuotationPage = () => {
                     <div className="item-content">
                         {/* TÊN SẢN PHẨM: */}
                         <div className="form-product-name">
-                            <label htmlFor="product-name">Tên sản phẩm:</label>
-                            <select name="product-name" id="product-name">
-                                <option value="product1">Sản phẩm 1</option>
-                                <option value="product2">Sản phẩm 2</option>
-                                <option value="product3">Sản phẩm 3</option>
+                            <label htmlFor="product-name">Biên lợi nhuận:</label>
+                            <select name="product-name" id="product-name" onChange={(e) => setProfit(Number(e.target.value))}>
+                                <option value="">Chọn</option>
+
+                                {profitList.map((item)=>(
+                                    <option key={item.id} value={item.id}>{item.name}</option>
+                                ))}
                             </select>
                         </div>
 
@@ -235,7 +262,7 @@ const QuotationPage = () => {
                                                     {/* <td>{item.ProcessingName}</td> */}
                                                     <td>{item.name}</td>
                                                     <td>
-                                                        <button onClick={() => setPaperList(paperList.filter((_, i) => i !== index))}>
+                                                        <button onClick={() => setProcessingList(processingList.filter((_, i) => i !== index))}>
                                                             <FiTrash2 />
                                                         </button>
                                                     </td>
@@ -260,27 +287,29 @@ const QuotationPage = () => {
                     <div className="item-content">
                         <div className="form-sheets-page">
                             <label htmlFor="sheets-page">Số tờ in:</label>
-                            <span className="sheets-page-value">{result?.data.quantityPaper}</span>
+                            <span className="sheets-page-value">{result?.data.quantityPaper | 0} tờ</span>
                         </div>
                         <div className="form-printing-price">
-                            <label htmlFor="quotation-price">Giá in:</label>
-                            <span className="printing-price-value">0đ</span>
+                            <label htmlFor="quotation-price">Số sp/tờ:</label>
+                            <span className="printing-price-value">{result?.data.productSheet | 0}</span>
                         </div>
                         <div className="form-processing-price">
-                            <label htmlFor="return-rate">Giá gia công:</label>
-                            <span className="processing-price-value">0đ</span>
+                            <label htmlFor="return-rate">Giá 1 sản phẩm:</label>
+                            <span className="processing-price-value">{formatMoney(result?.data.price / Number(quantity) || 0)}</span>
                         </div>
                         <div className="form-discount">
                             <label htmlFor="discount">Giảm:</label>
-                            <span className="discount-value">0đ</span>
+                            <span className="discount-value">0 đ</span>
                         </div>
                     </div>
                     <hr />
                     <div className="total-price">
-                        <label htmlFor="total-price">Tổng giá:</label>
-                        <span className="total-price-value">{result?.data.price | 0}đ</span>
+                        <label htmlFor="total-price">Tổng tiền:</label>
+                        <span className="total-price-value">{formatMoney(result?.data.price || 0)}</span>
+                        <br />
+                        
                     </div>
-
+                    <p className="text-money">{numberToVietnameseText(result?.data.price || 0)}</p>
                     <div className="action-buttons">
                         <button className="btn btn-primary" onClick={handSumitCalculate}>Tính báo giá</button>
                         <button className="btn btn-secondary">In báo giá</button>

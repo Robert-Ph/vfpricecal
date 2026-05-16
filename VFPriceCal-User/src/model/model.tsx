@@ -79,4 +79,12 @@ export type calculate = {
     paperSizeId: number | null;
     companyId: number | null;
     printPrice: number | null;
+    profit: number | null;
+}
+
+export type profitRequest = {
+    id: number | null;
+    companyId: number | null;
+    name: string;
+    percentage: number | null;
 }

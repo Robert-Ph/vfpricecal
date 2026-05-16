@@ -1,4 +1,4 @@
-import "./profit.scss";
+import "./discount.scss";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import ProfitModel from "../../../components/ProfitModel";
 import { getAllProfitByCompany } from "../../../service/ProfitService";
 
-const Profit = () => {
+const Discount = () => {
     const navigate = useNavigate();
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [profit, setProfit] = useState<any[]>([]); // State để quản lý danh mục lọc
@@ -65,8 +65,8 @@ const Profit = () => {
                     <table>
                         <thead>
                             <tr>
-                                <th>Tên biên lợi nhuận </th>
-                                <th>Tỷ lệ(%)</th>
+                                <th>Loại khách hàng </th>
+                                <th>Chiếc khấu(%)</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -100,4 +100,4 @@ const Profit = () => {
     );
 }
 
-export default Profit;
+export default Discount;

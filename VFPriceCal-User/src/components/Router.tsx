@@ -16,6 +16,7 @@ import PrintCost from "../pages/PriceComponent/PrintCost/PrintCost";
 import SystemSetting from "../pages/SystemPage/Setting/SystemSetting";
 import SystemBackup from "../pages/SystemPage/Backup/SystemBackup"
 import NewProduct from "../pages/ProductPage/NewProduct";
+import Discount from "../pages/PriceComponent/discount/Discount";
 
 export const router = createBrowserRouter([
   {
@@ -46,6 +47,7 @@ export const router = createBrowserRouter([
       { path: "component/papers/:id", element: <PaperDetail /> },
       { path: "system/users", element: <UserManagement /> },
       { path: "component/printcost", element: <PrintCost /> },
+      { path: "component/discount", element: <Discount />},
       { path: "system/settings", element: <SystemSetting /> },
       { path: "system/backup", element: <SystemBackup /> },
       { path: "component/profit", element: <Profit />}

@@ -1,0 +1,23 @@
+import { apiClient } from "../api/APIConfig";
+import { type profitRequest } from "../model/model";
+
+export const create = async (data:profitRequest): Promise<profitRequest> => {
+    try{
+        const response = await apiClient.post('/profit', data);
+        return response.data;
+
+    }catch(error){
+        console.error('Failed to create profit:', error);
+        throw error;
+    }
+}
+
+export const getAllProfitByCompany = async (companyId: number) => {
+    try{
+        const response = await apiClient.get(`/profit?companyId=${companyId}`);
+        return response.data;
+    }catch(error){
+        console.error('Failed to get all profit:', error);
+        throw error;
+    }
+}
