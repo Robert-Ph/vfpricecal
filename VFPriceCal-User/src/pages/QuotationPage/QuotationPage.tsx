@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
 import { formatMoney } from "../../utils/formatMoney";
 import { numberToVietnameseText } from "../../utils/MoneyModel";
+import { getAllDiscountByCompany } from "../../service/DiscountService";
 
 
 
@@ -28,9 +29,12 @@ const QuotationPage = () => {
     const [paperList, setPaperList] = useState<any[]>([]); // State để quản lý danh sách giấy/vật liệu trong báo giá
     const [paperSizeList, setPaperSizeList] = useState<any[]>([]); // State để quản lý danh sách kích thước giấy/vật liệu trong báo giá
     const [profitList, setProfitList] = useState<any[]>([]);
+    const [discountList, setDisountList] = useState<any[]>([]);
     const [profit, setProfit] = useState<number | null>(null);
     const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
     const [result, setResult] = useState<any>(null);
+    const [discountId, setdicountId] = useState<numbet | null>(null);
+    
 
 
     
@@ -98,9 +102,19 @@ const QuotationPage = () => {
                                 console.error("Lỗi khi lấy biên lợi nhuận:", error);
                             }
             }
+
+            const fetchDiscountList = async () => {
+                try {
+                    const response = await getAllDiscountByCompany(user.companyId);
+                    setDisountList(response.data);
+                } catch (error) {
+                    console.error("Lỗi khi lấy chiết khấu:", error);
+                }
+            }
             
             fetchPrintPrice();
             fetchProfitList();
+            fetchDiscountList();
     }, [user?.companyId]);
     
 
@@ -115,7 +129,8 @@ const QuotationPage = () => {
                 paperSizeId: Number(paperSize),
                 companyId: Number(user?.companyId),
                 printPrice: Number(printPrice),
-                profit: Number(profit)
+                profit: Number(profit),
+                discount: Number(discountId)
             }
 
             const response = await calculatePrint(data);
@@ -144,10 +159,15 @@ const QuotationPage = () => {
 
                         <div className="form-type-customer">
                             <label htmlFor="customer-type">Loại khách hàng:</label>
-                            <select id="customer-type" name="customer-type">
-                                <option value="individual">Khách hàng thường</option>
-                                <option value="vip">Khách hàng VIP</option>
-                                <option value="Company">Đại lý</option>
+                            <select id="customer-type" name="customer-type" onChange={(e) => setdicountId(e.target.value)}>
+                                {discountList.map((item) => (
+                                    <option
+                                        key={item.id} 
+                                        value={item.id}>
+                                            {item.name}
+                                        </option>
+                                ))
+                                }
                             </select>
                         </div>
                     </div>

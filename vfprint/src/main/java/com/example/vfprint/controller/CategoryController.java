@@ -51,16 +51,6 @@ public class CategoryController {
        
     }
 
-    // @GetMapping
-    // public CategoryDTO getCategoryByName(@RequestParam String name) {
-    //     if (!categoryService.existsByName(name)) {
-    //         throw new RuntimeException("Category with the given name does not exist");
-    //     }
-    //     // Assuming you have a method to fetch category details by name
-    //     // return categoryService.getCategoryByName(name);
-    //     return categoryService.getCategoryByName(name); // Placeholder for actual implementation
-    //  }
-
     @GetMapping
     public ResponseEntity<ApiResponse> getCategoryByCompanyId(@RequestParam Long companyId) {
         // Assuming you have a method to fetch category details by id
@@ -73,5 +63,8 @@ public class CategoryController {
             .build()
         );
     }
+
+
+
 
 }

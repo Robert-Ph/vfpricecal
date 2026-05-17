@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
-@RequestMapping("api/profit")
+@RequestMapping("api/print-price")
 public class PrintPriceController {
     
     @Autowired

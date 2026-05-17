@@ -80,6 +80,7 @@ export type calculate = {
     companyId: number | null;
     printPrice: number | null;
     profit: number | null;
+    discount: number | null;
 }
 
 export type profitRequest = {
@@ -87,4 +88,11 @@ export type profitRequest = {
     companyId: number | null;
     name: string;
     percentage: number | null;
+}
+
+export type discountRequest = {
+    id: number | null;
+    companyId: number | null;
+    name: string;
+    discount: number | null;
 }

@@ -1,0 +1,47 @@
+package com.example.vfprint.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.List;
+import com.example.vfprint.dto.DiscountDTO;
+import com.example.vfprint.entity.Discount;
+import com.example.vfprint.repository.DiscountRepository;
+
+@Service
+public class DiscountService {
+    @Autowired
+    private DiscountRepository discountRepository;
+
+    @Transactional
+    public void createDiscountByCompany(DiscountDTO discountDTO){
+        if (discountRepository.existsByName(discountDTO.getName())) {
+            throw new RuntimeException("Discount with the given name already exists");
+        }
+
+        discountRepository.save(
+            Discount.builder()
+            .companyId(discountDTO.getCompanyId())
+            .name(discountDTO.getName())
+            .discount(discountDTO.getDiscount())
+            .build()
+        );
+    }
+
+    @Transactional
+    public List<DiscountDTO> getAllDiscountByCompany(Long companyId){
+        List<Discount> dList = discountRepository.findByCompanyId(companyId);
+        if (dList.isEmpty()) {
+            throw new RuntimeException("Discount with the given company id does not exist");
+        }
+
+        return dList.stream().map(item -> DiscountDTO.builder()
+                                    .id(item.getId())
+                                    .companyId(item.getCompanyId())
+                                    .name(item.getName())
+                                    .discount(item.getDiscount())
+                                    .build()
+                                ).toList();
+
+    }
+}

@@ -1,4 +1,4 @@
-package com.example.vfprint.dto.response;
+package com.example.vfprint.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CalculateResponse {
-    private Long price;
-    private int quantityPaper;
-    private int productSheet;
+public class DiscountDTO {
+    private Long id;
+    private Long companyId;
+    private String name;
+    private float discount;
 }

@@ -8,7 +8,10 @@ import com.example.vfprint.dto.PaperSizeDTO;
 import com.example.vfprint.dto.request.CalculateRequest;
 import com.example.vfprint.dto.response.CalculateResponse;
 import com.example.vfprint.entity.Processing;
+import com.example.vfprint.repository.DiscountRepository;
+import com.example.vfprint.repository.PrintPriceRepository;
 import com.example.vfprint.repository.ProcessingRepository;
+import com.example.vfprint.repository.ProfitRepository;
 
 import java.util.List;
 @Service
@@ -21,12 +24,17 @@ public class CalculatorService {
     @Autowired
     private PaperSizeService paperSizeService;
 
-
-    @Autowired
-    private ProcessingService processingService;
-
     @Autowired
     private ProcessingRepository processingRepository;
+
+    @Autowired
+    private ProfitRepository profitRepository;
+
+    @Autowired
+    private PrintPriceRepository priceRepository;
+
+    @Autowired
+    private DiscountRepository discountRepository;
 
 
     // Ham tinh gia in an theo kich thuoc san pham va loai giay
@@ -49,11 +57,27 @@ public class CalculatorService {
         int sheetsNeeded = calculatePaperSheets(infoPriceDTO.getWidthProduct(), infoPriceDTO.getHeightProduct(),
                 paperSizeDTO.getWidth(), paperSizeDTO.getHeight(), infoPriceDTO.getQuantity());
         
+        float prinPrice = 0;
+        if(priceRepository.existsById(infoPriceDTO.getPrintPrice())){
+            prinPrice = priceRepository.findById(infoPriceDTO.getPrintPrice()).get().getPrice();
+        }
         double totalProcessingCost = calculateTotalProcessingCost(infoPriceDTO.getProcessingIds());
+        float percentage = 1;
+        if (profitRepository.existsById(infoPriceDTO.getProfit())) {
+            percentage = profitRepository.findById(infoPriceDTO.getProfit()).get().getPercentage() / 100;
+        }
+
+        //Lấy chiết khấu cho khách hàng
+        double discount = getDiscount(infoPriceDTO.getDiscount());
+
+        //Kết quả báo giá in ấn
+        double price = ((sheetsNeeded * (paperSizeDTO.getPrice()+ prinPrice + totalProcessingCost)) * percentage) * discount;
+
                 // Tinh tong chi phi in an
         return CalculateResponse.builder()
-                .price(sheetsNeeded * (paperSizeDTO.getPrice() + totalProcessingCost))
+                .price(Math.round(price))
                 .quantityPaper(sheetsNeeded)
+                .productSheet(calculateProductsPerSheet(infoPriceDTO.getWidthProduct(), infoPriceDTO.getHeightProduct(), paperSizeDTO.getWidth(), paperSizeDTO.getHeight(), true))
                 .build();
     }
 
@@ -75,7 +99,7 @@ public class CalculatorService {
         }
 
         // Tinh so luong san pham / to giay can thiet
-        int sheetsNeeded = calculateProductsPerSheet(widthProduct, heightProduct, widthPaper, heightPaper, false);
+        int sheetsNeeded = calculateProductsPerSheet(widthProduct, heightProduct, widthPaper, heightPaper, true);
         return (int) Math.ceil((double) quantity / sheetsNeeded);
     }
 
@@ -90,7 +114,7 @@ public class CalculatorService {
         for (CalculateRequest processingId : processingIds) {
             List<Processing> processingList = processingRepository.findByCategoryId(processingId.getId());
             for (Processing item : processingList){
-                if (item.equals(processingId.getName())) {
+                if ((item.getName()).equals(processingId.getName())) {
                     totalCost += item.getPrice();
                 }
             }
@@ -116,6 +140,14 @@ public class CalculatorService {
         }
 
         return totalProductsPerSheetbyHeight;
+    }
+
+    //Lấy thông tin chiết khấu
+    public double getDiscount(Long id){
+        if (discountRepository.existsById(id)) {
+            return (100 - discountRepository.findById(id).get().getDiscount())/100;
+        }
+        return 1;
     }
 
 }

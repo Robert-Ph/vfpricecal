@@ -16,5 +16,7 @@ public class InfoPriceDTO {
     private Long paperSizeId;
     private Long companyId;
     private Long printPrice;
+    private Long profit;
+    private Long discount;
 
 }

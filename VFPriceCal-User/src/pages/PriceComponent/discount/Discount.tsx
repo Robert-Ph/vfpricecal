@@ -3,13 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import ProfitModel from "../../../components/ProfitModel";
+import DiscountModel from "../../../components/discount/DiscountModel";
 import { getAllProfitByCompany } from "../../../service/ProfitService";
+import { getAllDiscountByCompany } from "../../../service/DiscountService";
 
 const Discount = () => {
     const navigate = useNavigate();
     const [openPaperModal, setOpenPaperModal] = useState(false);
-    const [profit, setProfit] = useState<any[]>([]); // State để quản lý danh mục lọc
+    const [discount, setDiscount] = useState<any[]>([]); // State để quản lý danh mục lọc
 
     const [user] = useState<any>(() => {
         const savedUser = localStorage.getItem("user");
@@ -29,8 +30,8 @@ const Discount = () => {
         const fetchCategories = async () => {
             try {
                 // Giả sử bạn có API getCategories
-                const data = await getAllProfitByCompany(user.companyId); 
-                setProfit(data.data);
+                const data = await getAllDiscountByCompany(user.companyId); 
+                setDiscount(data.data);
             } catch (error) {
                 console.error("Lỗi khi lấy danh mục lọc:", error);
             }
@@ -44,7 +45,7 @@ const Discount = () => {
     return (
         <div className="processing-page">
             <div className="processing-header">
-                <h3>Biên lợi nhuận</h3>
+                <h3>Chiết khấu khách hàng</h3>
 
                 <button className="add-processing-btn" onClick={() => setOpenPaperModal(true)}>
                     <FaPlus /> Thêm mới
@@ -73,10 +74,10 @@ const Discount = () => {
                         <tbody>
                             {/* sản phẩm sẽ được hiển thị ở đây. Mỗi sản phẩm sẽ có thông tin như tên, mã sản phẩm, mô tả . Bạn có thể nhấp vào một sản phẩm để xem chi tiết hoặc chỉnh sửa thông tin của nó. */}
                             {/* Ví dụ về một sản phẩm */}
-                            {profit.map((item) => (
+                            {discount.map((item) => (
                                 <tr key={item.id}>
                                     <td>{item.name}</td>
-                                    <td>{item.percentage}</td>
+                                    <td>{item.discount}</td>
                                     <td className="action-buttons">
                                         <button className=" icon edit-btn"
                                             onClick={() => navigate(``)}>
@@ -91,7 +92,7 @@ const Discount = () => {
                 </div>
             </div>
 
-        <ProfitModel
+        <DiscountModel
             open={openPaperModal}
             setOpen={setOpenPaperModal}
         />
