@@ -44,17 +44,12 @@ public class PaperSizeController {
         return ResponseEntity.ok("Paper size created successfully");
     }
 
-    @DeleteMapping("{id}")
-    public ResponseEntity<String> deletePaperSize(@PathVariable Long id) {
-        paperSizeService.deletePaperSize(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePaperSize(@PathVariable Long id, @RequestParam("paperId") Long paperId) {
+        paperSizeService.deletePaperSize(id, paperId);;
         return ResponseEntity.ok("Paper size deleted successfully");
     }
 
-    @DeleteMapping
-    public ResponseEntity<String> deletePaperSizesByPaperId(@RequestParam("paperId") Long paperId) {
-        paperSizeService.deletePaperSizesByPaperId(paperId);
-        return ResponseEntity.ok("Paper sizes deleted successfully");
-    }
     
     
     

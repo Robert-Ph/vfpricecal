@@ -1,5 +1,5 @@
-import { useState, type Dispatch, type SetStateAction } from "react";
-import "./userModal.scss";
+import { useState} from "react";
+import "./paperModel.scss";
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from "react-toastify";
 

@@ -1,4 +1,4 @@
-import ProcessingsCalModel from "../../components/ProcessingsCalModel";
+import ProcessingsCalModel from "../../components/processing/ProcessingsCalModel";
 import { getPaperById, getPapers } from "../../service/PaperService";
 import {getAllByCompany} from "../../service/PrintPriceService";
 import {calculatePrint} from "../../service/CalculateService";
@@ -22,6 +22,7 @@ const QuotationPage = () => {
     const [printPrice, setPrintPrice] = useState<number | null>(null);
     const [paperSize, setPaperSize] = useState<number | null>(null);
     const [quantity, setQuantity] = useState<number | null>(null);
+    const [vat, setVat] = useState<number | null>(null);
     // const [quotationData, setQuotationData] = useState<any>(null); // State để lưu thông tin báo giá
     // const [activeTab, setActiveTab] = useState("general"); // State để quản lý tab đang hoạt động
     // const [productList, setProductList] = useState<any[]>([]); // State để quản lý danh sách sản phẩm trong báo giá
@@ -256,6 +257,12 @@ const QuotationPage = () => {
                             <input type="number" id="product-quantity" name="product-quantity" onChange={(e) => setQuantity(Number(e.target.value))}/>
                         </div>
 
+                         {/* VAT: */}
+                        <div className="form-product-quantity">
+                            <label htmlFor="product-quantity">VAT(%):</label>
+                            <input type="number" id="product-quantity" name="product-quantity" onChange={(e) => setVat(Number(e.target.value))}/>
+                        </div>
+
                     </div>
 
                 </div>
@@ -318,18 +325,18 @@ const QuotationPage = () => {
                             <span className="processing-price-value">{formatMoney(result?.data.price / Number(quantity) || 0)}</span>
                         </div>
                         <div className="form-discount">
-                            <label htmlFor="discount">Giảm:</label>
-                            <span className="discount-value">0 đ</span>
+                            <label htmlFor="discount">VAT ({vat}%):</label>
+                            <span className="discount-value">{formatMoney(((result?.data.price)*(Number(vat)/100 || 0)) || 0)}</span>
                         </div>
                     </div>
                     <hr />
                     <div className="total-price">
                         <label htmlFor="total-price">Tổng tiền:</label>
-                        <span className="total-price-value">{formatMoney(result?.data.price || 0)}</span>
+                        <span className="total-price-value">{formatMoney((result?.data.price) + ((result?.data.price)*(Number(vat)/100 || 0)) || 0)}</span>
                         <br />
                         
                     </div>
-                    <p className="text-money">{numberToVietnameseText(result?.data.price || 0)}</p>
+                    <p className="text-money">{numberToVietnameseText((result?.data.price) + ((result?.data.price)*(Number(vat)/100 || 0)) || 0)}</p>
                     <div className="action-buttons">
                         <button className="btn btn-primary" onClick={handSumitCalculate}>Tính báo giá</button>
                         <button className="btn btn-secondary">In báo giá</button>

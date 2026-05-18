@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import {
     getCategories,
     getProcessingById,
-} from "../service/ProcessingService";
+} from "../../service/ProcessingService";
 
 interface ProcessingItem {
     id: number;

@@ -1,14 +1,16 @@
 import { useState} from "react";
-import "./categoryModel.scss";
+import "./printPriceModel.scss";
 import { toast } from "react-toastify";
-import { createCategory } from "../service/ProcessingService";
+import { create } from "../../service/PrintPriceService";
+import { useParams } from "react-router-dom";
 
 
-const CategoryModal = ({ open, setOpen }) => {
+const PrintPriceModel = ({ open, setOpen }) => {
 
   const [categoryName, setCategoryName] = useState("");
+  const [priceProcessing, setPriceProcessing] = useState(Number);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
-
+  const {id} = useParams();
 
 
    const [user] = useState<any>(() => {
@@ -38,11 +40,14 @@ const CategoryModal = ({ open, setOpen }) => {
         id: null, // ID sẽ được backend tạo tự động
         companyId: user?.companyId, // ID ẩn từ context
         name: categoryName,
+        price: priceProcessing,
+        isActive: true
+
     };
 
     // Gọi API để tạo mới danh mục
     // Ví dụ: createCategory(payload).then(() => { ... });
-    const response = await createCategory(payload); // Giả sử createCategory là hàm API đã được định nghĩa
+    const response = await create(payload); // Giả sử createCategory là hàm API đã được định nghĩa
 
     if (response.code === 200 || response.code === 201) {
         toast.success(`Tạo danh mục ${categoryName} thành công!`);
@@ -61,19 +66,32 @@ const CategoryModal = ({ open, setOpen }) => {
       <div className="modal">
 
         <div className="modal-header">
-          Thông tin danh mục
+          Thông tin loại gia công
         </div>
 
         <div className="main">
 
           <div className="info">
-            <label>Tên danh mục</label>
+            <label>Tên loại in</label>
             <input
             className={!categoryName && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
               type="text"
               placeholder="Nhập tên danh mục..."
               value={categoryName}
               onChange={(e) => {setCategoryName(e.target.value)
+                if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
+              }}
+            />
+          </div>
+
+          <div className="info">
+            <label>Giá</label>
+            <input
+            className={!priceProcessing && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
+              type="text"
+              placeholder="Nhập giá..."
+              value={priceProcessing}
+              onChange={(e) => {setPriceProcessing(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />
@@ -102,4 +120,4 @@ const CategoryModal = ({ open, setOpen }) => {
   );
 };
 
-export default CategoryModal;
+export default PrintPriceModel;

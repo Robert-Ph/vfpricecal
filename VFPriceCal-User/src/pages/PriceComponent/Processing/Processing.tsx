@@ -1,10 +1,10 @@
-import "./processing.scss";
+import "../component.scss"
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { getCategories } from "../../../service/ProcessingService";
-import CategoryModal from "../../../components/categoryModel";
+import CategoryModal from "../../../components/category/CategoryModel";
 
 const Processing = () => {
     const navigate = useNavigate();
@@ -42,18 +42,18 @@ const Processing = () => {
             
 
     return (
-        <div className="processing-page">
-            <div className="processing-header">
+        <div className="papers-page">
+            <div className="papers-header">
                 <h3>Gia công</h3>
 
-                <button className="add-processing-btn" onClick={() => setOpenPaperModal(true)}>
+                <button className="add-papers-btn" onClick={() => setOpenPaperModal(true)}>
                     <FaPlus /> Thêm gia công
                 </button>
             </div>
 
-            <div className="processing-info">
+            <div className="papers-info">
                 {/* Tìm kiếm gia công theo tên, mã gia công hoặc mô tả. Bạn cũng có thể lọc gia công theo danh mục, giá cả hoặc nhà cung cấp. */}
-                <div className="processing-search">
+                <div className="papers-search">
                     <FiSearch className="search-icon" />
                     <input type="text" value="" placeholder="Tìm kiếm..." />
                     <button>Tìm kiếm</button>
@@ -61,8 +61,9 @@ const Processing = () => {
 
 
                 {/* danh sách gia công sẽ hiển thị ở đây. Mỗi gia công sẽ có thông tin như tên, mã gia công, mô tả. Bạn có thể nhấp vào một gia công để xem chi tiết hoặc chỉnh sửa thông tin của nó. */}
-                <div className="processing-list">
-                    <table>
+                <div className="papers-list">
+                    <div className="table-scroll">
+                        <table>
                         <thead>
                             <tr>
                                 <th>Tên gia công</th>
@@ -88,6 +89,8 @@ const Processing = () => {
                             ))}
                         </tbody>
                     </table>
+                    </div>
+                    
                 </div>
             </div>
 

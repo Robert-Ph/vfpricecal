@@ -12,7 +12,10 @@ import org.springframework.web.service.annotation.GetExchange;
 import com.example.vfprint.dto.DiscountDTO;
 import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.service.DiscountService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -45,6 +48,18 @@ public class DiscountController {
             .build()
         );
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteDiscount(@PathVariable Long id, @RequestParam("companyId") Long companyId){
+        discountService.deleteDiscount(id, companyId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse.builder()
+            .code(200)
+            .message("Delete discount successfully")
+            .build()
+        );
+    }
     
+
     
 }

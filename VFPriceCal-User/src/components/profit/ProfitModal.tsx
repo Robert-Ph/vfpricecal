@@ -1,13 +1,13 @@
 import { useState} from "react";
-import "./printPriceModel.scss";
+import "./profitModal.scss";
 import { toast } from "react-toastify";
-import { create } from "../service/PrintPriceService";
+import { create } from "../../service/ProfitService";
 import { useParams } from "react-router-dom";
 
 
-const PrintPriceModel = ({ open, setOpen }) => {
+const ProfitModal = ({ open, setOpen }) => {
 
-  const [categoryName, setCategoryName] = useState("");
+  const [profitName, setProfitName] = useState("");
   const [priceProcessing, setPriceProcessing] = useState(Number);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
   const {id} = useParams();
@@ -27,7 +27,7 @@ const PrintPriceModel = ({ open, setOpen }) => {
 
   const handleSubmit = async () => {
         // Validate inputs
-    if (!categoryName) {
+    if (!profitName) {
       setError("Vui lòng điền đầy đủ thông tin.");
       toast.error("Vui lòng điền đầy đủ thông tin.");
       return;
@@ -38,10 +38,9 @@ const PrintPriceModel = ({ open, setOpen }) => {
     setError(""); // Reset error message
     const payload = {
         id: null, // ID sẽ được backend tạo tự động
-        companyId: user?.companyId, // ID ẩn từ context
-        name: categoryName,
-        price: priceProcessing,
-        isActive: true
+        companyId: Number(user?.companyId), // ID ẩn từ context
+        name: profitName,
+        percentage: priceProcessing
 
     };
 
@@ -50,12 +49,12 @@ const PrintPriceModel = ({ open, setOpen }) => {
     const response = await create(payload); // Giả sử createCategory là hàm API đã được định nghĩa
 
     if (response.code === 200 || response.code === 201) {
-        toast.success(`Tạo danh mục ${categoryName} thành công!`);
+        toast.success(`Tạo  ${profitName} thành công!`);
         setTimeout(() => {
             window.location.reload(); // Hoặc navigate("/component/processing") nếu bạn dùng react-router
         }, 500); // Đợi 0.5 giây trước khi reload hoặc navigate
     } else {
-        toast.error(`Có lỗi xảy ra khi tạo danh mục ${categoryName}.`);
+        toast.error(`Có lỗi xảy ra khi tạo danh mục ${profitName}.`);
     }
   };
 
@@ -66,30 +65,30 @@ const PrintPriceModel = ({ open, setOpen }) => {
       <div className="modal">
 
         <div className="modal-header">
-          Thông tin loại gia công
+          Thông tin biên lợi nhuận
         </div>
 
         <div className="main">
 
           <div className="info">
-            <label>Tên loại in</label>
+            <label>Tên </label>
             <input
-            className={!categoryName && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
+            className={!profitName && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
               type="text"
-              placeholder="Nhập tên danh mục..."
-              value={categoryName}
-              onChange={(e) => {setCategoryName(e.target.value)
+              placeholder="Nhập tên..."
+              value={profitName}
+              onChange={(e) => {setProfitName(e.target.value)
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />
           </div>
 
           <div className="info">
-            <label>Giá</label>
+            <label>Tỷ lệ %</label>
             <input
             className={!priceProcessing && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
               type="text"
-              placeholder="Nhập giá..."
+              placeholder="Nhập tỷ lệ..."
               value={priceProcessing}
               onChange={(e) => {setPriceProcessing(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
@@ -120,4 +119,4 @@ const PrintPriceModel = ({ open, setOpen }) => {
   );
 };
 
-export default PrintPriceModel;
+export default ProfitModal;

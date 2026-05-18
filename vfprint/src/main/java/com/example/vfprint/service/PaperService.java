@@ -82,13 +82,21 @@ public class PaperService {
     }   
 
     @Transactional
-    public void deletePaper(Long paperId) {
-        if (!paperRepository.existsById(paperId)) {
-            throw new IllegalArgumentException("Paper not found with id: " + paperId);
-        }
-        // Xóa các PaperSize liên quan đến Paper trước khi xóa Paper
+    public void deletePaper(Long paperId, Long companyId) {
+
+        Paper paper = paperRepository
+            .findByIdAndCompanyId(paperId, companyId)
+            .orElseThrow(() ->
+                    new IllegalArgumentException(
+                            "Paper not found with id: " + paperId
+                    )
+            );
+
+        // Xóa paper size trước
         paperSizeRepository.deleteByPaperId(paperId);
-        paperRepository.deleteById(paperId);
+
+        // Xóa paper
+        paperRepository.delete(paper);
     }
 
     @Transactional

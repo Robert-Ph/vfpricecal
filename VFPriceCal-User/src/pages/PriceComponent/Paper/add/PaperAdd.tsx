@@ -2,7 +2,7 @@ import "./paperAdd.scss";
 import { FaPlus } from "react-icons/fa";
 import { FiTrash2 } from "react-icons/fi";
 import {  useState } from "react";
-import PaperModel from "../../../../components/PaperModel";
+import PaperModel from "../../../../components/paper/PaperModel";
 import { createPaper } from "../../../../service/PaperService";
 import { toast } from "react-toastify";
 

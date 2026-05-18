@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import com.example.vfprint.dto.DiscountDTO;
 import com.example.vfprint.entity.Discount;
+import com.example.vfprint.entity.Paper;
 import com.example.vfprint.repository.DiscountRepository;
 
 @Service
@@ -44,4 +45,18 @@ public class DiscountService {
                                 ).toList();
 
     }
+
+    @Transactional
+    public void deleteDiscount(Long id, Long companyId){
+        Discount discount = discountRepository
+            .findByIdAndCompanyId(id, companyId)
+            .orElseThrow(() ->
+                    new IllegalArgumentException(
+                            "Paper not found with id: " + id
+                    )
+            );
+
+        discountRepository.delete(discount);
+    }
+
 }

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.vfprint.dto.PaperSizeDTO;
+import com.example.vfprint.entity.Paper;
 import com.example.vfprint.entity.PaperSize;
 import com.example.vfprint.repository.PaperRepository;
 import com.example.vfprint.repository.PaperSizeRepository;
@@ -73,11 +74,16 @@ public class PaperSizeService {
     }
 
     @Transactional
-    public void deletePaperSize(Long id){
-            if (!paperSizeRepository.existsById(id)) {
-                throw new RuntimeException("Paper size not found with ID: " + id);
-            }
-        paperSizeRepository.deleteById(id);
+    public void deletePaperSize(Long id, Long paperId){
+          PaperSize paper = paperSizeRepository
+            .findByIdAndPaperId(id, paperId)
+            .orElseThrow(() ->
+                    new IllegalArgumentException(
+                            "Paper not found with id: " + paperId
+                    )
+            );
+        
+        paperSizeRepository.delete(paper);;
         
     }
 

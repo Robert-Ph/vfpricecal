@@ -1,17 +1,19 @@
-import "./discount.scss";
+import "../component.scss";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import DiscountModel from "../../../components/discount/DiscountModel";
-import { getAllProfitByCompany } from "../../../service/ProfitService";
-import { getAllDiscountByCompany } from "../../../service/DiscountService";
+import { deleteDiscount, getAllDiscountByCompany } from "../../../service/DiscountService";
+import ConfirmModal from "../../../components/confirmModal";
+import { toast } from "react-toastify";
 
 const Discount = () => {
     const navigate = useNavigate();
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [discount, setDiscount] = useState<any[]>([]); // State để quản lý danh mục lọc
-
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [selectedDiscountId, setSelectedDiscountId] = useState<number | null>(null);
     const [user] = useState<any>(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
@@ -40,21 +42,44 @@ const Discount = () => {
         fetchCategories();
     }, [user?.companyId]);
 
+    const handleOpenDelete = (id: number) => {
+        setSelectedDiscountId(id);
+        setOpenDeleteModal(true);
+        };
+    
+        const handleDeletePaper = async () => {
+        try {
+            if (!selectedDiscountId) return;
+    
+            await deleteDiscount(Number(selectedDiscountId), user.companyId);
+    
+            setDiscount((prev) =>
+                prev.filter((item) => item.id !== selectedDiscountId)
+            );
+    
+            toast.success("Xoá chiết khấu  thành công");
+    
+            setOpenDeleteModal(false);
+        } catch (error) {
+            console.error(error);
+            toast.error("Xoá thất bại");
+        }
+        };
             
 
     return (
-        <div className="processing-page">
-            <div className="processing-header">
+        <div className="papers-page">
+            <div className="papers-header">
                 <h3>Chiết khấu khách hàng</h3>
 
-                <button className="add-processing-btn" onClick={() => setOpenPaperModal(true)}>
+                <button className="add-papers-btn" onClick={() => setOpenPaperModal(true)}>
                     <FaPlus /> Thêm mới
                 </button>
             </div>
 
-            <div className="processing-info">
+            <div className="papers-info">
                 {/* Tìm kiếm gia công theo tên, mã gia công hoặc mô tả. Bạn cũng có thể lọc gia công theo danh mục, giá cả hoặc nhà cung cấp. */}
-                <div className="processing-search">
+                <div className="papers-search">
                     <FiSearch className="search-icon" />
                     <input type="text" value="" placeholder="Tìm kiếm..." />
                     <button>Tìm kiếm</button>
@@ -62,8 +87,9 @@ const Discount = () => {
 
 
                 {/* danh sách gia công sẽ hiển thị ở đây. Mỗi gia công sẽ có thông tin như tên, mã gia công, mô tả. Bạn có thể nhấp vào một gia công để xem chi tiết hoặc chỉnh sửa thông tin của nó. */}
-                <div className="processing-list">
-                    <table>
+                <div className="papers-list">
+                    <div className="table-scroll">
+                        <table>
                         <thead>
                             <tr>
                                 <th>Loại khách hàng </th>
@@ -83,18 +109,28 @@ const Discount = () => {
                                             onClick={() => navigate(``)}>
                                             <FiEdit />
                                         </button>
-                                        <button className=" icon delete-btn"><FiTrash2 /></button>
+                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(item.id)}><FiTrash2 /></button>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                    </div>
+                    
                 </div>
             </div>
 
         <DiscountModel
             open={openPaperModal}
             setOpen={setOpenPaperModal}
+        />
+
+        <ConfirmModal
+            isOpen={openDeleteModal}
+            title="Xác nhận xoá"
+            message="Bạn có chắc muốn xoá chiết khấu này?"
+            onCancel={() => setOpenDeleteModal(false)}
+            onConfirm={handleDeletePaper}
         />
 
         </div>

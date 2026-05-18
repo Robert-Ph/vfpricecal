@@ -1,16 +1,20 @@
-import "./componentPaper.scss";
+// import "./componentPaper.scss";
+import "../component.scss"
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useState, useEffect } from "react";
-import { getPapers } from "../../../service/PaperService";
-import CategoryModal from "../../../components/categoryModel";
+import { deletePaper, getPapers } from "../../../service/PaperService";
+import ConfirmModal from "../../../components/confirmModal";
+import { toast } from "react-toastify";
 
 
 
 const ComponentPaper = () => {
     const navigate = useNavigate();
     const [paperList, setPaperList] = useState<any[]>([]);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
     const [user] = useState<any>(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
@@ -42,6 +46,29 @@ const ComponentPaper = () => {
     }, [user?.companyId]);
 
 
+    const handleOpenDelete = (id: number) => {
+    setSelectedPaperId(id);
+    setOpenDeleteModal(true);
+    };
+
+    const handleDeletePaper = async () => {
+    try {
+        if (!selectedPaperId) return;
+
+        await deletePaper(Number(selectedPaperId), user.companyId);
+
+        setPaperList((prev) =>
+            prev.filter((item) => item.id !== selectedPaperId)
+        );
+
+        toast.success("Xoá giấy/vật liệu thành công");
+
+        setOpenDeleteModal(false);
+    } catch (error) {
+        console.error(error);
+        toast.error("Xoá thất bại");
+    }
+    };
 
 
     return (
@@ -65,7 +92,8 @@ const ComponentPaper = () => {
 
                 {/* danh sách giấy/vật liệu sẽ hiển thị ở đây. Mỗi giấy/vật liệu sẽ có thông tin như tên, mã, mô tả. Bạn có thể nhấp vào một giấy/vật liệu để xem chi tiết hoặc chỉnh sửa thông tin của nó. */}
                 <div className="papers-list">
-                    <table>
+                    <div className="table-scroll">
+                        <table>
                         <thead>
                             <tr>
                                 <th>Tên giấy/vật liệu</th>
@@ -85,15 +113,25 @@ const ComponentPaper = () => {
                                         onClick={() => navigate(`/component/papers/${paper.id}`)}>
                                         <FiEdit />
                                     </button>
-                                    <button className=" icon delete-btn"><FiTrash2 /></button>
+                                    <button className=" icon delete-btn" onClick={() => handleOpenDelete(paper.id)}><FiTrash2 /></button>
                                 </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
+                    </div>
+                    
                 </div>
             </div>
          
+<ConfirmModal
+    isOpen={openDeleteModal}
+    title="Xác nhận xoá"
+    message="Bạn có chắc muốn xoá giấy/vật liệu này?"
+    onCancel={() => setOpenDeleteModal(false)}
+    onConfirm={handleDeletePaper}
+/>
+
         </div>
     );
 }

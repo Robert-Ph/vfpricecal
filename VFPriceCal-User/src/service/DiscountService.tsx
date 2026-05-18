@@ -16,7 +16,17 @@ export const getAllDiscountByCompany = async (companyId: number) => {
         const response = await apiClient.get(`/discount?companyId=${companyId}`);
         return response.data;
     }catch(error){
-         console.error('Failed get to  discount by company:', error);
+        console.error('Failed get to  discount by company:', error);
+        throw error;
+    }
+}
+
+export const deleteDiscount = async (id: number, companyId: number) => {
+    try{
+        const response = await apiClient.delete(`/discount/${id}?companyId=${companyId}`);
+        return response.data;
+    }catch(error){
+        console.error('Failed delete  discount by company:', error);
         throw error;
     }
 }

@@ -32,3 +32,23 @@ export const getPaperById = async (paperId: number) => {
         throw error;
     }
 };
+
+export const deletePaper = async (id: number, comapanyId: number) => {
+    try{
+        const response = await apiClient.delete(`/papers/${id}?companyId=${comapanyId}`)
+        return response.data;
+    }catch(error){
+        console.error('Failed to delete paper', error);
+        throw error;
+    }
+}
+
+export const deletePaperSize = async (id: number, paperId: number) => {
+    try{
+        const response = await apiClient.delete(`/paper-sizes/${id}?paperId=${paperId}`);
+        return response.data;
+    }catch(error){
+        console.error('Failed to delete paper size', error);
+        throw error;
+    }
+}

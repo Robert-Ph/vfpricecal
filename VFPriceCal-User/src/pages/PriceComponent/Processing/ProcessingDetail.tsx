@@ -4,7 +4,7 @@ import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProcessingById } from "../../../service/ProcessingService";
-import ProcessingAddModel from "../../../components/ProcessingAdd";
+import ProcessingAddModel from "../../../components/processing/ProcessingAdd";
 
 const ProcessingDetail = () => {
     const [activeTab, setActiveTab] = useState("paper");

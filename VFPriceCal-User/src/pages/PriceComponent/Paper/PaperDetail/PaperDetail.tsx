@@ -3,11 +3,15 @@ import { FaPlus } from "react-icons/fa";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getPaperById } from "../../../../service/PaperService";
+import { deletePaperSize, getPaperById } from "../../../../service/PaperService";
+import ConfirmModal from "../../../../components/confirmModal";
+import { toast } from "react-toastify";
 
 const PaperDetail = () => {
     const [activeTab, setActiveTab] = useState("paper");
-    const [paperData, setPaperData] = useState<any>(null); // State để lưu chi tiết giấy/vật liệu
+    const [paperData, setPaperData] = useState<any[]>([]); // State để lưu chi tiết giấy/vật liệu
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
     const {id} = useParams();
 
     const [user] = useState<any>(() => {
@@ -40,6 +44,30 @@ const PaperDetail = () => {
             };
             fetchPaperDetail();
     }, [id, user?.companyId]);
+
+    const handleOpenDelete = (id: number) => {
+        setSelectedPaperId(id);
+        setOpenDeleteModal(true);
+        };
+    
+        const handleDeletePaper = async () => {
+        try {
+            if (!selectedPaperId) return;
+    
+            await deletePaperSize(Number(selectedPaperId), Number(id));
+    
+            setPaperData((prev) =>
+                prev.filter((item) => item.id !== selectedPaperId)
+            );
+    
+            toast.success("Xoá kích thước giấy/vật liệu thành công");
+    
+            setOpenDeleteModal(false);
+        } catch (error) {
+            console.error(error);
+            toast.error("Xoá thất bại");
+        }
+        };
 
 
     return (
@@ -95,7 +123,7 @@ const PaperDetail = () => {
                                                     <td>{size.price}đ</td>
                                                     <td className="action-buttons">
                                                         <button className=" icon edit-btn"><FiEdit /></button>
-                                                        <button className=" icon delete-btn" ><FiTrash2 /></button>
+                                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(size.id)} ><FiTrash2 /></button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -111,6 +139,13 @@ const PaperDetail = () => {
                     </div>
                 </div>
             </div>
+            <ConfirmModal
+                isOpen={openDeleteModal}
+                title="Xác nhận xoá"
+                message="Bạn có chắc muốn xoá kích thước giấy/vật liệu này?"
+                onCancel={() => setOpenDeleteModal(false)}
+                onConfirm={handleDeletePaper}
+            />
         </div>
     );
 }

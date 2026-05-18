@@ -62,9 +62,9 @@ public class PaperController {
         );
     }
     
-    @DeleteMapping
-    public ResponseEntity<ApiResponse> deletePaper(@RequestParam("paperId") Long paperId) {
-        paperService.deletePaper(paperId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deletePaper(@PathVariable Long id,@RequestParam("companyId") Long companyId) {
+        paperService.deletePaper(id, companyId);
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse
             .builder()

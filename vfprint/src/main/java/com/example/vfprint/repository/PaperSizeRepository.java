@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import com.example.vfprint.entity.PaperSize;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PaperSizeRepository  extends JpaRepository<PaperSize, Long> {
@@ -15,6 +16,7 @@ public interface PaperSizeRepository  extends JpaRepository<PaperSize, Long> {
     void deleteByPaperId(Long paperId);
     boolean existsByPaperId(Long paperId);
     boolean existsByPaperIdAndWidthAndHeight(Long paperId, int width, int height);
+    Optional<PaperSize> findByIdAndPaperId(Long id, Long paperId);
 
     @Modifying
     @Query("""

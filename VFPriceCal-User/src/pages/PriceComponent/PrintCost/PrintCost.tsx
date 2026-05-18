@@ -1,8 +1,9 @@
-import "./printCost.scss";
+// import "./printCost.scss";
+import "../component.scss";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
-import PrintPriceModel from "../../../components/PrintPriceModel";
+import PrintPriceModel from "../../../components/printPrice/PrintPriceModel";
 import { useEffect, useState } from "react";
 import { getAllByCompany } from "../../../service/PrintPriceService";
 
@@ -44,18 +45,18 @@ const PrintCost = () =>{
 
 
     return(
-         <div className="print-cost-page">
-                    <div className="print-cost-header">
+         <div className="papers-page">
+                    <div className="papers-header">
                         <h3>Giá in</h3>
         
-                        <button className="add-print-cost-btn" onClick={() => setOpenPaperModal(true)}>
+                        <button className="add-papers-btn" onClick={() => setOpenPaperModal(true)}>
                             <FaPlus /> Thêm mới
                         </button>
                     </div>
         
-                    <div className="print-cost-info">
+                    <div className="papers-info">
                         {/* Tìm kiếm giấy/vật liệu theo tên, mã hoặc mô tả. Bạn cũng có thể lọc theo danh mục, giá cả hoặc nhà cung cấp. */}
-                        <div className="print-cost-search">
+                        <div className="papers-search">
                             <FiSearch className="search-icon" />
                             <input
                                 type="text"
@@ -68,8 +69,9 @@ const PrintCost = () =>{
         
         
                         {/* danh sách giấy/vật liệu sẽ hiển thị ở đây. Mỗi giấy/vật liệu sẽ có thông tin như tên, mã, mô tả. Bạn có thể nhấp vào một giấy/vật liệu để xem chi tiết hoặc chỉnh sửa thông tin của nó. */}
-                        <div className="print-cost-list">
-                            <table>
+                        <div className="papers-list">
+                            <div className="table-scroll">
+                                <table>
                                 <thead>
                                     <tr>
                                         <th>Tên </th>
@@ -97,6 +99,8 @@ const PrintCost = () =>{
                                 
                                 </tbody>
                             </table>
+                            </div>
+                            
                         </div>
                     </div>
 

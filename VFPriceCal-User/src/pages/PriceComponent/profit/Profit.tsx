@@ -1,9 +1,9 @@
-import "./profit.scss";
+import "../component.scss";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import ProfitModel from "../../../components/ProfitModel";
+import ProfitModal from "../../../components/profit/ProfitModal";
 import { getAllProfitByCompany } from "../../../service/ProfitService";
 
 const Profit = () => {
@@ -42,18 +42,18 @@ const Profit = () => {
             
 
     return (
-        <div className="processing-page">
-            <div className="processing-header">
+        <div className="papers-page">
+            <div className="papers-header">
                 <h3>Biên lợi nhuận</h3>
 
-                <button className="add-processing-btn" onClick={() => setOpenPaperModal(true)}>
+                <button className="add-papers-btn" onClick={() => setOpenPaperModal(true)}>
                     <FaPlus /> Thêm mới
                 </button>
             </div>
 
-            <div className="processing-info">
+            <div className="papers-info">
                 {/* Tìm kiếm gia công theo tên, mã gia công hoặc mô tả. Bạn cũng có thể lọc gia công theo danh mục, giá cả hoặc nhà cung cấp. */}
-                <div className="processing-search">
+                <div className="papers-search">
                     <FiSearch className="search-icon" />
                     <input type="text" value="" placeholder="Tìm kiếm..." />
                     <button>Tìm kiếm</button>
@@ -61,8 +61,9 @@ const Profit = () => {
 
 
                 {/* danh sách gia công sẽ hiển thị ở đây. Mỗi gia công sẽ có thông tin như tên, mã gia công, mô tả. Bạn có thể nhấp vào một gia công để xem chi tiết hoặc chỉnh sửa thông tin của nó. */}
-                <div className="processing-list">
-                    <table>
+                <div className="papers-list">
+                    <div className="table-scroll">
+                        <table>
                         <thead>
                             <tr>
                                 <th>Tên biên lợi nhuận </th>
@@ -88,10 +89,12 @@ const Profit = () => {
                             ))}
                         </tbody>
                     </table>
+                    </div>
+                    
                 </div>
             </div>
 
-        <ProfitModel
+        <ProfitModal
             open={openPaperModal}
             setOpen={setOpenPaperModal}
         />
