@@ -4,10 +4,14 @@ import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import ProfitModal from "../../../components/profit/ProfitModal";
-import { getAllProfitByCompany } from "../../../service/ProfitService";
+import { deleteProfitByCompany, getAllProfitByCompany } from "../../../service/ProfitService";
+import ConfirmModal from "../../../components/confirmModal";
+import { toast } from "react-toastify";
 
 const Profit = () => {
     const navigate = useNavigate();
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [selectedProfitId, setSelectedProfitId] = useState<number | null>(null);
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [profit, setProfit] = useState<any[]>([]); // State để quản lý danh mục lọc
 
@@ -39,6 +43,29 @@ const Profit = () => {
         fetchCategories();
     }, [user?.companyId]);
 
+    const handleOpenDelete = (id: number) => {
+            setSelectedProfitId(id);
+            setOpenDeleteModal(true);
+            };
+        
+    const handleDeletePaper = async () => {
+            try {
+                if (!selectedProfitId) return;
+        
+                await deleteProfitByCompany(Number(selectedProfitId), user.companyId);
+        
+                setProfit((prev) =>
+                    prev.filter((item) => item.id !== selectedProfitId)
+                );
+        
+                toast.success("Xoá chiết khấu  thành công");
+        
+                setOpenDeleteModal(false);
+            } catch (error) {
+                console.error(error);
+                toast.error("Xoá thất bại");
+            }
+    };
             
 
     return (
@@ -83,7 +110,7 @@ const Profit = () => {
                                             onClick={() => navigate(``)}>
                                             <FiEdit />
                                         </button>
-                                        <button className=" icon delete-btn"><FiTrash2 /></button>
+                                        <button className=" icon delete-btn" onClick={()=>handleOpenDelete(item.id)}><FiTrash2 /></button>
                                     </td>
                                 </tr>
                             ))}
@@ -97,6 +124,14 @@ const Profit = () => {
         <ProfitModal
             open={openPaperModal}
             setOpen={setOpenPaperModal}
+        />
+
+        <ConfirmModal
+            isOpen={openDeleteModal}
+            title="Xác nhận xoá"
+            message="Bạn có chắc muốn xoá biên lợi nhuận này này?"
+            onCancel={() => setOpenDeleteModal(false)}
+            onConfirm={handleDeletePaper}
         />
 
         </div>

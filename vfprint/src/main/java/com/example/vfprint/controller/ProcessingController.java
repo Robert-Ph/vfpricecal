@@ -12,6 +12,7 @@ import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.service.ProcessingService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -64,11 +65,6 @@ public class ProcessingController {
         return processingService.getProcessingByName(name); // Placeholder for actual implementation
      }
 
-     @PostMapping("/delete")
-     public ResponseEntity<String> deleteProcessingByName(@RequestParam String name) {
-        processingService.deleteProcessingByName(name);
-        return ResponseEntity.ok("Processing with name '" + name + "' has been deleted.");
-     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse> getProcessingById(@PathVariable Long id) {
@@ -83,7 +79,16 @@ public class ProcessingController {
        
      }
 
-    
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteProcessingByCategory(@PathVariable Long id, @RequestParam Long categoryId){
+        processingService.deleteProcessingByCategory(id, categoryId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse.builder()
+            .code(200)
+            .message("Delete processing by category successfully")
+            .build()
+        );
+    }
     
     
 

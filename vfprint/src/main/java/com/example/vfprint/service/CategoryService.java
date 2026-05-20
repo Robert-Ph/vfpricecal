@@ -117,6 +117,21 @@ public class CategoryService {
                 .build();
     }
 
+    @Transactional
+    public void deleteAllProcessingByCompany(Long id, Long companyId){
+        Category category = categoryRepository
+        .findByIdAndCompanyId(id, companyId)
+        .orElseThrow(() ->
+                    new IllegalArgumentException(
+                            "Paper not found with id: " + id
+                    )
+            );
+
+        processingRepository.deleteByCategoryId(id);
+
+        categoryRepository.delete(category);
+    }
+
 }
 
 

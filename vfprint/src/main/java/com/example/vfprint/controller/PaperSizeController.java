@@ -3,6 +3,7 @@ package com.example.vfprint.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.example.vfprint.dto.PaperSizeDTO;
+import com.example.vfprint.dto.response.ApiResponse;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -23,8 +26,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/paper-sizes")
 public class PaperSizeController {
 
+
     @Autowired
     private PaperSizeService paperSizeService;
+
 
 
     @GetMapping
@@ -50,6 +55,17 @@ public class PaperSizeController {
         return ResponseEntity.ok("Paper size deleted successfully");
     }
 
+    @PostMapping("/create")
+    public ResponseEntity<ApiResponse> createOne(@RequestBody PaperSizeDTO paperSizeDTO){
+        paperSizeService.createOnePaperSize(paperSizeDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse.builder()
+            .code(200)
+            .message("create successfully")
+            .data(paperSizeDTO)
+            .build()
+        );
+    }
     
     
     

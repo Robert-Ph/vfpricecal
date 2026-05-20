@@ -17,6 +17,7 @@ public interface PaperSizeRepository  extends JpaRepository<PaperSize, Long> {
     boolean existsByPaperId(Long paperId);
     boolean existsByPaperIdAndWidthAndHeight(Long paperId, int width, int height);
     Optional<PaperSize> findByIdAndPaperId(Long id, Long paperId);
+    boolean existsByWidthAndHeight(int width, int height);
 
     @Modifying
     @Query("""

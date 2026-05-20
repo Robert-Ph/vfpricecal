@@ -4,8 +4,9 @@ import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { deletePaperSize, getPaperById } from "../../../../service/PaperService";
-import ConfirmModal from "../../../../components/confirmModal";
+import ConfirmModal from "../../../../components/ConfirmModal";
 import { toast } from "react-toastify";
+import PaperSizeModal from "../../../../components/paper/PaperSizeModal";
 
 const PaperDetail = () => {
     const [activeTab, setActiveTab] = useState("paper");
@@ -13,6 +14,7 @@ const PaperDetail = () => {
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
     const {id} = useParams();
+    const [openPaperModal, setOpenPaperModal] = useState(false);
 
     const [user] = useState<any>(() => {
     const savedUser = localStorage.getItem("user");
@@ -56,9 +58,10 @@ const PaperDetail = () => {
     
             await deletePaperSize(Number(selectedPaperId), Number(id));
     
-            setPaperData((prev) =>
-                prev.filter((item) => item.id !== selectedPaperId)
-            );
+            setPaperData((prev) => ({
+                ...prev,
+                paperSizes: prev.paperSizes.filter((item) => item.id !== selectedPaperId),
+            }));
     
             toast.success("Xoá kích thước giấy/vật liệu thành công");
     
@@ -93,7 +96,7 @@ const PaperDetail = () => {
 
                     <div className="paper-item">
                         <label htmlFor="paper-status">Trạng thái:</label>
-                        <input type="text" id="paper-status" value={paperData?.status || "Đang hoạt động"} />
+                        <input type="text" id="paper-status" value={ "Đang hoạt động"} />
                     </div>
 
                 </div>
@@ -132,13 +135,20 @@ const PaperDetail = () => {
                                     </table>
                                 </div>
 
-                                <button className="add-paper-btn"><FaPlus /> Thêm kích thước</button>
+                                <button className="add-paper-btn" onClick={() => setOpenPaperModal(true)}><FaPlus /> Thêm kích thước</button>
                             </div>
 
                         }
                     </div>
                 </div>
             </div>
+            
+            <PaperSizeModal 
+                open={openPaperModal} 
+                setOpen={setOpenPaperModal} 
+                id={id}
+            />
+
             <ConfirmModal
                 isOpen={openDeleteModal}
                 title="Xác nhận xoá"

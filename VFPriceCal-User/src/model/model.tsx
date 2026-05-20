@@ -18,6 +18,7 @@ export type paperSize = {
     paperId: number;
     width: number;
     height: number;
+    price: number;
 }
 
 export type paperPrice = {

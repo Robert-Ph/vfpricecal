@@ -1,4 +1,5 @@
 import { apiClient } from "../api/APIConfig";
+import {type paperSize} from "../model/model";
 
 export const createPaper = async (companyId: number, name: string, gsm: string, paperSizes: { width: number; height: number; price: number }[]) => {
     try {
@@ -49,6 +50,16 @@ export const deletePaperSize = async (id: number, paperId: number) => {
         return response.data;
     }catch(error){
         console.error('Failed to delete paper size', error);
+        throw error;
+    }
+}
+
+export const createOne = async (data: paperSize ): Promise<paperSize> =>{
+    try{
+        const response = await apiClient.post(`/paper-sizes/create`,data);
+        return response.data;
+    }catch (error) {
+        console.error('Failed to create paper:', error);
         throw error;
     }
 }

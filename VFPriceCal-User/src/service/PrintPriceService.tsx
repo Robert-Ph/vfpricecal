@@ -22,3 +22,13 @@ export const getAllByCompany = async (companyId: number)=>{
         throw error;
     }
 }
+
+export const deleteByCompany = async (id: number, comapanyId: number) => {
+    try{
+        const response = await apiClient.delete(`/print-price/${id}?companyId=${comapanyId}`);
+        return response.data;
+    }catch(error){
+        console.error('Failed delete print price by company', error);
+        throw error;
+    }
+}

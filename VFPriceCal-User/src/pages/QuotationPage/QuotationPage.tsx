@@ -23,10 +23,6 @@ const QuotationPage = () => {
     const [paperSize, setPaperSize] = useState<number | null>(null);
     const [quantity, setQuantity] = useState<number | null>(null);
     const [vat, setVat] = useState<number | null>(null);
-    // const [quotationData, setQuotationData] = useState<any>(null); // State để lưu thông tin báo giá
-    // const [activeTab, setActiveTab] = useState("general"); // State để quản lý tab đang hoạt động
-    // const [productList, setProductList] = useState<any[]>([]); // State để quản lý danh sách sản phẩm trong báo giá
-    // const [processingList, setProcessingList] = useState<any[]>([]); // State để quản lý danh sách gia công trong báo giá
     const [paperList, setPaperList] = useState<any[]>([]); // State để quản lý danh sách giấy/vật liệu trong báo giá
     const [paperSizeList, setPaperSizeList] = useState<any[]>([]); // State để quản lý danh sách kích thước giấy/vật liệu trong báo giá
     const [profitList, setProfitList] = useState<any[]>([]);
@@ -34,7 +30,7 @@ const QuotationPage = () => {
     const [profit, setProfit] = useState<number | null>(null);
     const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
     const [result, setResult] = useState<any>(null);
-    const [discountId, setdicountId] = useState<numbet | null>(null);
+    const [discountId, setdicountId] = useState<number | null>(null);
     
 
 
@@ -160,7 +156,7 @@ const QuotationPage = () => {
 
                         <div className="form-type-customer">
                             <label htmlFor="customer-type">Loại khách hàng:</label>
-                            <select id="customer-type" name="customer-type" onChange={(e) => setdicountId(e.target.value)}>
+                            <select id="customer-type" name="customer-type" onChange={(e) => setdicountId(Number(e.target.value))}>
                                 {discountList.map((item) => (
                                     <option
                                         key={item.id} 
@@ -170,6 +166,21 @@ const QuotationPage = () => {
                                 ))
                                 }
                             </select>
+                        </div>
+                        <div className="form-product-name">
+                            <label htmlFor="product-name">Biên lợi nhuận:</label>
+                            <select name="product-name" id="product-name" onChange={(e) => setProfit(Number(e.target.value))}>
+                                <option value="">Chọn</option>
+
+                                {profitList.map((item)=>(
+                                    <option key={item.id} value={item.id}>{item.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                                                 {/* VAT: */}
+                        <div className="form-product-quantity">
+                            <label htmlFor="product-quantity">VAT(%):</label>
+                            <input type="number" id="product-quantity" name="product-quantity" onChange={(e) => setVat(Number(e.target.value))}/>
                         </div>
                     </div>
                 </div>
@@ -181,16 +192,7 @@ const QuotationPage = () => {
                     </div>
                     <div className="item-content">
                         {/* TÊN SẢN PHẨM: */}
-                        <div className="form-product-name">
-                            <label htmlFor="product-name">Biên lợi nhuận:</label>
-                            <select name="product-name" id="product-name" onChange={(e) => setProfit(Number(e.target.value))}>
-                                <option value="">Chọn</option>
-
-                                {profitList.map((item)=>(
-                                    <option key={item.id} value={item.id}>{item.name}</option>
-                                ))}
-                            </select>
-                        </div>
+                        
 
                         {/* KÍCH THƯỚC SẢN PHẨM: */}
                         <div className="form-product-size">
@@ -255,12 +257,6 @@ const QuotationPage = () => {
                         <div className="form-product-quantity">
                             <label htmlFor="product-quantity">Số lượng:</label>
                             <input type="number" id="product-quantity" name="product-quantity" onChange={(e) => setQuantity(Number(e.target.value))}/>
-                        </div>
-
-                         {/* VAT: */}
-                        <div className="form-product-quantity">
-                            <label htmlFor="product-quantity">VAT(%):</label>
-                            <input type="number" id="product-quantity" name="product-quantity" onChange={(e) => setVat(Number(e.target.value))}/>
                         </div>
 
                     </div>

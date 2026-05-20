@@ -3,12 +3,16 @@ import { FaPlus } from "react-icons/fa";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProcessingById } from "../../../service/ProcessingService";
+import { deleteProcessing, getProcessingById } from "../../../service/ProcessingService";
 import ProcessingAddModel from "../../../components/processing/ProcessingAdd";
+import ConfirmModal from "../../../components/confirmModal";
+import { toast } from "react-toastify";
 
 const ProcessingDetail = () => {
     const [activeTab, setActiveTab] = useState("paper");
     const [openPaperModal, setOpenPaperModal] = useState(false);
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [selectedProcessingId, setSelectedProcessingId] = useState<number | null>(null);
     const {id} = useParams();
     const [processingData, setProcessingData] = useState<any>(null); // State để lưu chi tiết gia công 
     const [user] = useState<any>(() => {
@@ -40,6 +44,33 @@ const ProcessingDetail = () => {
             };
             fetchProcessingDetail();
     }, [id]);
+
+    const handleOpenDelete = (id: number) => {
+            setSelectedProcessingId(id);
+            setOpenDeleteModal(true);
+            };
+        
+    const handleDeletePaper = async () => {
+            try {
+                if (!selectedProcessingId) return;
+        
+                await deleteProcessing(Number(selectedProcessingId), Number(id));
+        
+                setProcessingData((prev) => ({
+                                ...prev,
+                    processings: prev.processings.filter(
+                    (item) => item.id !== selectedProcessingId
+                    ),
+                }));
+        
+                toast.success("Xoá chiết khấu  thành công");
+        
+                setOpenDeleteModal(false);
+            } catch (error) {
+                console.error(error);
+                toast.error("Xoá thất bại");
+            }
+    };
 
     return (
         <div className="processing-detail">
@@ -88,7 +119,7 @@ const ProcessingDetail = () => {
                                                     <td>{material.price}</td>
                                                     <td className="action-buttons">
                                                         <button className=" icon edit-btn"><FiEdit /></button>
-                                                        <button className=" icon delete-btn" ><FiTrash2 /></button>
+                                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(material.id)}><FiTrash2 /></button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -104,10 +135,20 @@ const ProcessingDetail = () => {
                     </div>
                 </div>
             </div>
+
             <ProcessingAddModel
             open={openPaperModal}
             setOpen={setOpenPaperModal}
             />
+
+            <ConfirmModal
+            isOpen={openDeleteModal}
+            title="Xác nhận xoá"
+            message="Bạn có chắc muốn xoá gia công này?"
+            onCancel={() => setOpenDeleteModal(false)}
+            onConfirm={handleDeletePaper}
+            />
+
         </div>
     );
 };

@@ -3,14 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import { getCategories } from "../../../service/ProcessingService";
+import { deleteCategoryByCompany, getCategories } from "../../../service/ProcessingService";
 import CategoryModal from "../../../components/category/CategoryModel";
+import ConfirmModal from "../../../components/confirmModal";
+import { toast } from "react-toastify";
 
 const Processing = () => {
     const navigate = useNavigate();
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [category, setCategory] = useState<any[]>([]); // State để quản lý danh mục lọc
-
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [selectedProcessingId, setSelectedProcessingId] = useState<number | null>(null);
     const [user] = useState<any>(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
@@ -40,6 +43,29 @@ const Processing = () => {
     }, [user?.companyId]);
 
             
+    const handleOpenDelete = (id: number) => {
+                setSelectedProcessingId(id);
+                setOpenDeleteModal(true);
+                };
+            
+    const handleDeletePaper = async () => {
+                try {
+                    if (!selectedProcessingId) return;
+            
+                    await deleteCategoryByCompany(Number(selectedProcessingId), user.companyId);
+            
+                    setCategory((prev) =>
+                        prev.filter((item) => item.id !== selectedProcessingId)
+                    );
+            
+                    toast.success("Xoá chiết khấu  thành công");
+            
+                    setOpenDeleteModal(false);
+                } catch (error) {
+                    console.error(error);
+                    toast.error("Xoá thất bại");
+                }
+    };
 
     return (
         <div className="papers-page">
@@ -83,7 +109,7 @@ const Processing = () => {
                                         onClick={() => navigate(`/component/processing/${item.id}`)}>
                                         <FiEdit />
                                     </button>
-                                    <button className=" icon delete-btn"><FiTrash2 /></button>
+                                    <button className=" icon delete-btn" onClick={() => handleOpenDelete(item.id)}><FiTrash2 /></button>
                                 </td>
                                 </tr>
                             ))}
@@ -97,6 +123,14 @@ const Processing = () => {
         <CategoryModal
             open={openPaperModal}
             setOpen={setOpenPaperModal}
+        />
+
+        <ConfirmModal
+            isOpen={openDeleteModal}
+            title="Xác nhận xoá"
+            message="Bạn có chắc muốn xoá loại gia công này?"
+            onCancel={() => setOpenDeleteModal(false)}
+            onConfirm={handleDeletePaper}
         />
 
         </div>

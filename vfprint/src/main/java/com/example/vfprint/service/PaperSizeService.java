@@ -56,11 +56,29 @@ public class PaperSizeService {
                     .build())
             .toList();
 
-    // 3. Lưu toàn bộ (nếu danh sách lọc xong không rỗng)
-    if (!entitiesToSave.isEmpty()) {
-        paperSizeRepository.saveAll(entitiesToSave);
+        // 3. Lưu toàn bộ (nếu danh sách lọc xong không rỗng)
+        if (!entitiesToSave.isEmpty()) {
+            paperSizeRepository.saveAll(entitiesToSave);
+        }
     }
-}
+
+     //Tao moi 1 paper size cho 1 paper, neu da co thi khong tao nua
+    @Transactional
+    public void createOnePaperSize(PaperSizeDTO dtos){
+      if (paperSizeRepository.existsByPaperIdAndWidthAndHeight(dtos.getPaperId(),dtos.getWidth(), dtos.getHeight())) {
+        return;
+      }
+
+      PaperSize paperSize = PaperSize.builder()
+                            .paperId(dtos.getPaperId())
+                            .width(dtos.getWidth())
+                            .height(dtos.getHeight())
+                            .price(dtos.getPrice())
+                            .isActive(true)
+                            .build();
+    paperSizeRepository.save(paperSize);
+      
+    }
 
     @Transactional
     public PaperSize updatePaperSize(PaperSize paperSize){

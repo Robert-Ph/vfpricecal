@@ -5,13 +5,17 @@ import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import PrintPriceModel from "../../../components/printPrice/PrintPriceModel";
 import { useEffect, useState } from "react";
-import { getAllByCompany } from "../../../service/PrintPriceService";
+import { deleteByCompany, getAllByCompany } from "../../../service/PrintPriceService";
+import ConfirmModal from "../../../components/ConfirmModal";
+import { toast } from "react-toastify";
 
 const PrintCost = () =>{
     const navigate = useNavigate();
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [printPriceList, setPrintPriceList] = useState<any[]>([]);
     const [search, setSearch] = useState("");
+    const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [selectedPrintId, setSelectedPrintId] = useState<number | null>(null);
 
     const [user] = useState<any>(() => {
     const savedUser = localStorage.getItem("user");
@@ -42,6 +46,29 @@ const PrintCost = () =>{
             fetchPrintPrice();
     }, [user?.companyId]);
 
+    const handleOpenDelete = (id: number) => {
+                    setSelectedPrintId(id);
+                    setOpenDeleteModal(true);
+                    };
+                
+        const handleDeletePaper = async () => {
+                    try {
+                        if (!selectedPrintId) return;
+                
+                        await deleteByCompany(Number(selectedPrintId), user.companyId);
+                
+                        setPrintPriceList((prev) =>
+                            prev.filter((item) => item.id !== selectedPrintId)
+                        );
+                
+                        toast.success("Xoá chiết khấu  thành công");
+                
+                        setOpenDeleteModal(false);
+                    } catch (error) {
+                        console.error(error);
+                        toast.error("Xoá thất bại");
+                    }
+        };
 
 
     return(
@@ -92,7 +119,7 @@ const PrintCost = () =>{
                                                     onClick={() => navigate("  ")}>
                                                     <FiEdit />
                                                 </button>
-                                                <button className=" icon delete-btn"><FiTrash2 /></button>
+                                                <button className=" icon delete-btn" onClick={() => handleOpenDelete(item.id)}><FiTrash2 /></button>
                                             </td>
                                         </tr>
                                     ))}
@@ -104,9 +131,17 @@ const PrintCost = () =>{
                         </div>
                     </div>
 
-                     <PrintPriceModel
+        <PrintPriceModel
             open={openPaperModal}
             setOpen={setOpenPaperModal}
+        />
+
+        <ConfirmModal
+            isOpen={openDeleteModal}
+            title="Xác nhận xoá"
+            message="Bạn có chắc muốn giá in  này?"
+            onCancel={() => setOpenDeleteModal(false)}
+            onConfirm={handleDeletePaper}
         />
                 </div>
     );

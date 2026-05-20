@@ -43,4 +43,17 @@ public class ProfitService {
                 .percentage(item.getPercentage())
                 .build()).toList();
     }
+
+    @Transactional
+    public void deleteProfitByCompany(Long id, Long companyId){
+        Profit profit = profitRepository
+        .findByIdAndCompanyId(id, companyId)
+            .orElseThrow(() ->
+                    new IllegalArgumentException(
+                            "Paper not found with id: " + id
+                    )
+            );
+
+            profitRepository.delete(profit);
+    }
 }

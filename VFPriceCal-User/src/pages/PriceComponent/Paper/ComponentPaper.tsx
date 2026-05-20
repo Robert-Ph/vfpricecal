@@ -5,7 +5,7 @@ import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import { deletePaper, getPapers } from "../../../service/PaperService";
-import ConfirmModal from "../../../components/confirmModal";
+import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
 
 

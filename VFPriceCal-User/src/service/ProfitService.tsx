@@ -21,3 +21,13 @@ export const getAllProfitByCompany = async (companyId: number) => {
         throw error;
     }
 }
+
+export const deleteProfitByCompany = async (id: number, companyId: number) => {
+    try{
+        const response = await apiClient.delete(`/profit/${id}?companyId=${companyId}`);
+        return response.data;
+    }catch(error){
+        console.error('failed delete profit by company');
+        throw error;
+    }
+}

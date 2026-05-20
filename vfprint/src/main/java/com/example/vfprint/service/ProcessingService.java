@@ -93,4 +93,17 @@ public class ProcessingService {
         dto.setPrice(processing.getPrice());
         return dto;
     }
+
+    @Transactional
+    public void deleteProcessingByCategory(Long id, Long category){
+        Processing processing = processingRepository
+        .findByIdAndCategoryId(id, category)
+        .orElseThrow(() ->
+                    new IllegalArgumentException(
+                            "Processing not found with id: " + id
+                    )
+            );
+
+        processingRepository.delete(processing);
+    }
 }

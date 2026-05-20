@@ -46,4 +46,17 @@ public class PrintPriceService {
                                             .isActive(item.getIs_active())
                                         .build()).toList();
     }
+
+    @Transactional
+    public void deletePrintPrice(Long id, Long companyId){
+        PrintPrice printPrice = priceRepository
+        .findByIdAndCompanyId(id, companyId)
+        .orElseThrow(() ->
+                    new IllegalArgumentException(
+                            "Paper not found with id: " + id
+                    )
+            );
+        
+        priceRepository.delete(printPrice);
+    }
 }

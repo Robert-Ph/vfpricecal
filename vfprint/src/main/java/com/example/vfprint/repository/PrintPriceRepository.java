@@ -13,4 +13,5 @@ public interface PrintPriceRepository extends JpaRepository<PrintPrice, Long>{
     boolean existsByName(String name);
     List<PrintPrice> findByCompanyId(Long companyId);
     Optional<PrintPrice> findById(Long id);
+    Optional<PrintPrice> findByIdAndCompanyId(Long id, Long companyId);
 }

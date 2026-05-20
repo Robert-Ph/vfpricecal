@@ -12,7 +12,9 @@ import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.service.PrintPriceService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
@@ -48,6 +50,16 @@ public class PrintPriceController {
             );
     }
     
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> deleteByCompany(@PathVariable Long id, @RequestParam Long companyId){
+        priceService.deletePrintPrice(id, companyId);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse.builder()
+            .code(200)
+            .message("delete print price successfully")
+            .build()
+        );
+    }
     
 
 }
