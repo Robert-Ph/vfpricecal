@@ -13,6 +13,71 @@ $text-light: #ffffff;
   top: 0;
   bottom: 0;
 
+  /* Container chính bên trái màn hình đăng nhập */
+.login__left {
+    background: linear-gradient(135deg, #0F2027 0%, #203A43 50%, #2C5364 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding: 10px;
+}
+
+/* Khối bao ngoài của thương hiệu dạng ngang */
+.login__brand--horizontal {
+    display: flex;
+    align-items: center; /* Căn giữa logo và chữ theo chiều dọc */
+    gap: 10px; /* Khoảng cách giữa khối logo và khối chữ */
+    background: rgba(255, 255, 255, 0.03); /* Thêm nền mờ nhẹ để tạo khối (tùy chọn) */
+    padding: 10px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(5px);
+}
+
+/* Khối chứa logo */
+.brand__logo-wrapper {
+    flex-shrink: 0; /* Giữ nguyên kích thước logo không bị bóp méo */
+}
+
+.brand__logo--horizontal {
+    width: 80px; /* Thu nhỏ size lại một chút cho cân đối với hàng ngang */
+    height: auto;
+    filter: drop-shadow(0px 6px 12px rgba(0, 0, 0, 0.25));
+}
+
+/* Khối chứa text bên phải */
+.brand__text-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Căn lề trái cho text */
+    text-align: left;
+}
+
+/* Tên thương hiệu */
+.brand__title--horizontal {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin: 0 0 4px 0;
+    letter-spacing: 0.5px;
+    cursor: help;
+}
+
+/* Màu highlight Cyan cho chữ "print" đồng bộ với logo */
+.text-cyan {
+    color: #00e5ff;
+}
+
+/* Dòng mô tả ứng dụng */
+.brand__subtitle--horizontal {
+    font-size: 0.95rem;
+    color: #94a3b8; /* Màu xám sáng để dịu mắt hơn */
+    font-weight: 500;
+    margin: 0;
+    letter-spacing: 0.2px;
+}
+
   .logo {
     font-size: 20px;
     font-weight: 600;

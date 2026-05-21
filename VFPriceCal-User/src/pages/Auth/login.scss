@@ -10,6 +10,13 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        .brand__logo {
+    width: 120px; /* Cân chỉnh kích thước khiên logo cho vừa vặn */
+    height: auto;
+    margin-bottom: 20px;
+    /* Đổ bóng nhẹ phía sau khiên để tạo hiệu ứng 3D nổi bật trên nền tối */
+    filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.3)); 
+}
 
         .login__brand {
             text-align: center;

@@ -31,6 +31,7 @@ const QuotationPage = () => {
     const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
     const [result, setResult] = useState<any>(null);
     const [discountId, setdicountId] = useState<number | null>(null);
+    const [name, setName] = useState<string>("");
     
 
 
@@ -151,7 +152,7 @@ const QuotationPage = () => {
                     <div className="item-content">
                         <div className="form-name">
                             <label htmlFor="name">Tên báo giá:</label>
-                            <input type="text" id="name" name="name" />
+                            <input type="text" id="name" name="name"  onChange={(e) => setName(e.target.value)}/>
                         </div>
 
                         <div className="form-type-customer">
@@ -308,6 +309,14 @@ const QuotationPage = () => {
                         <h3>Kết quả báo giá</h3>
                     </div>
                     <div className="item-content">
+                        <div className="form-sheets-page">
+                            <label htmlFor="sheets-page">Tên:</label>
+                            <span className="sheets-page-value">{name}</span>
+                        </div>
+                        <div className="form-sheets-page">
+                            <label htmlFor="sheets-page">Kích thước:</label>
+                            <span className="sheets-page-value">{wight || 0}mm x {heigth || 0}mm</span>
+                        </div>
                         <div className="form-sheets-page">
                             <label htmlFor="sheets-page">Số tờ in:</label>
                             <span className="sheets-page-value">{result?.data.quantityPaper | 0} tờ</span>

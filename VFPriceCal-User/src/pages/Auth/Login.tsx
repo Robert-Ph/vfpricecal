@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "./login.scss";
 import { toast } from "react-toastify";
 import { login } from "../../service/AuthService";
+import logo from "../../assets/logo.png";
 
 
 const Login = () => {
@@ -78,7 +79,13 @@ if (response && response.username) {
 
             <div className="login__left">
                 <div className="login__brand">
-                    <h1>VFLT SYSTEM</h1>
+                    <img 
+                    src={logo} 
+                    alt="VFprint Logo" 
+                    className="brand__logo" 
+                    />
+                    <h1>VF PRINT</h1>
+                    <h1>ECOSYSTEM</h1>
                     <p>Management Platform</p>
                 </div>
             </div>

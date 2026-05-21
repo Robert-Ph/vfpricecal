@@ -4,6 +4,7 @@ import { FaFileAlt, FaBox, FaChartBar, FaCog } from "react-icons/fa";
 import { IoLayers } from "react-icons/io5";
 import { FiChevronDown } from "react-icons/fi";
 import "./sidebar.scss";
+import logo from "../assets/logo.png";
 
 const Sidebar = () => {
     const [openSubMenu, setOpenSubMenu] = useState(false);
@@ -11,8 +12,25 @@ const Sidebar = () => {
 
     return (
         <div className="sidebar">
-            <h3 title="version 1.0">VF PRINT</h3>
-            <p>Phần mềm báo giá in ấn</p>
+           <div className="login__brand--horizontal">
+                {/* Khối chứa biểu tượng bên trái */}
+                <div className="brand__logo-wrapper">
+                    <img 
+                        src={logo} 
+                        alt="VFprint Logo" 
+                        className="brand__logo--horizontal" 
+                    />
+                </div>
+                
+                {/* Khối chứa thông tin chữ bên phải */}
+                <div className="brand__text-wrapper">
+                    <h3 title="version 1.0" className="brand__title--horizontal">
+                        VF<span className="text-cyan">print</span> ECOSYSTEM
+                    </h3>
+                    <p className="brand__subtitle--horizontal">Hệ thống báo giá in ấn</p>
+                     <p className="brand__subtitle--horizontal">Version: 1.0.0</p>
+                </div>
+            </div>
 
             <hr />
             <nav>
