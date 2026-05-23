@@ -1,6 +1,7 @@
 package com.example.vfprint.dto;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.example.vfprint.dto.request.CalculateRequest;
 
@@ -13,7 +14,7 @@ public class InfoPriceDTO {
     private Integer quantity;
     private List<CalculateRequest> processingIds;
     private Long paperId;
-    private Long paperSizeId;
+    private UUID paperSizeId;
     private Long companyId;
     private Long printPrice;
     private Long profit;

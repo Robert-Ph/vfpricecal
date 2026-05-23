@@ -29,3 +29,13 @@ export const getAuthenticatedUser = async () => {
         throw error;
     }
 };
+
+export const logout = async () =>{
+    return await apiClient.post('auth/logout', {},
+        {
+            headers: {
+                Authorization:
+                    `Bearer ${localStorage.getItem("token")}`
+            }
+        });
+}

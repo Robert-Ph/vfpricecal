@@ -14,6 +14,8 @@ const Profit = () => {
     const [selectedProfitId, setSelectedProfitId] = useState<number | null>(null);
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [profit, setProfit] = useState<any[]>([]); // State để quản lý danh mục lọc
+     // item đang edit
+  const [selectedProfit, setSelectedProfit] = useState<any>(null);
 
     const [user] = useState<any>(() => {
         const savedUser = localStorage.getItem("user");
@@ -26,6 +28,13 @@ const Profit = () => {
         }
         return null;
     });
+
+      // mở modal update
+    const handleEdit = (item: any) => {
+        setSelectedProfit(item);
+        setOpenPaperModal(true);
+    };
+
 
     useEffect(() => {
         // Gọi API để lấy danh mục lọc (nếu có)
@@ -47,6 +56,7 @@ const Profit = () => {
             setSelectedProfitId(id);
             setOpenDeleteModal(true);
             };
+    
         
     const handleDeletePaper = async () => {
             try {
@@ -107,7 +117,7 @@ const Profit = () => {
                                     <td>{item.percentage}</td>
                                     <td className="action-buttons">
                                         <button className=" icon edit-btn"
-                                            onClick={() => navigate(``)}>
+                                            onClick={() => handleEdit(item)}>
                                             <FiEdit />
                                         </button>
                                         <button className=" icon delete-btn" onClick={()=>handleOpenDelete(item.id)}><FiTrash2 /></button>
@@ -124,6 +134,7 @@ const Profit = () => {
         <ProfitModal
             open={openPaperModal}
             setOpen={setOpenPaperModal}
+        
         />
 
         <ConfirmModal

@@ -1,6 +1,7 @@
 package com.example.vfprint.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,7 +51,7 @@ public class PaperSizeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePaperSize(@PathVariable Long id, @RequestParam("paperId") Long paperId) {
+    public ResponseEntity<String> deletePaperSize(@PathVariable UUID id, @RequestParam("paperId") Long paperId) {
         paperSizeService.deletePaperSize(id, paperId);;
         return ResponseEntity.ok("Paper size deleted successfully");
     }

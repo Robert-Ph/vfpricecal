@@ -2,6 +2,7 @@ import "./topbar.scss"
 import { useState, useRef, useEffect } from "react";
 import { FaCog, FaUser, FaChartLine, FaSignOutAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import {logout} from "../service/AuthService";
 
 const Topbar = () => {
     const [openDropdown, setOpenDropdown] = useState(false);
@@ -33,13 +34,29 @@ const Topbar = () => {
         return () => window.removeEventListener('storage', handleStorageChange);
     }, []);
 
-    const handleLogout = () => {
-        // nếu có token thì xóa
-        localStorage.removeItem("token");
+ /**
+     * Logout
+     */
+    const handleLogout = async () => {
 
-        // chuyển trang
-        navigate("/login");
+        try {
+
+            await logout();
+
+        } catch (e) {
+
+            console.log(e);
+
+        } finally {
+
+            localStorage.removeItem("token");
+
+            localStorage.removeItem("user");
+
+            navigate("/login");
+        }
     };
+
 
     
     return (

@@ -1,8 +1,6 @@
 package com.example.vfprint.service;
 
 import java.util.Date;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
 import com.example.vfprint.entity.Account;
 import com.example.vfprint.entity.Token;
 import com.example.vfprint.repository.AccountRepository;
@@ -13,7 +11,6 @@ import com.example.vfprint.dto.request.LoginRequest;
 import com.example.vfprint.dto.response.AuthenticationResponse;
 import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,66 +23,99 @@ public class AuthencaitonService {
     @Autowired
     private AccountRepository accountRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtService jwtService;
+
+
+      /**
+     * Check email/password
+     */
     public boolean authenticate(LoginRequest loginRequest) {
         // Thực hiện xác thực người dùng (ví dụ: kiểm tra email và password trong cơ sở dữ liệu)
         // Trả về true nếu xác thực thành công, ngược lại trả về false
-        var account = accountRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
+        Account account = accountRepository.findByEmail(loginRequest.getEmail())
+                        .orElseThrow(() -> 
+                        new NoSuchElementException("Email not found")    
+                    );
+        
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(); // Khởi tạo PasswordEncoder (ví dụ: BCryptPasswordEncoder)
 
-
-        return passwordEncoder.matches(loginRequest.getPassword(), account.getPassword()); // Giả sử luôn xác thực thành công
+        return passwordEncoder.matches(loginRequest.getPassword(), account.getPassword());
     }
 
+    /*
+        login
+     */
     public AuthenticationResponse authenticateResponse(LoginRequest request) {
-    // 1. Logic xác thực (thông qua AuthenticationManager)
-    if (authenticate(request)) {
-         // 2. Tìm user trong DB
-    Account account = accountRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new NoSuchElementException("User không tồn tại với email: " + request.getEmail()));
 
-    // 3. Tạo token
-    // var token = jwtService.generateToken(user);
+        boolean isAuthenticate = authenticate(request);
 
-    // 4. Trả về đầy đủ thông tin
-    return AuthenticationResponse.builder()
-            // .token(token)
+        if (!isAuthenticate) {
+            throw new RuntimeException("Invalid credentials");
+        }
+
+
+        Account account = accountRepository.findByEmail(request.getEmail())
+                        .orElseThrow(() -> 
+                        new NoSuchElementException("Email not found")    
+                    );
+
+        //genarate JWT
+        String jwtToken = jwtService.generateToken(account);
+
+        //save token DB
+        Token token = Token.builder()
+                        .id(jwtToken)
+                        .exDate(jwtService.extractExpiration(jwtToken))
+                        .revoked(false)
+                        .account(account)
+                        .build();
+        
+        tokenRepository.save(token);
+
+
+        //response FE
+        return AuthenticationResponse.builder()
+            .token(jwtToken)
             .companyId(account.getCompany().getId())
             .username(account.getUsername())
             .email(account.getEmail())
             .role(account.getRole().getName()) // Gửi role để FE phân quyền Menu
             .build();
-    }else {
-        throw new NoSuchElementException("Invalid credentials");
-    }
 
-   
 }
 
     //logout token
     public void logout(String token) throws JOSEException, ParseException {
-        // Xóa token khỏi cơ sở dữ liệu hoặc đánh dấu token là không hợp lệ
-        // Ví dụ: tokenRepository.deleteById(token);
+       Token tokenEntity = tokenRepository.findById(token)
+                            .orElseThrow(() -> 
+                                    new RuntimeException("Token not found"));
 
-        SignedJWT signedJWT = SignedJWT.parse(token);
-        JWTClaimsSet claimsSet = signedJWT.getJWTClaimsSet();
-        // Lấy thời gian hết hạn của token
-        Date expirationTime = claimsSet.getExpirationTime();
-        // Kiểm tra nếu token đã hết hạn
-        if (expirationTime.before(new Date())) {
-            // Token đã hết hạn, thực hiện các hành động cần thiết (ví dụ: xóa token khỏi cơ sở dữ liệu)
-            // tokenRepository.deleteById(token);
+        tokenEntity.setRevoked(true);
+        tokenRepository.save(tokenEntity);
+    }
 
-        } else {
-            // Token vẫn còn hiệu lực, có thể thực hiện các hành động khác nếu cần
+    /**
+     * Check token blacklist
+     */
+    public boolean isTokenValid(String token) {
+
+        Token tokenEntity = tokenRepository
+                .findById(token)
+                .orElse(null);
+
+        if (tokenEntity == null) {
+            return false;
         }
 
-        Token tokenEntity = Token.builder()
-                .id(token)
-                .exDate(expirationTime)
-                .build();
-        // Lưu token vào cơ sở dữ liệu
-        tokenRepository.save(tokenEntity);
+        if (tokenEntity.isRevoked()) {
+            return false;
+        }
 
+        return tokenEntity.getExDate()
+                .after(new Date());
     }
 }

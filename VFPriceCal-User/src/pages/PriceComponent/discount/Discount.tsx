@@ -5,13 +5,14 @@ import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import DiscountModel from "../../../components/discount/DiscountModel";
 import { deleteDiscount, getAllDiscountByCompany } from "../../../service/DiscountService";
-import ConfirmModal from "../../../components/confirmModal";
+import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
+import type { discountRequest } from "../../../model/model";
 
 const Discount = () => {
     const navigate = useNavigate();
     const [openPaperModal, setOpenPaperModal] = useState(false);
-    const [discount, setDiscount] = useState<any[]>([]); // State để quản lý danh mục lọc
+    const [discount, setDiscount] = useState<discountRequest[]>([]); // State để quản lý danh mục lọc
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedDiscountId, setSelectedDiscountId] = useState<number | null>(null);
     const [user] = useState<any>(() => {
@@ -109,7 +110,7 @@ const Discount = () => {
                                             onClick={() => navigate(``)}>
                                             <FiEdit />
                                         </button>
-                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(item.id)}><FiTrash2 /></button>
+                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(Number(item.id))}><FiTrash2 /></button>
                                     </td>
                                 </tr>
                             ))}

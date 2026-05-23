@@ -1,4 +1,4 @@
-import { useState} from "react";
+import {useState} from "react";
 import "./profitModal.scss";
 import { toast } from "react-toastify";
 import { create } from "../../service/ProfitService";
@@ -7,8 +7,8 @@ import { useParams } from "react-router-dom";
 
 const ProfitModal = ({ open, setOpen }) => {
 
-  const [profitName, setProfitName] = useState("");
-  const [priceProcessing, setPriceProcessing] = useState(Number);
+  const [profitName, setProfitName] = useState<string>("");
+  const [percentage, setpercentage] = useState(Number);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
   const {id} = useParams();
 
@@ -25,6 +25,7 @@ const ProfitModal = ({ open, setOpen }) => {
         return null;
     });
 
+
   const handleSubmit = async () => {
         // Validate inputs
     if (!profitName) {
@@ -40,7 +41,7 @@ const ProfitModal = ({ open, setOpen }) => {
         id: null, // ID sẽ được backend tạo tự động
         companyId: Number(user?.companyId), // ID ẩn từ context
         name: profitName,
-        percentage: priceProcessing
+        percentage: percentage
 
     };
 
@@ -84,13 +85,13 @@ const ProfitModal = ({ open, setOpen }) => {
           </div>
 
           <div className="info">
-            <label>Tỷ lệ %</label>
+            <label>Tỷ lệ % (lợi nhuận = tỷ lệ - 100)</label>
             <input
-            className={!priceProcessing && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
+            className={!percentage && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
               type="text"
               placeholder="Nhập tỷ lệ..."
-              value={priceProcessing}
-              onChange={(e) => {setPriceProcessing(Number(e.target.value))
+              value={percentage}
+              onChange={(e) => {setpercentage(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />

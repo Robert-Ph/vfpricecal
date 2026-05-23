@@ -8,15 +8,16 @@ import org.springframework.stereotype.Repository;
 import com.example.vfprint.entity.PaperSize;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface PaperSizeRepository  extends JpaRepository<PaperSize, Long> {
+public interface PaperSizeRepository  extends JpaRepository<PaperSize, UUID> {
 
     List<PaperSize> findByPaperId(Long paperId);
     void deleteByPaperId(Long paperId);
     boolean existsByPaperId(Long paperId);
     boolean existsByPaperIdAndWidthAndHeight(Long paperId, int width, int height);
-    Optional<PaperSize> findByIdAndPaperId(Long id, Long paperId);
+    Optional<PaperSize> findByIdAndPaperId(UUID id, Long paperId);
     boolean existsByWidthAndHeight(int width, int height);
 
     @Modifying

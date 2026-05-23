@@ -9,7 +9,7 @@ import com.example.vfprint.entity.Discount;
 
 @Repository
 public interface DiscountRepository extends JpaRepository<Discount,Long> {
-    boolean existsByName(String name);
+    boolean existsByNameAndCompanyId(String name, Long companyId);
     List<Discount> findByCompanyId(Long companyId);
     Optional<Discount> findByIdAndCompanyId(Long id, Long companyId);
     

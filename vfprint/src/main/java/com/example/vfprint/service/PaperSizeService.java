@@ -3,6 +3,8 @@ package com.example.vfprint.service;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Set;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -92,7 +94,7 @@ public class PaperSizeService {
     }
 
     @Transactional
-    public void deletePaperSize(Long id, Long paperId){
+    public void deletePaperSize(UUID id, Long paperId){
           PaperSize paper = paperSizeRepository
             .findByIdAndPaperId(id, paperId)
             .orElseThrow(() ->
@@ -111,7 +113,7 @@ public class PaperSizeService {
     }
 
     @Transactional(readOnly = true)
-    public PaperSizeDTO getPaperSizeById(Long paperId){
+    public PaperSizeDTO getPaperSizeById(UUID paperId){
         return paperSizeRepository.findById(paperId)
                 .map(ps -> {
                     PaperSizeDTO dto = new PaperSizeDTO();

@@ -1,10 +1,12 @@
 package com.example.vfprint.dto;
 
+import java.util.UUID;
+
 import lombok.Data;
 
 @Data
 public class PaperSizeDTO {
-    private Long id;
+    private UUID id;
     private Long paperId;
     private int width;
     private int height;

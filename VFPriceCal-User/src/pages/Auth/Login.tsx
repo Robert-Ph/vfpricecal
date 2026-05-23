@@ -18,57 +18,35 @@ const Login = () => {
     const [showPass, setShowPass] = useState(false);
     const navigate = useNavigate();
 
-   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+    const handleLogin = async (e: React.FormEvent) => {
+            e.preventDefault();
+            setLoading(true);
 
-    try {
-        // // 1. Gọi API đăng nhập
-        // const response = await login(email, password);
-
-        // // 2. Lưu trữ thông tin (Token và User)
-        // // Lưu ý: Thường API trả về response.data, bạn hãy kiểm tra lại cấu trúc trả về của hàm login nhé
-        // if (response.token) {
-        //     localStorage.setItem("token", response.token);
-        // }
-        
-        // if (response.user) {
-        //     localStorage.setItem("user", JSON.stringify(response.user));
-            
-        //     // 3. Cập nhật vào Global State / Context (nếu có)
-        //     // loginUser(response.user); 
-        // }
-
-// Login.tsx
-const response = await login(email, password);
-
-console.log("Full Response:", response); 
-
-// Vì response chính là object {companyId: 1, username: 'admin', ...}
-if (response && response.username) {
-    localStorage.setItem("user", JSON.stringify(response));
+            try {
+       
+                const response = await login(email, password);
+                // Vì response chính là object {companyId: 1, username: 'admin', ...}
+                if (response && response.username) {
+                    localStorage.setItem("user", JSON.stringify(response));
     
-    // Nếu có token riêng lẻ đi kèm (thường nằm chung trong response)
-    if (response.token) {
-        localStorage.setItem("token", response.token);
-    }
+                    localStorage.setItem("token", response.token);
+                    
 
-    navigate("/quotation");
-}
+                    navigate("/quotation");
+                }
 
-        // 4. Thông báo và điều hướng
-        toast.success("Đăng nhập thành công!");
-        navigate("/quotation");
+                // 4. Thông báo và điều hướng
+                toast.success("Đăng nhập thành công!");
+                navigate("/quotation");
 
-    } catch (err: any) {
-        // 5. Xử lý lỗi
-        const errorMessage = err.response?.data?.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.";
-        toast.error(errorMessage);
-        console.error("Login Error:", err);
-    } finally {
-        setLoading(false);
-    }
-};
+            } catch (err: any) {
+                // 5. Xử lý lỗi
+                const errorMessage = err.response?.data?.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.";
+                toast.error(errorMessage);
+            } finally {
+                setLoading(false);
+            }
+        };
 
     const handleForgotPassword = () => {
         navigate("/forgot-password");

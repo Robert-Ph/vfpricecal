@@ -4,7 +4,7 @@ import {getAllByCompany} from "../../service/PrintPriceService";
 import {calculatePrint} from "../../service/CalculateService";
 import { getAllProfitByCompany } from "../../service/ProfitService";
 import "./quotationPage.scss";
-import { useEffect, useState } from "react";
+import { useEffect ,useState } from "react";
 import { FiTrash2 } from "react-icons/fi";
 import { formatMoney } from "../../utils/formatMoney";
 import { numberToVietnameseText } from "../../utils/MoneyModel";

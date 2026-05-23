@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
-import { FaFileAlt, FaBox, FaChartBar, FaCog } from "react-icons/fa";
+import { FaFileAlt, FaChartBar, FaCog } from "react-icons/fa";
 import { IoLayers } from "react-icons/io5";
 import { FiChevronDown } from "react-icons/fi";
 import "./sidebar.scss";
@@ -38,11 +38,11 @@ const Sidebar = () => {
                     <FaFileAlt className="menu-icon" />
                     <span>Báo giá</span>
                 </NavLink>
-
+{/* 
                 <NavLink className="menu-item" to="/product">
                     <FaBox className="menu-icon" />
                     <span>Sản phẩm</span>
-                </NavLink>
+                </NavLink> */}
 
                 <div className="menu-item parent"
                     onClick={() => setOpenSubMenu(!openSubMenu)}>

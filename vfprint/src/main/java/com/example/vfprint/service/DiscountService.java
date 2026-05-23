@@ -16,7 +16,7 @@ public class DiscountService {
 
     @Transactional
     public void createDiscountByCompany(DiscountDTO discountDTO){
-        if (discountRepository.existsByName(discountDTO.getName())) {
+        if (discountRepository.existsByNameAndCompanyId(discountDTO.getName(), discountDTO.getCompanyId())) {
             throw new RuntimeException("Discount with the given name already exists");
         }
 

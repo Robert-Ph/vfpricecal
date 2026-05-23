@@ -93,7 +93,6 @@ const Processing = () => {
                         <thead>
                             <tr>
                                 <th>Tên gia công</th>
-                                <th>Mã gia công</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -103,7 +102,6 @@ const Processing = () => {
                             {category.map((item) => (
                                 <tr key={item.id}>
                                     <td>{item.name}</td>
-                                    <td>{item.id}</td>
                                     <td className="action-buttons">
                                     <button className=" icon edit-btn"
                                         onClick={() => navigate(`/component/processing/${item.id}`)}>
