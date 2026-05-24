@@ -79,12 +79,12 @@ const Sidebar = () => {
                     </div>
                 )
                 }
-                <NavLink className="menu-item" to="/report">
+                {/* <NavLink className="menu-item" to="/report">
                     <FaChartBar className="menu-icon" />
                     <span>Báo cáo</span>
-                </NavLink>
+                </NavLink> */}
 
-                <div className="menu-item parent"
+                {/* <div className="menu-item parent"
                     onClick={() => setOpenSubMenuSystem(!openSubMenuSystem)}>
                     <div className="menu-left">
                         <FaCog className="menu-icon" />
@@ -108,7 +108,7 @@ const Sidebar = () => {
                         </NavLink>
                     </div>
                 )
-                }
+                } */}
             </nav>
         </div>
     );

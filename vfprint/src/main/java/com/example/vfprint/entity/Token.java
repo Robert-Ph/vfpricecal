@@ -4,6 +4,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,7 @@ import java.util.Date;
 @Table(name = "tokens")
 public class Token {
     @Id
+    @Column(columnDefinition = "TEXT")
     private String id;
     private Date exDate;
     private boolean revoked;

@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import com.example.vfprint.entity.Account;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -60,7 +59,7 @@ public class JwtService {
                 .getExpiration();
     }
 
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
 
         return Jwts.parserBuilder()
 
@@ -94,13 +93,4 @@ public class JwtService {
         }
     }
 
-    public static void main(String[] args) {
-        String secret = Base64.getEncoder()
-                .encodeToString(
-                        Keys.secretKeyFor(SignatureAlgorithm.HS256)
-                                .getEncoded()
-                );
-
-        System.out.println(secret);
-    }
 }

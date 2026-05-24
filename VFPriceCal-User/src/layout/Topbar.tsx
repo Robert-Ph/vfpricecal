@@ -41,20 +41,21 @@ const Topbar = () => {
 
         try {
 
-            await logout();
+            const reponse = await logout();
+            if (reponse.status === 200){
+                localStorage.removeItem("token");
+
+                localStorage.removeItem("user");
+
+                navigate("/login");
+            }
+           
 
         } catch (e) {
 
             console.log(e);
 
-        } finally {
-
-            localStorage.removeItem("token");
-
-            localStorage.removeItem("user");
-
-            navigate("/login");
-        }
+        } 
     };
 
 

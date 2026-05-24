@@ -37,5 +37,6 @@ export const logout = async () =>{
                 Authorization:
                     `Bearer ${localStorage.getItem("token")}`
             }
-        });
+        }
+    );
 }

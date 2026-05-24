@@ -44,7 +44,7 @@ public class AuthencaitonController {
     return ResponseEntity.ok(
 
             ApiResponse.builder()
-                    .code(Code.SUCCESS)
+                    .code(200)
                     .message("Logout successful")
                     .build()
     );
