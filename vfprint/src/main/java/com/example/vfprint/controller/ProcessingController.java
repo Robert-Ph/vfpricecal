@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import java.util.UUID;
+
 import com.example.vfprint.dto.ProcessingDTO;
 import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.service.ProcessingService;
@@ -67,7 +69,7 @@ public class ProcessingController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse> getProcessingById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> getProcessingById(@PathVariable UUID id) {
         return ResponseEntity.ok(
             ApiResponse
             .builder()
@@ -80,7 +82,7 @@ public class ProcessingController {
      }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse> deleteProcessingByCategory(@PathVariable Long id, @RequestParam Long categoryId){
+    public ResponseEntity<ApiResponse> deleteProcessingByCategory(@PathVariable UUID id, @RequestParam UUID categoryId){
         processingService.deleteProcessingByCategory(id, categoryId);
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse.builder()

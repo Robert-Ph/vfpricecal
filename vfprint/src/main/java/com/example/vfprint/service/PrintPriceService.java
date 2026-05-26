@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.UUID;
+
 import com.example.vfprint.dto.PrintPriceDTO;
 import com.example.vfprint.entity.PrintPrice;
 import com.example.vfprint.repository.PrintPriceRepository;
@@ -33,7 +35,7 @@ public class PrintPriceService {
 
 
     @Transactional
-    public List<PrintPriceDTO> getAllByComapnyId(Long companyId){
+    public List<PrintPriceDTO> getAllByComapnyId(UUID companyId){
         List<PrintPrice> lPrices = priceRepository.findByCompanyId(companyId);
         if (lPrices.isEmpty()) {
             throw new RuntimeException("Print price with the given company id does not exist");
@@ -48,7 +50,7 @@ public class PrintPriceService {
     }
 
     @Transactional
-    public void deletePrintPrice(Long id, Long companyId){
+    public void deletePrintPrice(UUID id, UUID companyId){
         PrintPrice printPrice = priceRepository
         .findByIdAndCompanyId(id, companyId)
         .orElseThrow(() ->

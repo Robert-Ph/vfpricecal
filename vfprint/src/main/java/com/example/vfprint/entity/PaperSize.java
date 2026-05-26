@@ -29,7 +29,7 @@ public class PaperSize {
     private UUID id;
 
     @Column(name = "paper_id")
-    private Long paperId;
+    private UUID paperId;
     private int width;
     private int height;
 

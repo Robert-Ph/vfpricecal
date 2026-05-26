@@ -6,6 +6,8 @@ import com.example.vfprint.entity.Token;
 import com.example.vfprint.repository.AccountRepository;
 import com.example.vfprint.repository.TokenRepository;
 import com.nimbusds.jose.JOSEException;
+
+import java.beans.Transient;
 import java.text.ParseException;
 import com.example.vfprint.dto.request.LoginRequest;
 import com.example.vfprint.dto.response.AuthenticationResponse;
@@ -13,6 +15,9 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.example.vfprint.config.EmailService;
+import com.example.vfprint.config.UltiService;
 
 @Service
 public class AuthencaitonService {
@@ -28,6 +33,12 @@ public class AuthencaitonService {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private UltiService ultiService;
 
 
       /**
@@ -117,5 +128,24 @@ public class AuthencaitonService {
 
         return tokenEntity.getExDate()
                 .after(new Date());
+    }
+
+    @Transactional
+    public void forgotPassword(String email) {
+        String trimmedEmail = email.trim();
+        Account account = accountRepository.findByEmail(trimmedEmail)
+                        .orElseThrow(() -> 
+                        new NoSuchElementException("Email not found")    
+                    );
+
+        // Generate a new random password (you can use a more secure method in production)
+        String newPassword = ultiService.generateRandomPassword();
+
+        // Update the account with the new password (remember to encode it)
+        account.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(account);
+
+        // Send the new password to the user's email
+        emailService.sendNewPasswordEmail(trimmedEmail, newPassword);
     }
 }

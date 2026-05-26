@@ -1,5 +1,7 @@
 package com.example.vfprint.controller;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +50,7 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse> getCategoryByCompanyId(@RequestParam Long companyId) {
+    public ResponseEntity<ApiResponse> getCategoryByCompanyId(@RequestParam UUID companyId) {
         // Assuming you have a method to fetch category details by id
         return ResponseEntity.ok(
             ApiResponse
@@ -61,7 +63,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse> deleteByCompany(@PathVariable Long id, @RequestParam Long companyId){
+    public ResponseEntity<ApiResponse> deleteByCompany(@PathVariable UUID id, @RequestParam UUID companyId){
         categoryService.deleteAllProcessingByCompany(id, companyId);
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse.builder()

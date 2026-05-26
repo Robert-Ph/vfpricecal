@@ -51,7 +51,7 @@ public class PaperSizeController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePaperSize(@PathVariable UUID id, @RequestParam("paperId") Long paperId) {
+    public ResponseEntity<String> deletePaperSize(@PathVariable UUID id, @RequestParam("paperId") UUID paperId) {
         paperSizeService.deletePaperSize(id, paperId);;
         return ResponseEntity.ok("Paper size deleted successfully");
     }

@@ -1,6 +1,7 @@
 package com.example.vfprint.entity;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 import jakarta.persistence.ForeignKey;
@@ -29,8 +30,8 @@ import lombok.Setter;
 public class Account {
     
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
 
     // Khoá ngoại tới bảng company, nhưng chỉ lưu id của company, không cần ánh xạ đối tượng company

@@ -13,6 +13,7 @@ import com.example.vfprint.service.AccountService;
 import org.springframework.http.ResponseEntity;
 import com.example.vfprint.dto.AccountDTO;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/accounts")
@@ -27,12 +28,12 @@ public class AccountController {
     }
 
     @GetMapping("{id}")
-    public AccountDTO getAccountById(@PathVariable Long id) {
+    public AccountDTO getAccountById(@PathVariable UUID id) {
         return accountService.getAccountById(id);
     }
     
     @GetMapping("/company/{id}")
-    public List<AccountDTO> getAccountsByCompanyId(@PathVariable Long id) {
+    public List<AccountDTO> getAccountsByCompanyId(@PathVariable UUID id) {
         return accountService.getAllByCompanyId(id);
     }
     
@@ -49,7 +50,7 @@ public class AccountController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteAccount(@PathVariable Long id){
+    public ResponseEntity<String> deleteAccount(@PathVariable UUID id){
         accountService.deleteAccount(id);
         return ResponseEntity.ok("Account deleted");
     }

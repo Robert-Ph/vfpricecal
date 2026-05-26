@@ -40,3 +40,14 @@ export const logout = async () =>{
         }
     );
 }
+
+
+export const forgotPassword = async (email: string) => {
+    try {
+        const response = await apiClient.post('/auth/forgot-password', { email });
+        return response.data; // Assuming the response contains a success message
+    } catch (error) {
+        console.error('Forgot password request failed:', error);
+        throw error;
+    }
+};

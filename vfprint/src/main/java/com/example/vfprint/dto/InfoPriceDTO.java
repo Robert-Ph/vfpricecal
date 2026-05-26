@@ -13,11 +13,11 @@ public class InfoPriceDTO {
     private int heightProduct;
     private Integer quantity;
     private List<CalculateRequest> processingIds;
-    private Long paperId;
+    private UUID paperId;
     private UUID paperSizeId;
-    private Long companyId;
-    private Long printPrice;
-    private Long profit;
-    private Long discount;
+    private UUID companyId;
+    private UUID printPrice;
+    private UUID profit;
+    private UUID discount;
 
 }

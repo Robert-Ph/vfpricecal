@@ -1,6 +1,7 @@
 package com.example.vfprint.entity;
 
 import java.sql.Timestamp;
+import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -27,8 +28,8 @@ import lombok.Setter;
 @Table(name = "companies")
 public class Companies {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     private String name;
     private String phone;

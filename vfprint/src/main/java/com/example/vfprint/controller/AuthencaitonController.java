@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.example.vfprint.config.Code;
 import com.example.vfprint.dto.request.LoginRequest;
 import com.example.vfprint.dto.response.ApiResponse;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -22,6 +22,7 @@ public class AuthencaitonController {
     
     @Autowired
     private AuthencaitonService authencaitonService;
+
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest request){
@@ -48,5 +49,17 @@ public class AuthencaitonController {
                     .message("Logout successful")
                     .build()
     );
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse> forgotPassword(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+        authencaitonService.forgotPassword(email);
+        return ResponseEntity.ok(
+            ApiResponse.builder()
+            .code(200)
+            .message("Mật khẩu mới sẽ được gửi nếu email của bạn tồn tại trên hệ thống.")
+            .build()
+        );
     }
 }

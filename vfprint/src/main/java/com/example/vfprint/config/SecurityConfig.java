@@ -31,10 +31,7 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http
-    ) throws Exception {
-
+    public SecurityFilterChain securityFilterChain( HttpSecurity http) throws Exception {
         http
 
                 /**
@@ -69,7 +66,9 @@ public class SecurityConfig {
                          * Public API
                          */
                         .requestMatchers(
-                                "/api/auth/**"
+                                "/api/auth/**",
+                                "/api/companies/**",
+                                "/api/accounts/**"
                         ).permitAll()
 
                         /**

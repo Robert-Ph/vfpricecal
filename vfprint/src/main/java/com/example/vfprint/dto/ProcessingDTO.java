@@ -1,5 +1,7 @@
 package com.example.vfprint.dto;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,8 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ProcessingDTO {
-    private Long id;
-    private Long categoryId;
+    private UUID id;
+    private UUID categoryId;
     private String name;
     private float price;
 }

@@ -2,6 +2,7 @@
 import { useState } from "react";
 import "./forgotPassword.scss";
 import { useNavigate } from "react-router-dom";
+import { forgotPassword } from "../../service/AuthService";
 
 export default function ForgotPassword() {
 
@@ -10,8 +11,21 @@ export default function ForgotPassword() {
     const navigate = useNavigate();
 
     const handleSend = () => {
-        if (!email) return;
-        setSent(true);
+        // Call the forgotPassword service function
+        if (!email) {
+            alert("Vui lòng nhập email!");
+            return;
+        }
+        forgotPassword(email)
+            .then(() => {
+                setSent(true);
+            })
+            .catch((error) => {
+                console.error("Failed to send forgot password request:", error);
+                // Optionally, show an error message to the user
+            });
+        
+
     };
 
     const handleBackLogin = () => {

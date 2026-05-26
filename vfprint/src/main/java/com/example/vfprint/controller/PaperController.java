@@ -12,6 +12,8 @@ import com.example.vfprint.dto.request.PaperRequest;
 import com.example.vfprint.dto.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import java.util.List;
+import java.util.UUID;
+
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +28,7 @@ public class PaperController {
     private PaperService paperService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse> getAllPapers(@RequestParam("companyId") Long companyId){
+    public ResponseEntity<ApiResponse> getAllPapers(@RequestParam("companyId") UUID companyId){
         return ResponseEntity.ok(
             ApiResponse
             .builder()
@@ -38,7 +40,7 @@ public class PaperController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse> getPapersByCompanyId(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse> getPapersByCompanyId(@PathVariable UUID id) {
         return ResponseEntity.ok(
             ApiResponse
             .builder()
@@ -63,7 +65,7 @@ public class PaperController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse> deletePaper(@PathVariable Long id,@RequestParam("companyId") Long companyId) {
+    public ResponseEntity<ApiResponse> deletePaper(@PathVariable UUID id,@RequestParam("companyId") UUID companyId) {
         paperService.deletePaper(id, companyId);
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse

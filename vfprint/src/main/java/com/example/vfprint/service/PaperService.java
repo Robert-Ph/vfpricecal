@@ -3,6 +3,7 @@ package com.example.vfprint.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,7 +83,7 @@ public class PaperService {
     }   
 
     @Transactional
-    public void deletePaper(Long paperId, Long companyId) {
+    public void deletePaper(UUID paperId, UUID companyId) {
 
         Paper paper = paperRepository
             .findByIdAndCompanyId(paperId, companyId)
@@ -117,7 +118,7 @@ public class PaperService {
     }
 
     @Transactional
-    public PaperDTO getPaperById(Long paperId) {
+    public PaperDTO getPaperById(UUID paperId) {
         Paper paper = paperRepository.findById(paperId)
                 .orElseThrow(() -> new IllegalArgumentException("Paper not found with id: " + paperId));
         // Lấy danh sách Size kèm theo Price của từng Sizey
@@ -143,7 +144,7 @@ public class PaperService {
     }
 
     @Transactional
-    public List<PaperResponse> getAllPapersByCompany(Long companyId) {
+    public List<PaperResponse> getAllPapersByCompany(UUID companyId) {
         return paperRepository.findAll().stream()
                 .filter(paper -> paper.getCompanyId().equals(companyId))
                 .map(paper -> {

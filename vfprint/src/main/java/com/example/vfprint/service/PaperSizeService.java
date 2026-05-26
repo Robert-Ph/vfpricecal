@@ -32,11 +32,11 @@ public class PaperSizeService {
     }
 
     // 1. Gom nhóm PaperId để check database 1 lần duy nhất (tối ưu hiệu suất)
-    Set<Long> paperIds = dtos.stream()
+    Set<UUID> paperIds = dtos.stream()
             .map(PaperSizeDTO::getPaperId)
             .collect(Collectors.toSet());
 
-    for (Long pId : paperIds) {
+    for (UUID pId : paperIds) {
         if (!paperRepository.existsById(pId)) {
             throw new RuntimeException("Paper không tồn tại với ID: " + pId);
         }
@@ -94,7 +94,7 @@ public class PaperSizeService {
     }
 
     @Transactional
-    public void deletePaperSize(UUID id, Long paperId){
+    public void deletePaperSize(UUID id, UUID paperId){
           PaperSize paper = paperSizeRepository
             .findByIdAndPaperId(id, paperId)
             .orElseThrow(() ->
@@ -108,7 +108,7 @@ public class PaperSizeService {
     }
 
     @Transactional(readOnly = true)
-    public void deletePaperSizesByPaperId(Long paperId){
+    public void deletePaperSizesByPaperId(UUID paperId){
         paperSizeRepository.deleteByPaperId(paperId);
     }
 

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import java.util.UUID;
 
 import com.example.vfprint.dto.CompaniesDto;
 import com.example.vfprint.service.CompaniesService;
@@ -38,7 +39,7 @@ public class CompaniesController {
     }
 
     @GetMapping("{id}")
-    public CompaniesDto getCompanyById(@PathVariable Long id) {
+    public CompaniesDto getCompanyById(@PathVariable UUID id) {
         return companiesService.getCompanyById(id);
     }
     
@@ -50,7 +51,7 @@ public class CompaniesController {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<String> deleteCompany(@PathVariable Long id) {
+    public ResponseEntity<String> deleteCompany(@PathVariable UUID id) {
         companiesService.deleteCompany(id);
         return ResponseEntity.ok("Company deleted");
     }

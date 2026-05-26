@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.UUID;
+
 import com.example.vfprint.repository.CompaniesRepository;
 import com.example.vfprint.dto.CompaniesDto;
 import com.example.vfprint.entity.Companies;
@@ -46,14 +48,14 @@ public class CompaniesService {
     
     // Delete a company by ID
     @Transactional
-    public void deleteCompany(Long id){
+    public void deleteCompany(UUID id){
         companiesRepository.deleteById(id);
     }
 
 
     //get company by ID
     @Transactional(readOnly = true)
-    public CompaniesDto getCompanyById(Long id){
+    public CompaniesDto getCompanyById(UUID id){
         Companies company = companiesRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
         CompaniesDto dto = new CompaniesDto();

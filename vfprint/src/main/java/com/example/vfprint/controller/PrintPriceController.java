@@ -1,5 +1,7 @@
 package com.example.vfprint.controller;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -40,7 +42,7 @@ public class PrintPriceController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse> getAllPrintPriceByCompany(@RequestParam Long companyId){
+    public ResponseEntity<ApiResponse> getAllPrintPriceByCompany(@RequestParam UUID companyId){
             return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()
                 .code(200)
@@ -51,7 +53,7 @@ public class PrintPriceController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse> deleteByCompany(@PathVariable Long id, @RequestParam Long companyId){
+    public ResponseEntity<ApiResponse> deleteByCompany(@PathVariable UUID id, @RequestParam UUID companyId){
         priceService.deletePrintPrice(id, companyId);
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse.builder()

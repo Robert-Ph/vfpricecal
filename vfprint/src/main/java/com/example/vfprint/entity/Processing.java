@@ -1,5 +1,7 @@
 package com.example.vfprint.entity;
 
+import java.util.UUID;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,11 +23,11 @@ import lombok.Setter;
 @Builder
 public class Processing {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "category_id")
-    private Long categoryId;
+    private UUID categoryId;
     private String name;
     private Float price;
     private Boolean is_active;

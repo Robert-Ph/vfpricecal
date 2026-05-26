@@ -1,12 +1,14 @@
 package com.example.vfprint.dto;
 
+import java.util.UUID;
+
 import lombok.Data;
 
 @Data
 public class AccountDTO {
-    private Long companyId;
+    private UUID companyId;
     private String email;
     private String username;
     private String password;
-    private Long roleId;
+    private UUID roleId;
 }

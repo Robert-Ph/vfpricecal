@@ -8,6 +8,7 @@ import com.example.vfprint.repository.ProcessingRepository;
 import com.example.vfprint.dto.ProcessingDTO;
 import com.example.vfprint.entity.Processing;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ProcessingService {
@@ -82,7 +83,7 @@ public class ProcessingService {
     }
 
     @Transactional
-    public ProcessingDTO getProcessingById(Long id){
+    public ProcessingDTO getProcessingById(UUID id){
         Processing processing = processingRepository.findById(id).orElse(null);
         if (processing == null) {
             throw new RuntimeException("Processing with the given ID does not exist");
@@ -95,7 +96,7 @@ public class ProcessingService {
     }
 
     @Transactional
-    public void deleteProcessingByCategory(Long id, Long category){
+    public void deleteProcessingByCategory(UUID id, UUID category){
         Processing processing = processingRepository
         .findByIdAndCategoryId(id, category)
         .orElseThrow(() ->

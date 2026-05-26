@@ -14,6 +14,7 @@ import com.example.vfprint.repository.ProcessingRepository;
 import com.example.vfprint.repository.ProfitRepository;
 
 import java.util.List;
+import java.util.UUID;
 @Service
 public class CalculatorService {
     
@@ -143,7 +144,7 @@ public class CalculatorService {
     }
 
     //Lấy thông tin chiết khấu
-    public double getDiscount(Long id){
+    public double getDiscount(UUID id){
         if (discountRepository.existsById(id)) {
             return (100 - discountRepository.findById(id).get().getDiscount())/100;
         }

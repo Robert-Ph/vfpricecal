@@ -13,11 +13,11 @@ import java.util.UUID;
 @Repository
 public interface PaperSizeRepository  extends JpaRepository<PaperSize, UUID> {
 
-    List<PaperSize> findByPaperId(Long paperId);
-    void deleteByPaperId(Long paperId);
-    boolean existsByPaperId(Long paperId);
-    boolean existsByPaperIdAndWidthAndHeight(Long paperId, int width, int height);
-    Optional<PaperSize> findByIdAndPaperId(UUID id, Long paperId);
+    List<PaperSize> findByPaperId(UUID paperId);
+    void deleteByPaperId(UUID paperId);
+    boolean existsByPaperId(UUID paperId);
+    boolean existsByPaperIdAndWidthAndHeight(UUID paperId, int width, int height);
+    Optional<PaperSize> findByIdAndPaperId(UUID id, UUID paperId);
     boolean existsByWidthAndHeight(int width, int height);
 
     @Modifying
@@ -25,5 +25,5 @@ public interface PaperSizeRepository  extends JpaRepository<PaperSize, UUID> {
         DELETE FROM PaperSize ps WHERE ps.paperId = :paperId
             
             """)
-    void deleteByPaperIdCustom(@Param("paperId") Long paperId);
+    void deleteByPaperIdCustom(@Param("paperId") UUID paperId);
 }

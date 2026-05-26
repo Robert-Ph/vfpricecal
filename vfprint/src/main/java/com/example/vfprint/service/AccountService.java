@@ -1,6 +1,7 @@
 package com.example.vfprint.service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.example.vfprint.entity.Roles;
@@ -54,6 +55,7 @@ public class AccountService {
       // 4. Sử dụng Builder (Đúng chuẩn với annotation @Builder bạn đã đặt ở Entity)
         Account account = Account.builder()
             .email(accountDto.getEmail())
+            .username(accountDto.getUsername())  
             .password(passwordEncoder.encode(accountDto.getPassword()))
             .company(company)
             .role(role)
@@ -80,13 +82,13 @@ public class AccountService {
 
     // Delete an account by ID
     @Transactional
-    public void deleteAccount(Long id){
+    public void deleteAccount(UUID id){
         accountRepository.deleteById(id);
     }
 
     // Retrieve an account by ID
     @Transactional(readOnly = true)
-    public AccountDTO getAccountById(Long id){
+    public AccountDTO getAccountById(UUID id){
         return accountRepository.findById(id)
                 .map(account -> {
                     AccountDTO dto = new AccountDTO();
@@ -100,7 +102,7 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public List<AccountDTO> getAllByCompanyId(Long companyIds){
+    public List<AccountDTO> getAllByCompanyId(UUID companyIds){
 
         List<Account> accounts = accountRepository.findByCompanyId(companyIds);
         return accounts.stream()

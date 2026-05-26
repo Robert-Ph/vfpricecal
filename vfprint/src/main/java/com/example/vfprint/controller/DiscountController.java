@@ -1,5 +1,7 @@
 package com.example.vfprint.controller;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,12 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.service.annotation.GetExchange;
-
 import com.example.vfprint.dto.DiscountDTO;
 import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.service.DiscountService;
-
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,7 +38,7 @@ public class DiscountController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse> getAllDiscountByCompany(@RequestParam Long companyId){
+    public ResponseEntity<ApiResponse> getAllDiscountByCompany(@RequestParam UUID companyId){
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse.builder()
             .code(200)
@@ -50,7 +49,7 @@ public class DiscountController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse> deleteDiscount(@PathVariable Long id, @RequestParam("companyId") Long companyId){
+    public ResponseEntity<ApiResponse> deleteDiscount(@PathVariable UUID id, @RequestParam("companyId") UUID companyId){
         discountService.deleteDiscount(id, companyId);
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse.builder()

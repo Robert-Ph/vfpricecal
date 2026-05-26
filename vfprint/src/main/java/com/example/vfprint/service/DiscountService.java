@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.UUID;
+
 import com.example.vfprint.dto.DiscountDTO;
 import com.example.vfprint.entity.Discount;
 import com.example.vfprint.entity.Paper;
@@ -30,7 +32,7 @@ public class DiscountService {
     }
 
     @Transactional
-    public List<DiscountDTO> getAllDiscountByCompany(Long companyId){
+    public List<DiscountDTO> getAllDiscountByCompany(UUID companyId){
         List<Discount> dList = discountRepository.findByCompanyId(companyId);
         if (dList.isEmpty()) {
             throw new RuntimeException("Discount with the given company id does not exist");
@@ -47,7 +49,7 @@ public class DiscountService {
     }
 
     @Transactional
-    public void deleteDiscount(Long id, Long companyId){
+    public void deleteDiscount(UUID id, UUID companyId){
         Discount discount = discountRepository
             .findByIdAndCompanyId(id, companyId)
             .orElseThrow(() ->

@@ -6,10 +6,12 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import com.example.vfprint.entity.Account;
 
 @Repository
-public interface AccountRepository extends JpaRepository<Account, Long>{
+public interface AccountRepository extends JpaRepository<Account, UUID>{
 
 
    @Query("""
@@ -19,8 +21,9 @@ public interface AccountRepository extends JpaRepository<Account, Long>{
      OR (:param IS NULL OR c.name LIKE %:param%)
     """)
     List<Account> search(@Param("param") String param);
-    Optional<Account> findByEmail(String email);
-    List<Account> findByCompanyId(Long id);
+
+     Optional<Account> findByEmail(String email);
+    List<Account> findByCompanyId(UUID id);
     boolean existsByEmail(String email);
 
     

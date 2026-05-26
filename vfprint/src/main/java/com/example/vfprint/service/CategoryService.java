@@ -14,6 +14,7 @@ import com.example.vfprint.repository.CategoryRepository;
 import com.example.vfprint.repository.ProcessingRepository;
 
 import java.util.List;
+import java.util.UUID;
 @Service
 public class CategoryService {
     
@@ -59,7 +60,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryDTO getCategoryById(Long id){
+    public CategoryDTO getCategoryById(UUID id){
         Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category with the given id does not exist"));
         CategoryDTO dto = new CategoryDTO();
         dto.setCompanyId(category.getCompanyId());
@@ -68,7 +69,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public void updateCategory(Long id, CategoryDTO categoryDTO){
+    public void updateCategory(UUID id, CategoryDTO categoryDTO){
         Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category with the given id does not exist"));
         if (categoryRepository.existsByName(categoryDTO.getName()) && !category.getName().equals(categoryDTO.getName())) {
             throw new RuntimeException("Category with the given name already exists");
@@ -80,12 +81,12 @@ public class CategoryService {
 
 
     @Transactional
-    public void deleteCategoryById(Long id){
+    public void deleteCategoryById(UUID id){
         categoryRepository.deleteById(id);
     }
 
     @Transactional
-    public List<CategoryDTO> getProcessingByCompanyId(Long companyId){
+    public List<CategoryDTO> getProcessingByCompanyId(UUID companyId){
         List<Category> categories = categoryRepository.findByCompanyId(companyId);
         if (categories.isEmpty()) {
             throw new RuntimeException("Category with the given company id does not exist");
@@ -99,7 +100,7 @@ public class CategoryService {
 
 
     @Transactional
-    public CategoryResponse getAllProcessingByCategories(Long id){
+    public CategoryResponse getAllProcessingByCategories(UUID id){
         Category categories = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category with the given id does not exist"));
         List<Processing> processings = processingRepository.findByCategoryId(categories.getId());
 
@@ -118,7 +119,7 @@ public class CategoryService {
     }
 
     @Transactional
-    public void deleteAllProcessingByCompany(Long id, Long companyId){
+    public void deleteAllProcessingByCompany(UUID id, UUID companyId){
         Category category = categoryRepository
         .findByIdAndCompanyId(id, companyId)
         .orElseThrow(() ->
