@@ -11,6 +11,7 @@ import type { discountRequest } from "../../../model/model";
 
 const Discount = () => {
     const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState("");
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [discount, setDiscount] = useState<discountRequest[]>([]); // State để quản lý danh mục lọc
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -82,7 +83,7 @@ const Discount = () => {
                 {/* Tìm kiếm gia công theo tên, mã gia công hoặc mô tả. Bạn cũng có thể lọc gia công theo danh mục, giá cả hoặc nhà cung cấp. */}
                 <div className="papers-search">
                     <FiSearch className="search-icon" />
-                    <input type="text" value="" placeholder="Tìm kiếm..." />
+                    <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Tìm kiếm..." />
                     <button>Tìm kiếm</button>
                 </div>
 

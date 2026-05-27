@@ -11,6 +11,7 @@ import { toast } from "react-toastify";
 const Profit = () => {
     const navigate = useNavigate();
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
     const [selectedProfitId, setSelectedProfitId] = useState<number | null>(null);
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [profit, setProfit] = useState<any[]>([]); // State để quản lý danh mục lọc
@@ -92,7 +93,7 @@ const Profit = () => {
                 {/* Tìm kiếm gia công theo tên, mã gia công hoặc mô tả. Bạn cũng có thể lọc gia công theo danh mục, giá cả hoặc nhà cung cấp. */}
                 <div className="papers-search">
                     <FiSearch className="search-icon" />
-                    <input type="text" value="" placeholder="Tìm kiếm..." />
+                    <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Tìm kiếm..." />
                     <button>Tìm kiếm</button>
                 </div>
 

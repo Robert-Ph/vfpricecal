@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 
 const ComponentPaper = () => {
     const navigate = useNavigate();
+    const [searchTerm, setSearchTerm] = useState("");
     const [paperList, setPaperList] = useState<any[]>([]);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
@@ -85,7 +86,7 @@ const ComponentPaper = () => {
                 {/* Tìm kiếm giấy/vật liệu theo tên, mã hoặc mô tả. Bạn cũng có thể lọc theo danh mục, giá cả hoặc nhà cung cấp. */}
                 <div className="papers-search">
                     <FiSearch className="search-icon" />
-                    <input type="text" value="" placeholder="Tìm kiếm..." />
+                    <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Tìm kiếm..." />
                     <button>Tìm kiếm</button>
                 </div>
 

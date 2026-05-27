@@ -51,3 +51,13 @@ export const forgotPassword = async (email: string) => {
         throw error;
     }
 };
+
+export const changePassword = async (email: string, newPassword: string) => {
+    try {
+        const response = await apiClient.post(`/auth/change-password`, { email, newPassword });
+        return response.data;
+    } catch (error) {
+        console.error('Failed to change password:', error);
+        throw error;
+    }
+};

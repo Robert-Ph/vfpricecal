@@ -5,12 +5,13 @@ import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { deleteCategoryByCompany, getCategories } from "../../../service/ProcessingService";
 import CategoryModal from "../../../components/category/CategoryModel";
-import ConfirmModal from "../../../components/confirmModal";
+import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
 
 const Processing = () => {
     const navigate = useNavigate();
     const [openPaperModal, setOpenPaperModal] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
     const [category, setCategory] = useState<any[]>([]); // State để quản lý danh mục lọc
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedProcessingId, setSelectedProcessingId] = useState<number | null>(null);
@@ -81,7 +82,7 @@ const Processing = () => {
                 {/* Tìm kiếm gia công theo tên, mã gia công hoặc mô tả. Bạn cũng có thể lọc gia công theo danh mục, giá cả hoặc nhà cung cấp. */}
                 <div className="papers-search">
                     <FiSearch className="search-icon" />
-                    <input type="text" value="" placeholder="Tìm kiếm..." />
+                    <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} placeholder="Tìm kiếm..." />
                     <button>Tìm kiếm</button>
                 </div>
 
