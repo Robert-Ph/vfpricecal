@@ -88,9 +88,6 @@ public class CategoryService {
     @Transactional
     public List<CategoryDTO> getProcessingByCompanyId(UUID companyId){
         List<Category> categories = categoryRepository.findByCompanyId(companyId);
-        if (categories.isEmpty()) {
-            throw new RuntimeException("Category with the given company id does not exist");
-        }
         return categories.stream().map(category -> CategoryDTO.builder()
                 .id(category.getId())
                 .companyId(category.getCompanyId())

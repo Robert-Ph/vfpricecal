@@ -82,16 +82,20 @@ public class ProcessingService {
         return dto;
     }
 
-    @Transactional
-    public ProcessingDTO getProcessingById(UUID id){
+    @Transactional(readOnly = true)
+    public ProcessingDTO getProcessingById(UUID id) {
         Processing processing = processingRepository.findById(id).orElse(null);
+    
+        // Kiểm tra an toàn: Nếu null thì trả về null hoặc new ProcessingDTO() trống luôn
         if (processing == null) {
-            throw new RuntimeException("Processing with the given ID does not exist");
+            return null; 
         }
+
         ProcessingDTO dto = new ProcessingDTO();
         dto.setCategoryId(processing.getCategoryId());
         dto.setName(processing.getName());
         dto.setPrice(processing.getPrice());
+    
         return dto;
     }
 

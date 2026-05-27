@@ -31,13 +31,9 @@ public class DiscountService {
         );
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<DiscountDTO> getAllDiscountByCompany(UUID companyId){
         List<Discount> dList = discountRepository.findByCompanyId(companyId);
-        if (dList.isEmpty()) {
-            throw new RuntimeException("Discount with the given company id does not exist");
-        }
-
         return dList.stream().map(item -> DiscountDTO.builder()
                                     .id(item.getId())
                                     .companyId(item.getCompanyId())

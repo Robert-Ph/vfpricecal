@@ -35,11 +35,8 @@ public class PrintPriceService {
 
 
     @Transactional
-    public List<PrintPriceDTO> getAllByComapnyId(UUID companyId){
+    public List<PrintPriceDTO> getAllByCompanyId(UUID companyId){
         List<PrintPrice> lPrices = priceRepository.findByCompanyId(companyId);
-        if (lPrices.isEmpty()) {
-            throw new RuntimeException("Print price with the given company id does not exist");
-        }
         return lPrices.stream().map( item -> PrintPriceDTO.builder()
                                             .id(item.getId())
                                             .companyId(companyId)

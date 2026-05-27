@@ -62,4 +62,18 @@ public class AuthencaitonController {
             .build()
         );
     }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<ApiResponse> changePassword(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+        String newPassword = payload.get("newPassword");
+
+        String result = authencaitonService.changePassword(email,  newPassword);
+        return ResponseEntity.ok(
+            ApiResponse.builder()
+            .code(200)
+            .message(result)
+            .build()
+        );
+    }
 }

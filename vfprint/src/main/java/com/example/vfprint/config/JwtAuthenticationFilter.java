@@ -101,25 +101,39 @@ public class JwtAuthenticationFilter
         }
 
         /**
-            * STEP 5
-            * Set Authentication cho Spring Security
-         */
-       String email = jwtService.extractEmail(jwt);
+        * STEP 5
+        * Set Authentication cho Spring Security
+        */
+        String email = jwtService.extractEmail(jwt);
 
-String role = jwtService
-        .extractAllClaims(jwt)
-        .get("role", String.class);
+        // Lấy role từ JWT Claim an toàn
+        Object roleClaim = jwtService.extractAllClaims(jwt).get("role");
+        String role = roleClaim != null ? roleClaim.toString().trim().toUpperCase() : "";
 
-UsernamePasswordAuthenticationToken authentication =
-        new UsernamePasswordAuthenticationToken(
-                email,
-                null,
-                List.of(new SimpleGrantedAuthority("ROLE_" + role))
-        );
+        List<SimpleGrantedAuthority> authorities = List.of();
 
-SecurityContextHolder
-        .getContext()
-        .setAuthentication(authentication);
+        if (!role.isEmpty()) {
+                // Nếu chuỗi chưa bắt đầu bằng "ROLE_" thì mới thêm vào (ví dụ: ADMIN -> ROLE_ADMIN)
+                String finalRole = role.startsWith("ROLE_") ? role : "ROLE_" + role;
+                authorities = List.of(new SimpleGrantedAuthority(finalRole));
+        }
+
+        // In ra log để bạn tiện theo dõi ở console khi test
+        System.out.println("--- CHECK QUYỀN USER ---");
+        System.out.println("User Email: " + email);
+        System.out.println("Quyền thực tế được gán: " + authorities);
+        System.out.println("------------------------");
+
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(
+                        email,
+                        null,
+                        authorities
+                );
+
+        SecurityContextHolder
+                .getContext()
+                .setAuthentication(authentication);
 
 
         /**

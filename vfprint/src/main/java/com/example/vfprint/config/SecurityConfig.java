@@ -72,6 +72,19 @@ public class SecurityConfig {
                         ).permitAll()
 
                         /**
+                        * 2. API phân quyền nội bộ công ty (Cần đăng nhập)
+                        */
+                        // Bảng giá in ấn và Giảm giá: Cả Admin và User của công ty đều xem được
+                        .requestMatchers("/api/print-prices/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/discount/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/profit/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/paper-sizes/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/papers/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/category/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/role/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/processing/**").hasAnyRole("ADMIN", "USER")
+
+                        /**
                          * Protected API
                          */
                         .anyRequest()

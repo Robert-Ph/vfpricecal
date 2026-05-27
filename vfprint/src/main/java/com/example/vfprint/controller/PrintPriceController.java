@@ -47,7 +47,7 @@ public class PrintPriceController {
                 ApiResponse.builder()
                 .code(200)
                 .message("Get all success by company")
-                .data(priceService.getAllByComapnyId(companyId))
+                .data(priceService.getAllByCompanyId(companyId))
                 .build()
             );
     }

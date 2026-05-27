@@ -148,4 +148,24 @@ public class AuthencaitonService {
         // Send the new password to the user's email
         emailService.sendNewPasswordEmail(trimmedEmail, newPassword);
     }
+
+
+    @Transactional
+    public String changePassword(String email, String newPassword) {
+        String trimmedEmail = email.trim();
+        Account account = accountRepository.findByEmail(trimmedEmail)
+                        .orElseThrow(() -> 
+                        new NoSuchElementException("Email not found")    
+                    );
+
+        // Check if the old password matches
+        if (passwordEncoder.matches(newPassword, account.getPassword())) {
+            return "Mật khẩu mới trùng với mật khẩu cũ";
+        }
+
+        // Update the account with the new password (remember to encode it)
+        account.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(account);
+        return "Password changed successfully";
+    }
 }
