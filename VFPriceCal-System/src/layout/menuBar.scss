@@ -1,0 +1,134 @@
+.menu-bar {
+    width: 280px;
+    height: 100%;
+    background: #f5f7ff;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid #e4e7f2;
+    font-family: sans-serif;
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 25px;
+}
+
+.logo-box {
+    width: 50px;
+    height: 50px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #5b7fff, #393cf1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo {
+    width: 48px;
+    height: 48px;
+}
+
+.header-info h2 {
+    margin: 0;
+    font-size: 20px;
+    color: #1f2a52;
+}
+
+.header-info p {
+    margin: 4px 0 0;
+    color: #7c86a2;
+    font-size: 14px;
+}
+
+.search-box {
+    margin-bottom: 20px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid #dce1f0;
+    outline: none;
+    background: white;
+    box-sizing: border-box;
+}
+
+.menu-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #4b5675;
+    font-weight: 100;
+    transition: 0.2s;
+}
+
+.menu-item:hover {
+    background: #e9eeff;
+}
+
+.menu-item.active {
+    background: linear-gradient(135deg, #5b7fff, #7b61ff);
+    color: white;
+}
+
+.shortcut-title {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 10px;
+    color: #98a2c3;
+    font-weight: bold;
+}
+
+.shortcuts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.shortcut-item {
+    color: #58627d;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.profile-box {
+    margin-top: auto;
+    background: white;
+    border-radius: 18px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+}
+
+.profile-info h4 {
+    margin: 0;
+    color: #1f2a52;
+}
+
+.profile-info p {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: #7c86a2;
+}
