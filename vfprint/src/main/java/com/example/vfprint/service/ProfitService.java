@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import com.example.vfprint.dto.request.ProfitRequest;
 import com.example.vfprint.entity.Profit;
 import com.example.vfprint.repository.ProfitRepository;
+import com.example.vfprint.entity.Companies;
 
 @Service
 public class ProfitService {
@@ -24,7 +25,7 @@ public class ProfitService {
 
         profitRepository.save(
             Profit.builder()
-            .companyId(profitRequest.getCompanyId())
+            .company(Companies.builder().id(profitRequest.getCompanyId()).build())
             .name(profitRequest.getName())
             .percentage(profitRequest.getPercentage())
             .build()
@@ -38,7 +39,7 @@ public class ProfitService {
         return profit.stream()
             .map(item -> ProfitRequest.builder()
                     .id(item.getId())
-                    .companyId(item.getCompanyId())
+                    .companyId(companyId)
                     .name(item.getName())
                     .percentage(item.getPercentage())
                     .build())

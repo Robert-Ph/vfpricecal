@@ -13,12 +13,12 @@ import com.example.vfprint.entity.Companies;
 public interface CompaniesRepository extends JpaRepository<Companies, UUID>{
 
 
-   @Query("""
-            SELECT c FROM Companies c
-            WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :param, '%')) OR LOWER(c.phone) LIKE LOWER(CONCAT('%', :param, '%')) 
-            OR LOWER(c.address) LIKE LOWER(CONCAT('%', :param, '%')) OR LOWER(c.taxCode) LIKE LOWER(CONCAT('%', :param, '%'))
-            OR LOWER(c.email) LIKE LOWER(CONCAT('%', :param, '%')) OR LOWER(c.type) LIKE LOWER(CONCAT('%', :param, '%'))
-            """)
-    List<Companies> search(@Param("param") String param);
+//    @Query("""
+//             SELECT c FROM Companies c
+//             WHERE LOWER(c.name) LIKE LOWER(CONCAT('%', :param, '%')) OR LOWER(c.phone) LIKE LOWER(CONCAT('%', :param, '%')) 
+//             OR LOWER(c.address) LIKE LOWER(CONCAT('%', :param, '%')) OR LOWER(c.taxCode) LIKE LOWER(CONCAT('%', :param, '%'))
+//             OR LOWER(c.email) LIKE LOWER(CONCAT('%', :param, '%')) OR LOWER(c.type) LIKE LOWER(CONCAT('%', :param, '%'))
+//             """)
+//     List<Companies> search(@Param("param") String param);
     boolean existsByName(String name);
 }

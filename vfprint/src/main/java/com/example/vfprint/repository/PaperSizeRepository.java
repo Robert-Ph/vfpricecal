@@ -22,7 +22,7 @@ public interface PaperSizeRepository  extends JpaRepository<PaperSize, UUID> {
 
     @Modifying
     @Query("""
-        DELETE FROM PaperSize ps WHERE ps.paperId = :paperId
+        DELETE FROM PaperSize ps WHERE ps.paper.id = :paperId
             
             """)
     void deleteByPaperIdCustom(@Param("paperId") UUID paperId);

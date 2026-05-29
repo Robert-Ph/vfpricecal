@@ -50,7 +50,7 @@ public class PaperSizeService {
                         dto.getPaperId(), dto.getWidth(), dto.getHeight());
             })
             .map(dto -> PaperSize.builder()
-                    .paperId(dto.getPaperId())
+                    .paper(Paper.builder().id(dto.getPaperId()).build())
                     .width(dto.getWidth())
                     .height(dto.getHeight())
                     .price(dto.getPrice())
@@ -72,7 +72,7 @@ public class PaperSizeService {
       }
 
       PaperSize paperSize = PaperSize.builder()
-                            .paperId(dtos.getPaperId())
+                            .paper(Paper.builder().id(dtos.getPaperId()).build())
                             .width(dtos.getWidth())
                             .height(dtos.getHeight())
                             .price(dtos.getPrice())
@@ -117,7 +117,7 @@ public class PaperSizeService {
         return paperSizeRepository.findById(paperId)
                 .map(ps -> {
                     PaperSizeDTO dto = new PaperSizeDTO();
-                    dto.setPaperId(ps.getPaperId());
+                    dto.setPaperId(ps.getPaper().getId());
                     dto.setWidth(ps.getWidth());
                     dto.setHeight(ps.getHeight());
                     dto.setPrice(ps.getPrice());
@@ -130,10 +130,10 @@ public class PaperSizeService {
     public List<PaperSizeDTO> getPaperSizesByPaperId(Long paperId){
         return paperSizeRepository.findAll()
                 .stream()
-                .filter(ps -> ps.getPaperId().equals(paperId))
+                .filter(ps -> ps.getPaper().getId().equals(paperId))
                 .map(ps -> {
                     PaperSizeDTO dto = new PaperSizeDTO();
-                    dto.setPaperId(ps.getPaperId());
+                    dto.setPaperId(ps.getPaper().getId());
                     dto.setWidth(ps.getWidth());
                     dto.setHeight(ps.getHeight());
                     dto.setPrice(ps.getPrice());

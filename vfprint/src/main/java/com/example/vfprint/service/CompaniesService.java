@@ -5,16 +5,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
-
+import com.example.vfprint.repository.CompanyStatusRepository;
 import com.example.vfprint.repository.CompaniesRepository;
 import com.example.vfprint.dto.CompaniesDto;
 import com.example.vfprint.entity.Companies;
+import com.example.vfprint.entity.CompaniesStatus;
 
 @Service
 public class CompaniesService {
     
     @Autowired  
     private CompaniesRepository companiesRepository;
+
+    @Autowired
+    private CompanyStatusRepository companyStatusRepository;
 
 
     // Create a new company
@@ -31,7 +35,11 @@ public class CompaniesService {
                 .address(company.getAddress())
                 .taxCode(company.getTaxCode())
                 .email(company.getEmail())
-                .type(company.getType())
+                .code(company.getCode())
+                .logoUrl(company.getLogoUrl())
+                .status(CompaniesStatus.builder().id(company.getStatusId()).build())
+                .createAt(new java.sql.Timestamp(System.currentTimeMillis()))
+                .updateAt(new java.sql.Timestamp(System.currentTimeMillis()))
                 .build();
 
         companiesRepository.save(entity);
@@ -43,6 +51,13 @@ public class CompaniesService {
         Companies existingCompany = companiesRepository.findById(company.getId())
                 .orElseThrow(() -> new RuntimeException("Company not found"));  
         existingCompany.setName(company.getName());
+        existingCompany.setPhone(company.getPhone());
+        existingCompany.setAddress(company.getAddress());
+        existingCompany.setTaxCode(company.getTaxCode());
+        existingCompany.setEmail(company.getEmail());
+        existingCompany.setCode(company.getCode());
+        existingCompany.setLogoUrl(company.getLogoUrl());
+        existingCompany.setUpdateAt(new java.sql.Timestamp(System.currentTimeMillis()));
         return companiesRepository.save(existingCompany);
     }
     
@@ -59,12 +74,16 @@ public class CompaniesService {
         Companies company = companiesRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
         CompaniesDto dto = new CompaniesDto();
+        dto.setCode(company.getCode());
         dto.setName(company.getName());
         dto.setPhone(company.getPhone());
         dto.setAddress(company.getAddress());
         dto.setTaxCode(company.getTaxCode());
         dto.setEmail(company.getEmail());
-        dto.setType(company.getType());
+        dto.setStatusId(company.getStatus().getId());
+        dto.setLogoUrl(company.getLogoUrl());
+        dto.setCreateAt(company.getCreateAt());
+        dto.setUpdateAt(company.getUpdateAt());
         return dto;
     }
 
@@ -75,6 +94,7 @@ public class CompaniesService {
                 .stream()
                 .map(company -> {
                     CompaniesDto dto = new CompaniesDto();
+                    dto.setCode(company.getCode());
                     dto.setName(company.getName());
                     dto.setPhone(company.getPhone());
                     dto.setAddress(company.getAddress());
@@ -83,18 +103,18 @@ public class CompaniesService {
                 .toList();
     }
 
-    @Transactional
-    public List<CompaniesDto> searchCompanies(String param){
-        return companiesRepository.search(param)
-                .stream()
-                .map(company -> {
-                    CompaniesDto dto = new CompaniesDto();
-                    dto.setName(company.getName());
-                    dto.setPhone(company.getPhone());
-                    dto.setAddress(company.getAddress());
-                    return dto;
-                })
-                .toList();
-    }
+    // @Transactional
+    // public List<CompaniesDto> searchCompanies(String param){
+    //     return companiesRepository.search(param)
+    //             .stream()
+    //             .map(company -> {
+    //                 CompaniesDto dto = new CompaniesDto();
+    //                 dto.setName(company.getName());
+    //                 dto.setPhone(company.getPhone());
+    //                 dto.setAddress(company.getAddress());
+    //                 return dto;
+    //             })
+    //             .toList();
+    // }
 
 }

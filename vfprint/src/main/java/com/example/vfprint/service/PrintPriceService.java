@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.example.vfprint.dto.PrintPriceDTO;
+import com.example.vfprint.entity.Companies;
 import com.example.vfprint.entity.PrintPrice;
 import com.example.vfprint.repository.PrintPriceRepository;
 
@@ -25,7 +26,7 @@ public class PrintPriceService {
 
         priceRepository.save(
             PrintPrice.builder()
-            .companyId(priceDTO.getCompanyId())
+            .company(Companies.builder().id(priceDTO.getCompanyId()).build())
             .name(priceDTO.getName())
             .price(priceDTO.getPrice())
             .is_active(priceDTO.isActive())

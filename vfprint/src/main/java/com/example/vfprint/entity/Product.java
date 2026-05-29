@@ -8,8 +8,12 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
 
 @Getter
 @Setter
@@ -20,8 +24,11 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "company_id")
-    private UUID companyId;
+     // Khoá ngoại tới bảng company, nhưng chỉ lưu id của company, không cần ánh xạ đối tượng company
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id",foreignKey = @ForeignKey(name = "fk_product_company"))
+    private Companies company;
+
     private String name;
     private String description;
     private Boolean is_active;

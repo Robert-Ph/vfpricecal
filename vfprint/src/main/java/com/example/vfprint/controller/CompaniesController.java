@@ -33,10 +33,10 @@ public class CompaniesController {
         return companiesService.getAllCompanies();
     }
     
-    @GetMapping("/search")
-    public List<CompaniesDto> searchCompanies(@RequestParam("param") String param) {
-        return companiesService.searchCompanies(param);
-    }
+    // @GetMapping("/search")
+    // public List<CompaniesDto> searchCompanies(@RequestParam("param") String param) {
+    //     return companiesService.searchCompanies(param);
+    // }
 
     @GetMapping("{id}")
     public CompaniesDto getCompanyById(@PathVariable UUID id) {

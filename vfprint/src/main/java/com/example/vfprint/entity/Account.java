@@ -53,6 +53,11 @@ public class Account {
     @JoinColumn(name = "role_id",foreignKey = @ForeignKey(name = "fk_account_role"))
     private Roles role;
 
+        // Khoá ngoại tới bảng user_status, nhưng chỉ lưu id của user_status, không cần ánh xạ đối tượng user_status
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "status_id",foreignKey = @ForeignKey(name = "fk_account_status"))
+    private UserStatus status;
+
     @Column(name = "create_at", updatable = false)
     @CreationTimestamp
     private Timestamp createAt;

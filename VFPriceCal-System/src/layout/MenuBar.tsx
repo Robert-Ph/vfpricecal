@@ -25,52 +25,72 @@ const MenuBar = () => {
 
     <nav className="menu-nav">
 
-        <NavLink to="/dashboard" className="menu-item active">
+        <NavLink to="/dashboard" className={({ isActive }) =>
+        isActive ? "menu-item active" : "menu-item"
+        }>
             <span>🏠</span>
             Dashboard
         </NavLink>
 
-        <NavLink to="/users" className="menu-item">
+        <NavLink to="/user-management" className={({ isActive }) =>
+            isActive ? "menu-item active" : "menu-item"
+        }>
             <span>👤</span>
-            Người dùng
+            Quản lý người dùng
         </NavLink>
 
-        <NavLink to="/roles" className="menu-item">
+        <NavLink to="/roles" className={({ isActive }) =>
+            isActive ? "menu-item active" : "menu-item"
+        }>
             <span>🛡️</span>
             Roles & Permissions
         </NavLink>
 
-        <NavLink to="/apps" className="menu-item">
+        <NavLink to="/apps" className={({ isActive }) =>
+            isActive ? "menu-item active" : "menu-item"
+        }>
             <span>📦</span>
             Applications
         </NavLink>
 
-        <NavLink to="/logs" className="menu-item">
+        <NavLink to="/logs" className={({ isActive }) =>
+            isActive ? "menu-item active" : "menu-item"
+        }>
             <span>📄</span>
             System Logs
         </NavLink>
 
-        <NavLink to="/monitor" className="menu-item">
+        <NavLink to="/monitor" className={({ isActive }) =>
+            isActive ? "menu-item active" : "menu-item"
+        }>
             <span>🔄</span>
             Monitoring
         </NavLink>
 
-        <NavLink to="/database" className="menu-item">
+        <NavLink to="/database" className={({ isActive }) =>
+            isActive ? "menu-item active" : "menu-item"
+        }>
             <span>🗄️</span>
             Database
         </NavLink>
 
-        <NavLink to="/backup" className="menu-item">
+        <NavLink to="/backup" className={({ isActive }) =>
+            isActive ? "menu-item active" : "menu-item"
+        }>
             <span>☁️</span>
             Backup & Restore
         </NavLink>
 
-        <NavLink to="/security" className="menu-item">
+        <NavLink to="/security" className={({ isActive }) =>
+            isActive ? "menu-item active" : "menu-item"
+        }>
             <span>🛡️</span>
             Security Center
         </NavLink>
 
-        <NavLink to="/settings" className="menu-item">
+        <NavLink to="/settings" className={({ isActive }) =>
+            isActive ? "menu-item active" : "menu-item"
+        }>
             <span>⚙️</span>
             Settings
         </NavLink>

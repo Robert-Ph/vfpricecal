@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
-
+import com.example.vfprint.entity.Companies;
 import com.example.vfprint.dto.DiscountDTO;
 import com.example.vfprint.entity.Discount;
 import com.example.vfprint.entity.Paper;
@@ -24,7 +24,7 @@ public class DiscountService {
 
         discountRepository.save(
             Discount.builder()
-            .companyId(discountDTO.getCompanyId())
+            .company(Companies.builder().id(discountDTO.getCompanyId()).build())
             .name(discountDTO.getName())
             .discount(discountDTO.getDiscount())
             .build()
@@ -36,7 +36,7 @@ public class DiscountService {
         List<Discount> dList = discountRepository.findByCompanyId(companyId);
         return dList.stream().map(item -> DiscountDTO.builder()
                                     .id(item.getId())
-                                    .companyId(item.getCompanyId())
+                                    .companyId(item.getCompany().getId())
                                     .name(item.getName())
                                     .discount(item.getDiscount())
                                     .build()

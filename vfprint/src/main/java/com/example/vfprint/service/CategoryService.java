@@ -9,6 +9,7 @@ import com.example.vfprint.dto.ProcessingDTO;
 import com.example.vfprint.dto.response.CategoryResponse;
 import com.example.vfprint.dto.response.ProcessingResponse;
 import com.example.vfprint.entity.Category;
+import com.example.vfprint.entity.Companies;
 import com.example.vfprint.entity.Processing;
 import com.example.vfprint.repository.CategoryRepository;
 import com.example.vfprint.repository.ProcessingRepository;
@@ -40,7 +41,7 @@ public class CategoryService {
             throw new RuntimeException("Category with the given name already exists");
         }
         categoryRepository.save(Category.builder()
-                .companyId(categoryDTO.getCompanyId())
+                .company(Companies.builder().id(categoryDTO.getCompanyId()).build())
                 .name(categoryDTO.getName())
                 .is_active(true)
                 .build());
@@ -54,7 +55,7 @@ public class CategoryService {
             throw new RuntimeException("Category with the given name does not exist");
         }
         CategoryDTO dto = new CategoryDTO();
-        dto.setCompanyId(category.getCompanyId());
+        dto.setCompanyId(category.getCompany().getId());
        dto.setName(category.getName());
         return dto;
     }
@@ -63,7 +64,7 @@ public class CategoryService {
     public CategoryDTO getCategoryById(UUID id){
         Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category with the given id does not exist"));
         CategoryDTO dto = new CategoryDTO();
-        dto.setCompanyId(category.getCompanyId());
+        dto.setCompanyId(category.getCompany().getId());
        dto.setName(category.getName());
         return dto;
     }
@@ -74,7 +75,7 @@ public class CategoryService {
         if (categoryRepository.existsByName(categoryDTO.getName()) && !category.getName().equals(categoryDTO.getName())) {
             throw new RuntimeException("Category with the given name already exists");
         }
-        category.setCompanyId(categoryDTO.getCompanyId());
+        category.setCompany(Companies.builder().id(categoryDTO.getCompanyId()).build());
         category.setName(categoryDTO.getName());
         categoryRepository.save(category);
     }
@@ -90,7 +91,7 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findByCompanyId(companyId);
         return categories.stream().map(category -> CategoryDTO.builder()
                 .id(category.getId())
-                .companyId(category.getCompanyId())
+                .companyId(category.getCompany().getId())
                 .name(category.getName())
                 .build()).toList();
     }
@@ -103,7 +104,7 @@ public class CategoryService {
 
         return CategoryResponse.builder()
                 .id(categories.getId())
-                .companyId(categories.getCompanyId())
+                .companyId(categories.getCompany().getId())
                 .name(categories.getName())
                 .processings(processings.stream()
                         .map(processing -> ProcessingResponse.builder()

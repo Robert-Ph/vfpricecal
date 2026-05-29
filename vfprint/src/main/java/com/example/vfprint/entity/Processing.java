@@ -13,6 +13,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.persistence.ForeignKey;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Getter
 @Setter
@@ -26,8 +30,9 @@ public class Processing {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "category_id")
-    private UUID categoryId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "fk_processing_category"))
+    private Category category; // Khoá ngoại tới bảng category, nhưng chỉ lưu id của category, không cần ánh xạ đối tượng category
     private String name;
     private Float price;
     private Boolean is_active;

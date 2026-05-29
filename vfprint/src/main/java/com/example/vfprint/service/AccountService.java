@@ -5,6 +5,8 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.example.vfprint.entity.Roles;
+import com.example.vfprint.entity.UserStatus;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +61,7 @@ public class AccountService {
             .password(passwordEncoder.encode(accountDto.getPassword()))
             .company(company)
             .role(role)
+            .status(UserStatus.builder().id(accountDto.getStatusId()).build())
             .build(); // Đảm bảo không có trường ID nào bị set thủ công ở đây
         //5. luu account moi vao database
         accountRepository.save(account);
@@ -96,6 +99,7 @@ public class AccountService {
                     dto.setEmail(account.getEmail());
                     dto.setPassword(account.getPassword());
                     dto.setRoleId(account.getRole().getId());
+                    dto.setStatusId(account.getStatus().getId());
                     return dto;
                 })
                 .orElseThrow(() -> new RuntimeException("Account not found"));

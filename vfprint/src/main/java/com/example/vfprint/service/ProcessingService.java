@@ -9,6 +9,7 @@ import com.example.vfprint.dto.ProcessingDTO;
 import com.example.vfprint.entity.Processing;
 import java.util.List;
 import java.util.UUID;
+import com.example.vfprint.entity.Category;
 
 @Service
 public class ProcessingService {
@@ -42,7 +43,7 @@ public class ProcessingService {
             throw new RuntimeException("Processing with the given name already exists");
         }
         processingRepository.save(Processing.builder()
-                .categoryId(processingDTO.getCategoryId())
+                .category(Category.builder().id(processingDTO.getCategoryId()).build())
                 .name(processingDTO.getName())
                 .price(processingDTO.getPrice())
                 .is_active(true)
@@ -60,7 +61,7 @@ public class ProcessingService {
                 throw new RuntimeException("Processing with the given name already exists");
             }
             processingRepository.save(Processing.builder()
-                    .categoryId(processingDTO.getCategoryId())
+                    .category(Category.builder().id(processingDTO.getCategoryId()).build())
                     .name(processingDTO.getName())
                     .price(processingDTO.getPrice())
                     .is_active(true)
@@ -76,7 +77,7 @@ public class ProcessingService {
             throw new RuntimeException("Processing with the given name does not exist");
         }
         ProcessingDTO dto = new ProcessingDTO();
-        dto.setCategoryId(processing.getCategoryId());
+        dto.setCategoryId(processing.getCategory().getId());
         dto.setName(processing.getName());
         dto.setPrice(processing.getPrice());
         return dto;
@@ -92,7 +93,7 @@ public class ProcessingService {
         }
 
         ProcessingDTO dto = new ProcessingDTO();
-        dto.setCategoryId(processing.getCategoryId());
+        dto.setCategoryId(processing.getCategory().getId());
         dto.setName(processing.getName());
         dto.setPrice(processing.getPrice());
     

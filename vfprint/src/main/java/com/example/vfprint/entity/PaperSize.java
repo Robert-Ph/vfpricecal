@@ -4,9 +4,12 @@ import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -14,6 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.persistence.ForeignKey;
 
 @Getter
 @Setter
@@ -28,8 +32,9 @@ public class PaperSize {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "paper_id")
-    private UUID paperId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "paper_id",foreignKey = @ForeignKey(name = "fk_papersize_paper"))
+    private Paper paper; // Khoá ngoại tới bảng paper, nhưng chỉ lưu id của paper, không cần ánh xạ đối tượng paper
     private int width;
     private int height;
 

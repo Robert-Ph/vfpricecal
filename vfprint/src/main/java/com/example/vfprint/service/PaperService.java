@@ -18,6 +18,7 @@ import com.example.vfprint.dto.response.PaperResponse;
 import com.example.vfprint.repository.PaperRepository;
 import com.example.vfprint.repository.PaperSizeRepository;
 import com.example.vfprint.repository.CompaniesRepository;
+import com.example.vfprint.entity.Companies;
 
 @Service
 public class PaperService {
@@ -49,7 +50,7 @@ public class PaperService {
         // 3. NẾU MỌI THỨ OK -> TIẾN HÀNH LƯU
         // Lưu Paper
         Paper paper = Paper.builder()
-                .companyId(paperRequest.getCompanyId())
+                .company(Companies.builder().id(paperRequest.getCompanyId()).build())
                 .name(paperRequest.getName())
                 .gsm(paperRequest.getGsm())
                 .isActive(true)
@@ -59,7 +60,7 @@ public class PaperService {
         // Lưu PaperSize và PaperPrice... (giữ nguyên logic vòng lặp cũ của bạn)
         for (PaperSizeRequest sizeRequest : paperRequest.getPaperSizes()) {
             PaperSize savedSize = paperSizeRepository.save(PaperSize.builder()
-                    .paperId(savedPaper.getId())
+                    .paper(savedPaper)
                     .width(sizeRequest.getWidth())
                     .height(sizeRequest.getHeight())
                     .price(sizeRequest.getPrice())
@@ -74,7 +75,7 @@ public class PaperService {
             throw new IllegalArgumentException("Paper with the same name and company already exists");
         }
         Paper paper = Paper.builder()
-                .companyId(paperDTO.getCompanyId())
+                .company(Companies.builder().id(paperDTO.getCompanyId()).build())
                 .name(paperDTO.getName())
                 .gsm(paperDTO.getGsm())
                 .isActive(true)
@@ -103,13 +104,13 @@ public class PaperService {
     @Transactional
     public List<PaperResponse> getPapersByCompanyId(Long companyId) {
         List<Paper> papers = paperRepository.findAll().stream()
-                .filter(paper -> paper.getCompanyId().equals(companyId))
+                .filter(paper -> paper.getCompany().getId().equals(companyId))
                 .toList();
         return papers.stream()
                 .map(paper -> {
                     return PaperResponse.builder()
                             .id(paper.getId())
-                            .companyId(paper.getCompanyId())
+                            .companyId(paper.getCompany().getId())
                             .name(paper.getName())
                             .gsm(paper.getGsm())
                             .build();
@@ -133,7 +134,7 @@ public class PaperService {
                                 .map(size -> {
                                     PaperSizeDTO sizeDTO = new PaperSizeDTO();
                                     sizeDTO.setId(size.getId());
-                                    sizeDTO.setPaperId(size.getPaperId());
+                                    sizeDTO.setPaperId(size.getPaper().getId());
                                     sizeDTO.setWidth(size.getWidth());
                                     sizeDTO.setHeight(size.getHeight());
                                     sizeDTO.setPrice(size.getPrice());
@@ -146,11 +147,11 @@ public class PaperService {
     @Transactional
     public List<PaperResponse> getAllPapersByCompany(UUID companyId) {
         return paperRepository.findAll().stream()
-                .filter(paper -> paper.getCompanyId().equals(companyId))
+                .filter(paper -> paper.getCompany().getId().equals(companyId))
                 .map(paper -> {
                     return PaperResponse.builder()
                             .id(paper.getId())
-                            .companyId(paper.getCompanyId())
+                            .companyId(paper.getCompany().getId())
                             .name(paper.getName())
                             .gsm(paper.getGsm())
                             .build();
