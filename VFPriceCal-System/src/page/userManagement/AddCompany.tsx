@@ -1,6 +1,70 @@
 import "./addCompany.scss";
+import {type Companies, type companiesStatus} from "../../config/ModelConfig";
+import { useEffect, useState } from "react";
+import { getCompaniesStatus } from "../../service/CompaniesStatusService";
+import { createCompany } from "../../service/CompaniesService";
+import { toast } from "react-toastify";
+
 
 const AddCompany = () => {
+
+    const [statusList, setStatusList] = useState<companiesStatus[]>([]);
+    const [formData, setFormData] = useState<Companies>({
+        code: '',
+        name: '',
+        phone: '',
+        address: '',
+        taxCode: '',
+        email: '',
+        statusId: '', // Ví dụ: '1' là Active
+        logoUrl: '',
+        createAt: '',
+        updateAt: ''
+    });
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+        const { name, value } = e.target;
+        
+        setFormData(prevState => ({
+            ...prevState,
+            // Nếu trường là 'status', ép kiểu về số (number), còn lại giữ là string
+            [name]: name === 'statusId' ? value : value
+        }));
+    };
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        // Xử lý logic lưu công ty mới ở đây
+        console.log("Form Data:", formData);
+        try {
+            // Gọi API bằng fetch hoặc axios
+            const response = await createCompany( formData);
+            if (response.status === 200) {
+                alert('Company created successfully!');
+                // Reset form hoặc điều hướng nếu cần
+                toast.success('Company created successfully!');
+                // Tải lại trang hiện tại
+                window.location.reload();
+                
+            }
+        } catch (error) {
+            console.error("Lỗi khi thêm công ty:", error);
+        }
+    };
+
+    useEffect(() => {
+        const fetchStatus = async () => {
+            try {
+                const data = await getCompaniesStatus();
+                setStatusList(data);
+            } catch (error) {
+                console.error('Error fetching companies status:', error);
+            }
+
+        };
+        void fetchStatus();
+    }, []);
+
     return (
         <div className="add-company">
 
@@ -31,7 +95,21 @@ const AddCompany = () => {
                             <label>Company Name</label>
                             <input
                                 type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
                                 placeholder="VFprint Company"
+                            />
+                        </div>
+
+                         <div className="form-group">
+                            <label>Name</label>
+                            <input
+                                type="text"
+                                name="code"
+                                value={formData.code}
+                                onChange={handleChange}
+                                placeholder="VFprint"
                             />
                         </div>
 
@@ -39,6 +117,9 @@ const AddCompany = () => {
                             <label>Email</label>
                             <input
                                 type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
                                 placeholder="company@email.com"
                             />
                         </div>
@@ -47,6 +128,9 @@ const AddCompany = () => {
                             <label>Phone Number</label>
                             <input
                                 type="text"
+                                name="phone"
+                                value={formData.phone}
+                                onChange={handleChange}
                                 placeholder="+84 xxx xxx xxx"
                             />
                         </div>
@@ -55,9 +139,24 @@ const AddCompany = () => {
                             <label>Address</label>
                             <textarea
                                 rows={4}
+                                name="address"
+                                value={formData.address}
+                                onChange={handleChange}
                                 placeholder="Company address..."
                             />
                         </div>
+
+                         <div className="form-group">
+                            <label>Tax code</label>
+                            <input
+                                type="text"
+                                name="taxCode"
+                                value={formData.taxCode}
+                                onChange={handleChange}
+                                placeholder="0123456789"
+                            />
+                        </div>
+
                     </div>
 
                     <div className="card">
@@ -78,11 +177,14 @@ const AddCompany = () => {
                             <div className="form-group">
                                 <label>Status</label>
 
-                                <select>
-                                    <option>Active</option>
-                                    <option>Pending</option>
-                                    <option>Expired</option>
+                                <select name="statusId" value={formData.statusId} onChange={handleChange}>
+                                        {statusList.map(status => (
+                                            <option key={status.id} value={status.id}>
+                                                {status.name}
+                                            </option>
+                                        ))}
                                 </select>
+        
                             </div>
 
                             <div className="form-group">
@@ -161,7 +263,7 @@ const AddCompany = () => {
                     Cancel
                 </button>
 
-                <button className="save-btn">
+                <button className="save-btn" onClick={handleSubmit}>
                     Save Company
                 </button>
             </div>

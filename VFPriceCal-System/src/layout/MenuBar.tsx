@@ -36,7 +36,7 @@ const MenuBar = () => {
             isActive ? "menu-item active" : "menu-item"
         }>
             <span>👤</span>
-            Quản lý người dùng
+            Quản lý doanh nghiệp
         </NavLink>
 
         <NavLink to="/roles" className={({ isActive }) =>

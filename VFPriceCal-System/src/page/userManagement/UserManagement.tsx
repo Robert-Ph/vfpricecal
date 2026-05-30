@@ -8,8 +8,8 @@ const UserManagement = () => {
             <div className="top-header">
 
                 <div>
-                    <h1>User Management</h1>
-                    <p>Manage customer companies and subscriptions</p>
+                    <h1>Quản lý doanh nghiệp</h1>
+                    <p>Quản lý thông tin doanh nghiệp và quyền truy cập</p>
                 </div>
 
                 <button className="add-btn" onClick={() => {
