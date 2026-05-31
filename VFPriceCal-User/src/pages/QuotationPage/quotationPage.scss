@@ -1,327 +1,292 @@
-.body {
-    width: 100%;
-    height: 100%;
-    display: flex;
+.quotation-page {
+  padding: 24px;
+  background: #f5f7fb;
+  min-height: 100vh;
 }
 
-.info {
-    width: 60%;
-    height: 100%;
+.quotation-header {
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px 30px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+
+  margin-bottom: 20px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
+  h1 {
+    font-size: 28px;
+    margin: 0;
+  }
+
+  p {
+    margin-top: 4px;
+    color: #64748b;
+  }
+}
+
+.header-icon {
+  font-size: 42px;
+  color: #2563eb;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.quotation-content {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 10px;
+}
+
+.quotation-main {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.card,
+.result-card,
+.notice-box {
+  background: white;
+  border-radius: 18px;
+  margin-top: 20px;
+  padding: 10px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .05);
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  color: #2563eb;
+  font-size: 24px;
+  font-weight: 700;
+
+  margin-bottom: 24px;
+}
+
+.general-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.vat-field {
+  grid-column: 1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  label {
+    font-weight: 600;
+    color: #1e293b;
+  }
+}
+
+input,
+select {
+  height: 52px;
+  border: 1px solid #dbe2ea;
+  border-radius: 12px;
+  padding: 0 16px;
+  background: white;
+}
+
+.input-addon {
+  display: flex;
+
+  input {
+    flex: 1;
+    border-radius: 12px 0 0 12px;
+  }
+
+  span {
+    width: 42px;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    overflow: hidden;
-
-    .info-item {
-        width: 90%;
-        height: 100%;
-        margin-top: 20px;
-        border-radius: 5px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .item-lable {
-        width: 100%;
-        height: 30px;
-        background: rgb(209, 209, 209);
-        display: flex;
-        align-items: center;
-        padding-left: 10px;
-    }
-
-    .info-item-1 {
-        height: 70%;
-    }
-
-    .item-content {
-        width: 100%;
-        height: 100%;
-        padding-top: 5px;
-        padding-bottom: 10px;
-        padding-left: 10px;
-        background: rgb(255, 255, 255);
-
-        .form-name,
-        .form-type-customer,
-        .form-product-name,
-        .form-product-print-type,
-        .form-product-paper-type,
-        .form-product-quantity,
-        .form-film-lamination,
-        .form-die-cutting {
-            display: flex;
-            align-items: center;
-            padding: 2px;
-
-            label {
-                font-size: 16px;
-                font-weight: 500;
-            }
-
-            input,
-            select {
-                margin-left: 10px;
-                padding: 6px;
-                width: 60%;
-                border-radius: 6px;
-                border: 1px solid #ccc;
-
-                &:focus {
-                    border-color: #3b82f6;
-                }
-            }
-        }
-    }
-
-    .form-processing {
-        display: flex;
-        align-items: center;
-        flex-direction: column;
-        width: 100%;
-        padding: 1%;
-
-        .form-processing-list {
-            display: flex;
-            margin-left: 10px;
-        }
-        .form-processing-item {
-            display: flex;
-            align-items: center;
-            width: 100px;
-            margin-right: 20px;
-            margin-top: 10px;
-        }
-        label {
-            font-size: 16px;
-            font-weight: 500;
-            width: 150px;
-        }
-
-        input,
-        select {
-            margin-left: 10px;
-            padding: 6px;
-            width: 60%;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-
-            &:focus {
-                border-color: #3b82f6;
-            }
-        }
-    }
-
-    .form-product-size {
-        display: flex;
-        align-items: center;
-        padding: 1%;
-
-        label {
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        input,
-        select {
-            margin-left: 10px;
-            padding: 6px;
-            width: 13%;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-
-            &:focus {
-                border-color: #3b82f6;
-            }
-        }
-    }
-
-    .info-product {
-        background: green;
-    }
-    .info-quantity {
-        background: white;
-        
-        .button-processing{
-            background-color: #3b82f6;
-            color: white;
-            margin-bottom: 10px;
-        }
-    }
-}
-.quotation {
-    width: 40%;
-    height: 100%;
-    display: flex;
-    margin-left: 20px;
     justify-content: center;
 
-    .info-item {
-        width: 90%;
-        height: 50%;
-        margin-top: 20px;
-        border-radius: 5px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
-    }
-    .item-lable {
-        width: 100%;
-        height: 30px;
-        background: rgb(209, 209, 209);
-        display: flex;
-        align-items: center;
-        padding-left: 10px;
-    }
+    border: 1px solid #dbe2ea;
+    border-left: none;
 
-    .item-content {
-        width: 100%;
-        height: 60%;
-        // padding-top: px;
-        background: rgb(255, 255, 255);
-
-        .form-name,
-        .form-type-customer,
-        .form-product-name,
-        .form-sheets-page,
-        .form-printing-price,
-        .form-processing-price,
-        .form-discount {
-            display: flex;
-            align-items: center;
-            padding-left: 10px;
-
-            label {
-                font-size: 16px;
-                font-weight: 500;
-            }
-
-            span {
-                margin-left: 10px;
-                padding: 3px;
-            }
-        }
-    }
-
-    .total-price {
-        width: 100%;
-        height: 15%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: white;
-
-        label {
-            font-size: 24px;
-            font-weight: 500;
-        }
-        span {
-            margin-left: 10px;
-            padding: 6px;
-            font-size: 24px;
-
-        }
-    }
-
-    .text-money{
-        width: 100%;
-        background: white;
-    }
-
-    .action-buttons {
-        display: flex;
-        justify-content: center;
-        padding: 5%;
-        width: 100%;
-        height: 25%;
-        background: rgb(255, 255, 255);
-
-        button {
-            padding: 10px 20px;
-            margin: 0 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #3b82f6;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-
-            &:hover {
-                background-color: #2563eb;
-            }
-        }
-    }
+    border-radius: 0 12px 12px 0;
+  }
 }
 
-.tab-content {
-                table {
-                    width: 100%;
-                    align-content: center;
-                    margin-bottom: 20px;
-                    border-collapse: collapse;
+.product-grid {
+  display: grid;
+  grid-template-columns: 1fr 1px 1fr;
+  gap: 24px;
+}
 
-                    thead {
-                        background-color: #f3f4f6;
+.divider {
+  background: #e2e8f0;
+}
 
-                        th {
-                            padding: 12px;
-                            text-align: left;
-                            font-size: 14px;
-                            color: #3c414d;
-                        }
-                    }
+.product-left,
+.product-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
-                    tbody {
-                        tr {
-                            border-bottom: 1px solid #e5e7eb;
-                            text-align: left;
+.size-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 
-                            &:hover {
-                                background-color: #739bf0;
-                            }
+  input {
+    flex: 1;
+  }
 
-                            td {
-                                padding: 5px;
-                                font-size: 14px;
-                                color: #374151;
-                            }
+  .x,
+  .unit {
+    font-weight: 700;
+  }
+}
 
-                            .action-buttons {
-                                display: flex;
-                                gap: 5px;
-                                align-items: center;
-                                justify-content: right;
-                            }
+.add-processing {
+  height: 44px;
+  border: 1px solid #2563eb;
+  border-radius: 12px;
 
-                            .icon {
-                                cursor: pointer;
-                                font-size: 18px;
-                                transition: 0.2s;
-                            }
+  background: white;
+  color: #2563eb;
 
-                            .icon.edit-btn {
-                                color: #2563eb;
-                            }
+  padding: 0 18px;
+  margin-bottom: 20px;
+}
 
-                            .icon.edit-btn:hover {
-                                color: #1d4ed8;
-                                transform: scale(1.1);
-                            }
+.processing-table {
+  width: 100%;
+  border-collapse: collapse;
 
-                            .icon.delete-btn {
-                                color: #ef4444;
-                            }
+  th {
+    background: #f8fafc;
+    padding: 14px;
+    text-align: left;
+  }
 
-                            .icon.delete-btn:hover {
-                                color: #dc2626;
-                                transform: scale(1.1);
-                            }
-                        }
-                    }
-                }
-            }
+  td {
+    padding: 20px;
+  }
+}
+
+.empty-table {
+  text-align: center;
+  color: #94a3b8;
+
+  padding: 40px 0;
+
+  p {
+    margin: 12px 0 4px;
+  }
+}
+
+.result-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 22px;
+
+  strong {
+    font-size: 22px;
+  }
+}
+
+.total-box {
+  margin-top: 20px;
+
+  border: 1px solid #cfe0ff;
+  border-radius: 16px;
+
+  background: #f7fbff;
+  padding: 22px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h3 {
+    color: #2563eb;
+    margin: 0;
+  }
+
+  p {
+    margin-top: 5px;
+    color: #64748b;
+  }
+
+  span {
+    font-size: 48px;
+    font-weight: 700;
+    color: #2563eb;
+  }
+}
+
+.notice-box {
+  border: 1px solid #f7d28d;
+  background: #fffdf8;
+
+  h4 {
+    color: #d97706;
+    margin-bottom: 12px;
+  }
+
+  p {
+    line-height: 1.7;
+  }
+}
+
+.sidebar-actions {
+  display: flex;
+  margin-top: 20px;
+  gap: 12px;
+}
+
+.btn-primary,
+.btn-outline {
+  flex: 1;
+
+  height: 56px;
+
+  border-radius: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  font-weight: 600;
+}
+
+.btn-primary {
+  border: none;
+  background: #2563eb;
+  color: white;
+}
+
+.btn-outline {
+  background: white;
+  border: 1px solid #cbd5e1;
+}

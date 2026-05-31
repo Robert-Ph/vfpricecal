@@ -17,6 +17,7 @@ import SystemSetting from "../pages/SystemPage/Setting/SystemSetting";
 import SystemBackup from "../pages/SystemPage/Backup/SystemBackup"
 import NewProduct from "../pages/ProductPage/NewProduct";
 import Discount from "../pages/PriceComponent/discount/Discount";
+import QuotationMobile from "../pages/QuotationPage/QuotationMobile";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
   {
     path: "/forgot-password",
     element: <ForgotPassword />,
+  },
+  {
+    path: "/bao-gia/:companyName/:companyId",
+    element: <QuotationMobile />,
   },
   {
     path: "/",

@@ -8,6 +8,7 @@ import { deleteDiscount, getAllDiscountByCompany } from "../../../service/Discou
 import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
 import type { discountRequest } from "../../../model/model";
+import type { UserInfo } from "../../../context/AuthContext";
 
 const Discount = () => {
     const navigate = useNavigate();
@@ -15,8 +16,8 @@ const Discount = () => {
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [discount, setDiscount] = useState<discountRequest[]>([]); // State để quản lý danh mục lọc
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    const [selectedDiscountId, setSelectedDiscountId] = useState<number | null>(null);
-    const [user] = useState<any>(() => {
+    const [selectedDiscountId, setSelectedDiscountId] = useState<string | null>(null);
+    const [user] = useState<UserInfo | null>(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
             try {
@@ -34,7 +35,7 @@ const Discount = () => {
         const fetchCategories = async () => {
             try {
                 // Giả sử bạn có API getCategories
-                const data = await getAllDiscountByCompany(user.companyId); 
+                const data = await getAllDiscountByCompany(user?.companyId ?? ""); 
                 setDiscount(data.data);
             } catch (error) {
                 console.error("Lỗi khi lấy danh mục lọc:", error);
@@ -44,7 +45,7 @@ const Discount = () => {
         fetchCategories();
     }, [user?.companyId]);
 
-    const handleOpenDelete = (id: number) => {
+    const handleOpenDelete = (id: string) => {
         setSelectedDiscountId(id);
         setOpenDeleteModal(true);
         };
@@ -53,10 +54,10 @@ const Discount = () => {
         try {
             if (!selectedDiscountId) return;
     
-            await deleteDiscount(Number(selectedDiscountId), user.companyId);
+            await deleteDiscount(selectedDiscountId, user?.companyId ?? "");
     
             setDiscount((prev) =>
-                prev.filter((item) => item.id !== selectedDiscountId)
+                prev.filter((item) => String(item.id) !== selectedDiscountId)
             );
     
             toast.success("Xoá chiết khấu  thành công");
@@ -111,7 +112,7 @@ const Discount = () => {
                                             onClick={() => navigate(``)}>
                                             <FiEdit />
                                         </button>
-                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(Number(item.id))}><FiTrash2 /></button>
+                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(String(item.id))}><FiTrash2 /></button>
                                     </td>
                                 </tr>
                             ))}

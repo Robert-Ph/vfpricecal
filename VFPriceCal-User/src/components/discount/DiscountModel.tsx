@@ -2,6 +2,7 @@ import { useState} from "react";
 import "./discountModel.scss";
 import { toast } from "react-toastify";
 import { createDiscount } from "../../service/DiscountService";
+import type { UserInfo } from "../../context/AuthContext";
 
 
 const DiscountModel = ({ open, setOpen }) => {
@@ -11,7 +12,7 @@ const DiscountModel = ({ open, setOpen }) => {
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
 
 
-   const [user] = useState<any>(() => {
+   const [user] = useState<UserInfo | null>(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
             try {
@@ -36,7 +37,7 @@ const DiscountModel = ({ open, setOpen }) => {
     setError(""); // Reset error message
     const payload = {
         id: null, // ID sẽ được backend tạo tự động
-        companyId: Number(user?.companyId), // ID ẩn từ context
+        companyId: user?.companyId ?? "", // ID ẩn từ context
         name: discountName,
         discount: discount
 

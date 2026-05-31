@@ -38,7 +38,7 @@ const ProcessingAddModel = ({ open, setOpen }) => {
     setError(""); // Reset error message
     const payload = {
         id: null, // ID sẽ được backend tạo tự động
-        categoryId: Number(id), // ID ẩn từ context
+        categoryId: id, // ID ẩn từ context
         name: categoryName,
         price: priceProcessing
     };

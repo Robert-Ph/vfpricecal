@@ -6,8 +6,7 @@ import com.example.vfprint.entity.Token;
 import com.example.vfprint.repository.AccountRepository;
 import com.example.vfprint.repository.TokenRepository;
 import com.nimbusds.jose.JOSEException;
-
-import java.beans.Transient;
+import com.example.vfprint.repository.CompaniesRepository;
 import java.text.ParseException;
 import com.example.vfprint.dto.request.LoginRequest;
 import com.example.vfprint.dto.response.AuthenticationResponse;
@@ -18,12 +17,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.vfprint.config.EmailService;
 import com.example.vfprint.config.UltiService;
-
+import com.example.vfprint.entity.Companies;
 @Service
 public class AuthencaitonService {
 
     @Autowired
     private TokenRepository tokenRepository;
+
+    @Autowired
+    private CompaniesRepository companyRepository;
     
     @Autowired
     private AccountRepository accountRepository;
@@ -88,10 +90,15 @@ public class AuthencaitonService {
         tokenRepository.save(token);
 
 
+        Companies company = companyRepository.findById(account.getCompany().getId())
+                        .orElseThrow(() -> 
+                        new NoSuchElementException("Company not found")    
+                    );
         //response FE
         return AuthenticationResponse.builder()
             .token(jwtToken)
             .companyId(account.getCompany().getId())
+            .companyName(company.getCode())
             .username(account.getUsername())
             .email(account.getEmail())
             .role(account.getRole().getName()) // Gửi role để FE phân quyền Menu

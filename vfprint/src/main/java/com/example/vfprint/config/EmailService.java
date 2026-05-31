@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import jakarta.mail.MessagingException;
@@ -58,6 +59,31 @@ public class EmailService {
         // Nội dung thuần văn bản (Plain text)
         String body = "Xin chào,\n\n"
                     + "Hệ thống đã nhận được yêu cầu cấp lại mật khẩu của bạn.\n"
+                    + "Mật khẩu mới được cấp là: " + newPassword + "\n\n"
+                    + "Vui lòng đăng nhập lại bằng mật khẩu này và đổi ngay mật khẩu mới để đảm bảo an toàn.\n\n"
+                    + "Trân trọng,\n"
+                    + "vfpricecal.service@gmail.com";
+                    
+        message.setText(body);
+
+        // Tiến hành gửi
+        mailSender.send(message);
+        
+    }
+
+    @Async
+    public void sendPasswordNewAccount(String toEmail, String newPassword) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        
+        // Thiết lập người gửi (Tên hiển thị <email>)
+        message.setFrom("vfpricecal.service@gmail.com");
+        message.setTo(toEmail);
+        message.setSubject(" [VFPrint]Tài khoản mới của bạn đã được tạo");
+        
+        // Nội dung thuần văn bản (Plain text)
+        String body = "Xin chào,\n\n"
+                    + "Hệ thống đã nhận được yêu cầu tạo tài khoản mới cho bạn.\n"
+                    + "email đăng nhập của bạn là: " + toEmail + "\n"
                     + "Mật khẩu mới được cấp là: " + newPassword + "\n\n"
                     + "Vui lòng đăng nhập lại bằng mật khẩu này và đổi ngay mật khẩu mới để đảm bảo an toàn.\n\n"
                     + "Trân trọng,\n"

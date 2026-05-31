@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { deleteProcessing, getProcessingById } from "../../../service/ProcessingService";
 import ProcessingAddModel from "../../../components/processing/ProcessingAdd";
-import ConfirmModal from "../../../components/confirmModal";
+import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
 
 const ProcessingDetail = () => {
@@ -36,7 +36,7 @@ const ProcessingDetail = () => {
                 // const data = await getProcessingById(id); 
                 // setProcessingData(data);
                 // Tạm thời dùng dữ liệu giả để hiển thị
-                const data = await getProcessingById(Number(id));
+                const data = await getProcessingById(id);
                 setProcessingData(data.data);
             } catch (error) {
                 console.error("Lỗi khi lấy chi tiết gia công:", error);

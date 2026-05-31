@@ -34,12 +34,12 @@ public class PaperSizeController {
 
 
     @GetMapping
-    public List<PaperSizeDTO> getAllPaperSizes(@RequestParam("paperId") Long paperId){
+    public List<PaperSizeDTO> getAllPaperSizes(@RequestParam("paperId") UUID paperId){
         return paperSizeService.getPaperSizesByPaperId(null);
     }
 
     @GetMapping("/{paperId}")
-    public List<PaperSizeDTO> getPaperSizesByPaperId(@PathVariable Long paperId) {
+    public List<PaperSizeDTO> getPaperSizesByPaperId(@PathVariable UUID paperId) {
         return paperSizeService.getPaperSizesByPaperId(paperId);
     }
     

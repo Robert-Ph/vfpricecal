@@ -8,9 +8,9 @@ const MainLayout = () => {
         <div className="layout">
             <Sidebar />
             <div className="main">
-                <div className="nav">
+                {/* <div className="nav">
                     <Topbar />
-                </div>
+                </div> */}
 
                 <div className="content">
                     <Outlet />

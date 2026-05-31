@@ -33,7 +33,7 @@ export const getCategories = async (companyId: number) => {
     }
 };
 
-export const getProcessingById = async (processingId: number) => {
+export const getProcessingById = async (processingId: string) => {
     try {
         const response = await apiClient.get(`/processing/${processingId}`); 
         return response.data; // Assuming the processing details are in response.data

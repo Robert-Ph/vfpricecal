@@ -8,7 +8,7 @@ import {
 } from "../../service/ProcessingService";
 
 interface ProcessingItem {
-    id: number;
+    id: TemplateStringsArray;
     name: string;
 }
 
@@ -34,7 +34,7 @@ const ProcessingsCalModel = ({
 
     const [typeList, setTypeList] = useState<ProcessingTypeResponse | null>(null);
 
-    const [processingName, setProcessingName] =useState<number | null>(null);
+    const [processingName, setProcessingName] =useState<string>("");
 
     const [type, setType] =useState("");
 
@@ -85,9 +85,7 @@ const ProcessingsCalModel = ({
             if (!processingName) return;
 
             try {
-                const data = await getProcessingById(
-                    processingName
-                );
+                const data = await getProcessingById(processingName);
 
                 setTypeList(data.data);
 
@@ -147,7 +145,7 @@ const ProcessingsCalModel = ({
         setOpen(false);
 
         // Reset
-        setProcessingName(null);
+        setProcessingName("");
         setType("");
         setError("");
 
@@ -175,7 +173,7 @@ const ProcessingsCalModel = ({
                             value={processingName ?? ""}
                             onChange={(e) =>
                                 setProcessingName(
-                                    Number(e.target.value)
+                                    e.target.value
                                 )
                             }
                         >

@@ -67,14 +67,14 @@ public class JwtAuthenticationFilter
          */
         String jwt = authHeader.substring(7);
         
-        System.out.println("JWT REQUEST = " + jwt);
+        // System.out.println("JWT REQUEST = " + jwt);
 
         /**
          * STEP 3
          * verify JWT
          */
         boolean validJwt = jwtService.isTokenValid(jwt);
-        System.out.println("VALID JWT = " + validJwt);
+        // System.out.println("VALID JWT = " + validJwt);
 
         if (!validJwt) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -90,12 +90,12 @@ public class JwtAuthenticationFilter
                         .findById(jwt)
                         .orElse(null);
 
-                        System.out.println("TOKEN ENTITY = " + tokenEntity);
+                        // System.out.println("TOKEN ENTITY = " + tokenEntity);
         /**
          * token đã logout
          */
         if (tokenEntity != null && tokenEntity.isRevoked()) {
-            System.out.println("TOKEN BỊ CHẶN VÌ ĐÃ REVOKED!");
+        //     System.out.println("TOKEN BỊ CHẶN VÌ ĐÃ REVOKED!");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
@@ -118,11 +118,11 @@ public class JwtAuthenticationFilter
                 authorities = List.of(new SimpleGrantedAuthority(finalRole));
         }
 
-        // In ra log để bạn tiện theo dõi ở console khi test
-        System.out.println("--- CHECK QUYỀN USER ---");
-        System.out.println("User Email: " + email);
-        System.out.println("Quyền thực tế được gán: " + authorities);
-        System.out.println("------------------------");
+        // // In ra log để bạn tiện theo dõi ở console khi test
+        // System.out.println("--- CHECK QUYỀN USER ---");
+        // System.out.println("User Email: " + email);
+        // System.out.println("Quyền thực tế được gán: " + authorities);
+        // System.out.println("------------------------");
 
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(

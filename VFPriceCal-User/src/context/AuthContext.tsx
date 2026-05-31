@@ -2,7 +2,8 @@ import { createContext } from "react";
 
 // 1. Định nghĩa cấu trúc UserInfo khớp với dữ liệu ẩn bạn muốn lưu
 export interface UserInfo {
-  companyId: number;
+  companyId: string; // Hoặc number nếu companyId là số
+  companyName: string;
   username: string;
   email: string;
   role: string;

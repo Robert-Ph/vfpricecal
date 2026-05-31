@@ -68,21 +68,23 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/companies/**",
-                                "/api/accounts/**"
+                                "/api/accounts/**",
+                                "/api/system/**",
+                                "/api/bao-gia/**"
                         ).permitAll()
 
                         /**
                         * 2. API phân quyền nội bộ công ty (Cần đăng nhập)
                         */
                         // Bảng giá in ấn và Giảm giá: Cả Admin và User của công ty đều xem được
-                        .requestMatchers("/api/print-prices/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/api/discount/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/api/profit/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/api/paper-sizes/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/api/papers/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/api/category/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/api/role/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/api/processing/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/print-prices/**").hasAnyRole("OWNER", "STAFF")
+                        .requestMatchers("/api/discount/**").hasAnyRole("OWNER", "STAFF")
+                        .requestMatchers("/api/profit/**").hasAnyRole("OWNER", "STAFF")
+                        .requestMatchers("/api/paper-sizes/**").hasAnyRole("OWNER", "STAFF")
+                        .requestMatchers("/api/papers/**").hasAnyRole("OWNER", "STAFF")
+                        .requestMatchers("/api/category/**").hasAnyRole("OWNER", "STAFF")
+                        .requestMatchers("/api/role/**").hasAnyRole("OWNER", "STAFF")
+                        .requestMatchers("/api/processing/**").hasAnyRole("OWNER", "STAFF")
 
                         /**
                          * Protected API

@@ -12,7 +12,7 @@ export const createPaper = async (companyId: number, name: string, gsm: string, 
     }
 };
 
-export const getPapers = async (companyId: number) => {
+export const getPapers = async (companyId: string) => {
     try {
         const response = await apiClient.get(`/papers?companyId=${companyId}`); 
         return response.data; // Assuming the list of papers is in response.data
@@ -23,7 +23,7 @@ export const getPapers = async (companyId: number) => {
     }
 };
 
-export const getPaperById = async (paperId: number) => {
+export const getPaperById = async (paperId: string) => {
     try {
         const response = await apiClient.get(`/papers/${paperId}`); 
         return response.data; // Assuming the paper details are in response.data
@@ -34,7 +34,7 @@ export const getPaperById = async (paperId: number) => {
     }
 };
 
-export const deletePaper = async (id: number, comapanyId: number) => {
+export const deletePaper = async (id: number, comapanyId: string) => {
     try{
         const response = await apiClient.delete(`/papers/${id}?companyId=${comapanyId}`)
         return response.data;
@@ -44,7 +44,7 @@ export const deletePaper = async (id: number, comapanyId: number) => {
     }
 }
 
-export const deletePaperSize = async (id: number, paperId: number) => {
+export const deletePaperSize = async (id: number, paperId: string) => {
     try{
         const response = await apiClient.delete(`/paper-sizes/${id}?paperId=${paperId}`);
         return response.data;

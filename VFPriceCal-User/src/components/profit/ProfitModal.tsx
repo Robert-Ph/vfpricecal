@@ -2,18 +2,17 @@ import {useState} from "react";
 import "./profitModal.scss";
 import { toast } from "react-toastify";
 import { create } from "../../service/ProfitService";
-import { useParams } from "react-router-dom";
+import type { UserInfo } from "../../context/AuthContext";
 
 
 const ProfitModal = ({ open, setOpen }) => {
 
   const [profitName, setProfitName] = useState<string>("");
-  const [percentage, setpercentage] = useState(Number);
+  const [percentage, setpercentage] = useState<number>(0);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
-  const {id} = useParams();
 
 
-   const [user] = useState<any>(() => {
+   const [user] = useState<UserInfo | null>(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
             try {
@@ -39,11 +38,12 @@ const ProfitModal = ({ open, setOpen }) => {
     setError(""); // Reset error message
     const payload = {
         id: null, // ID sẽ được backend tạo tự động
-        companyId: Number(user?.companyId), // ID ẩn từ context
+        companyId: user?.companyId ?? "", // ID ẩn từ context
         name: profitName,
         percentage: percentage
 
     };
+    console.log("Payload gửi đi:", user?.companyId); // Kiểm tra payload trước khi gửi API
 
     // Gọi API để tạo mới danh mục
     // Ví dụ: createCategory(payload).then(() => { ... });

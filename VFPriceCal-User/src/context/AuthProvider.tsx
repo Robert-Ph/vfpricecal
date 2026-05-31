@@ -12,10 +12,25 @@ interface UserInfo {
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Khởi tạo state từ localStorage để tránh mất dữ liệu khi F5 (Refresh) trang
-  const [user, setUser] = useState<UserInfo | null>(() => {
+ const [user, setUser] = useState<UserInfo | null>(() => {
+  try {
     const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+
+    if (
+      !savedUser ||
+      savedUser === "undefined" ||
+      savedUser === "null"
+    ) {
+      return null;
+    }
+
+    return JSON.parse(savedUser);
+  } catch (error) {
+    console.error("Invalid user data:", error);
+    localStorage.removeItem("user");
+    return null;
+  }
+});
 
   const [role, setRole] = useState<string | null>(
     localStorage.getItem("role")

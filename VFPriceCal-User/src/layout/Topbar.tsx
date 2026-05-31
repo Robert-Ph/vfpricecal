@@ -1,9 +1,11 @@
 import "./topbar.scss"
 import { useState, useRef, useEffect } from "react";
-import { FaCog, FaKey, FaSignOutAlt } from "react-icons/fa";
+import { FaCog, FaKey, FaSignOutAlt, FaChartLine } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import {logout} from "../service/AuthService";
 import ChangePasswordModal from "../components/auth/ChandePassword";
+import type { UserInfo } from "../context/AuthContext";
+
 
 const Topbar = () => {
     const [openDropdown, setOpenDropdown] = useState(false);
@@ -13,7 +15,7 @@ const Topbar = () => {
    // Thêm "as AuthContextType" ở cuối
 
 // Khởi tạo state bằng một hàm (Lazy initialization)
-    const [user, setUser] = useState<any>(() => {
+    const [user, setUser] = useState<UserInfo | null>(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
             try {
@@ -60,6 +62,10 @@ const Topbar = () => {
         } 
     };
 
+    const handleClickModal = () => {
+       navigate(`/bao-gia/${user?.companyName}/${user?.companyId}`);
+    };
+
 
     
     return (
@@ -75,10 +81,10 @@ const Topbar = () => {
                         <FaKey className="dropdown-icon" />
                         <span onClick={() => setOpenPaperModal(true)}>Đổi mật khẩu</span>
                     </div>
-                    {/* <div className="dropdown-item">
+                    <div className="dropdown-item" onClick={handleClickModal}>
                         <FaChartLine className="dropdown-icon" />
-                        <span>Thống kê</span>
-                    </div> */}
+                        <span >Sao chép liên kết</span>
+                    </div>
                     <div className="dropdown-item" onClick={handleLogout}>
                         <FaSignOutAlt className="dropdown-icon" />
                         <span>Đăng xuất</span>

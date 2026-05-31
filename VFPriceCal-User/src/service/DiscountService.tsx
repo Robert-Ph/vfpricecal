@@ -11,7 +11,7 @@ export const createDiscount = async(data: discountRequest): Promise<discountRequ
     }
 }
 
-export const getAllDiscountByCompany = async (companyId: number) => {
+export const getAllDiscountByCompany = async (companyId: string) => {
     try{
         const response = await apiClient.get(`/discount?companyId=${companyId}`);
         return response.data;
@@ -21,7 +21,7 @@ export const getAllDiscountByCompany = async (companyId: number) => {
     }
 }
 
-export const deleteDiscount = async (id: number, companyId: number) => {
+export const deleteDiscount = async (id: string, companyId: string) => {
     try{
         const response = await apiClient.delete(`/discount/${id}?companyId=${companyId}`);
         return response.data;

@@ -17,6 +17,7 @@ import com.example.vfprint.entity.Companies;
 import com.example.vfprint.repository.AccountRepository;
 import com.example.vfprint.repository.RolesRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.example.vfprint.repository.UserStatusREpository;
 
 @Service
 public class AccountService {
@@ -34,6 +35,8 @@ public class AccountService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserStatusREpository userStatusRepository;
 
 
     // Create a new account with encoded password
@@ -54,6 +57,9 @@ public class AccountService {
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
     
+        UserStatus activeStatus = userStatusRepository.findByCode("ACTIVE")
+                .orElseThrow(() -> new RuntimeException("User status not found"));
+                
       // 4. Sử dụng Builder (Đúng chuẩn với annotation @Builder bạn đã đặt ở Entity)
         Account account = Account.builder()
             .email(accountDto.getEmail())
@@ -61,7 +67,7 @@ public class AccountService {
             .password(passwordEncoder.encode(accountDto.getPassword()))
             .company(company)
             .role(role)
-            .status(UserStatus.builder().id(accountDto.getStatusId()).build())
+            .status(activeStatus) // Hoặc lấy từ DTO nếu bạn muốn cho phép set status khi tạo
             .build(); // Đảm bảo không có trường ID nào bị set thủ công ở đây
         //5. luu account moi vao database
         accountRepository.save(account);

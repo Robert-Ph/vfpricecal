@@ -127,12 +127,13 @@ public class PaperSizeService {
     }
 
     @Transactional
-    public List<PaperSizeDTO> getPaperSizesByPaperId(Long paperId){
+    public List<PaperSizeDTO> getPaperSizesByPaperId(UUID paperId){
         return paperSizeRepository.findAll()
                 .stream()
                 .filter(ps -> ps.getPaper().getId().equals(paperId))
                 .map(ps -> {
                     PaperSizeDTO dto = new PaperSizeDTO();
+                    dto.setId(ps.getId());
                     dto.setPaperId(ps.getPaper().getId());
                     dto.setWidth(ps.getWidth());
                     dto.setHeight(ps.getHeight());

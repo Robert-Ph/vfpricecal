@@ -1,22 +1,17 @@
-package com.example.vfprint.dto;
-
-import java.util.UUID;
+package com.example.vfprint.dto.quotation;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
-public class PaperSizeDTO {
+public class PaperSizeQuatation {
     private UUID id;
-    private UUID paperId;
     private int width;
     private int height;
-    private Float price; // Giá của size này
-
 }

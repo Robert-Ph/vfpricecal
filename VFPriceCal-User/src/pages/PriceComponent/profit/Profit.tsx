@@ -12,7 +12,7 @@ const Profit = () => {
     const navigate = useNavigate();
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedProfitId, setSelectedProfitId] = useState<number | null>(null);
+    const [selectedProfitId, setSelectedProfitId] = useState<string>("");
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [profit, setProfit] = useState<any[]>([]); // State để quản lý danh mục lọc
      // item đang edit
@@ -53,7 +53,7 @@ const Profit = () => {
         fetchCategories();
     }, [user?.companyId]);
 
-    const handleOpenDelete = (id: number) => {
+    const handleOpenDelete = (id: string) => {
             setSelectedProfitId(id);
             setOpenDeleteModal(true);
             };
@@ -63,7 +63,7 @@ const Profit = () => {
             try {
                 if (!selectedProfitId) return;
         
-                await deleteProfitByCompany(Number(selectedProfitId), user.companyId);
+                await deleteProfitByCompany(selectedProfitId, user.companyId);
         
                 setProfit((prev) =>
                     prev.filter((item) => item.id !== selectedProfitId)

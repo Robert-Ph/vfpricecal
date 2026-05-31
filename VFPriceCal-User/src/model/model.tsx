@@ -1,6 +1,6 @@
 export type account = {
     id: number | null;
-    comapnyId: number;
+    comapnyId: string;
     username: string;
     password: string;
     roleId: number;
@@ -35,7 +35,7 @@ export type category = {
 
 export type processing = {
     id: number | null;
-    categoryId: number;
+    categoryId: number | null;
     name: string;
     price: number;
 }
@@ -75,25 +75,25 @@ export type calculate = {
     widthProduct: number | null;
     heightProduct: number | null;
     quantity: number | null;
-    processingIds: any[];
-    paperId: number | null;
-    paperSizeId: number | null;
-    companyId: number | null;
-    printPrice: number | null;
-    profit: number | null;
-    discount: number | null;
+    processingIds: string[];
+    paperId: string | null;
+    paperSizeId: string | null;
+    companyId: string | null;
+    printPrice: string | null;
+    profit: string | null;
+    discount: string | null;
 }
 
 export type profitRequest = {
     id: number | null;
-    companyId: number | null;
+    companyId: string ;
     name: string;
     percentage: number | null;
 }
 
 export type discountRequest = {
     id: number | null;
-    companyId: number | null;
+    companyId: string ;
     name: string;
     discount: number | null;
 }

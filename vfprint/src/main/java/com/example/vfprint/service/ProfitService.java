@@ -10,12 +10,16 @@ import com.example.vfprint.dto.request.ProfitRequest;
 import com.example.vfprint.entity.Profit;
 import com.example.vfprint.repository.ProfitRepository;
 import com.example.vfprint.entity.Companies;
-
+import com.example.vfprint.repository.CompaniesRepository;
 @Service
 public class ProfitService {
     
     @Autowired
     private ProfitRepository profitRepository;
+
+    @Autowired
+    private CompaniesRepository companyRepository;
+
 
     @Transactional
     public void createProfit(ProfitRequest profitRequest){
@@ -23,9 +27,13 @@ public class ProfitService {
             throw new RuntimeException("Profit with the given name already exists");
         }
 
+        Companies company = companyRepository.findById(profitRequest.getCompanyId())
+                        .orElseThrow(() -> 
+                        new RuntimeException("Company with the given ID does not exist")    
+                    );
         profitRepository.save(
             Profit.builder()
-            .company(Companies.builder().id(profitRequest.getCompanyId()).build())
+            .company(company)
             .name(profitRequest.getName())
             .percentage(profitRequest.getPercentage())
             .build()

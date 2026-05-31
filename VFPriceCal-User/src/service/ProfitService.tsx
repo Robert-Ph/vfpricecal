@@ -12,7 +12,7 @@ export const create = async (data:profitRequest): Promise<profitRequest> => {
     }
 }
 
-export const getAllProfitByCompany = async (companyId: number) => {
+export const getAllProfitByCompany = async (companyId: string) => {
     try{
         const response = await apiClient.get(`/profit?companyId=${companyId}`);
         return response.data;
@@ -22,7 +22,7 @@ export const getAllProfitByCompany = async (companyId: number) => {
     }
 }
 
-export const deleteProfitByCompany = async (id: number, companyId: number) => {
+export const deleteProfitByCompany = async (id: string, companyId: string) => {
     try{
         const response = await apiClient.delete(`/profit/${id}?companyId=${companyId}`);
         return response.data;

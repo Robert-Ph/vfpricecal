@@ -12,7 +12,7 @@ const PaperDetail = () => {
     const [activeTab, setActiveTab] = useState("paper");
     const [paperData, setPaperData] = useState<any[]>([]); // State để lưu chi tiết giấy/vật liệu
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
+    const [selectedPaperId, setSelectedPaperId] = useState<string>("");
     const {id} = useParams();
     const [openPaperModal, setOpenPaperModal] = useState(false);
 
@@ -38,7 +38,7 @@ const PaperDetail = () => {
                 // const data = await getPaperById(id); 
                 // setPaperData(data);
                 // Tạm thời dùng dữ liệu giả để hiển thị
-                const data = await getPaperById(Number(id));
+                const data = await getPaperById(id);
                 setPaperData(data.data);
             } catch (error) {
                 console.error("Lỗi khi lấy chi tiết giấy/vật liệu:", error);
@@ -56,7 +56,7 @@ const PaperDetail = () => {
         try {
             if (!selectedPaperId) return;
     
-            await deletePaperSize(Number(selectedPaperId), Number(id));
+            await deletePaperSize(selectedPaperId, id);
     
             setPaperData((prev) => ({
                 ...prev,

@@ -1,6 +1,7 @@
 package com.example.vfprint.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -10,6 +11,14 @@ import com.example.vfprint.repository.CompaniesRepository;
 import com.example.vfprint.dto.CompaniesDto;
 import com.example.vfprint.entity.Companies;
 import com.example.vfprint.entity.CompaniesStatus;
+import com.example.vfprint.repository.RolesRepository;
+import com.example.vfprint.dto.AccountDTO;
+import com.example.vfprint.entity.Roles;
+import com.example.vfprint.config.UltiService;
+import com.example.vfprint.config.EmailService;
+import com.example.vfprint.repository.UserStatusREpository;
+import com.example.vfprint.entity.UserStatus;
+
 
 @Service
 public class CompaniesService {
@@ -20,6 +29,24 @@ public class CompaniesService {
     @Autowired
     private CompanyStatusRepository companyStatusRepository;
 
+    @Autowired
+    private RolesRepository roleRepository;
+
+    @Autowired
+    private UltiService ultiService;
+
+    @Autowired
+    private AccountService accountService;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserStatusREpository userStatusRepository;
+
 
     // Create a new company
     @Transactional
@@ -29,6 +56,8 @@ public class CompaniesService {
             throw new RuntimeException("Company with the same name already exists");
         }
 
+        CompaniesStatus status = companyStatusRepository.findById(company.getStatusId())
+                .orElseThrow(() -> new RuntimeException("Company status not found"));
         Companies entity = Companies.builder()
                 .name(company.getName())
                 .phone(company.getPhone())
@@ -37,12 +66,32 @@ public class CompaniesService {
                 .email(company.getEmail())
                 .code(company.getCode())
                 .logoUrl(company.getLogoUrl())
-                .status(CompaniesStatus.builder().id(company.getStatusId()).build())
+                .status(status)
                 .createAt(new java.sql.Timestamp(System.currentTimeMillis()))
                 .updateAt(new java.sql.Timestamp(System.currentTimeMillis()))
                 .build();
 
         companiesRepository.save(entity);
+
+        Roles role = roleRepository.findByName("OWNER")
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+
+                // Generate a new random password (you can use a more secure method in production)
+        String newPassword = ultiService.generateRandomPassword();
+
+        AccountDTO accountDto = new AccountDTO();
+        accountDto.setEmail(company.getEmail());
+        accountDto.setUsername(company.getName());
+        accountDto.setPassword(passwordEncoder.encode(newPassword)); // Sử dụng mật khẩu ngẫu nhiên đã tạo
+        accountDto.setCompanyId(entity.getId());
+        accountDto.setRoleId(role.getId()); // ID của role "Owner"
+        
+        UserStatus activeStatus = userStatusRepository.findByCode("ACTIVE")
+                .orElseThrow(() -> new RuntimeException("User status not found"));
+        accountDto.setStatusId(activeStatus.getId());
+
+        accountService.createAccount(accountDto);
+        emailService.sendPasswordNewAccount(company.getEmail(), newPassword);
     }
 
     // Update company details
