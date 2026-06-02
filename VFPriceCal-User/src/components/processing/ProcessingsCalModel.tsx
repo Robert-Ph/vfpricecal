@@ -20,6 +20,7 @@ interface Props {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onAdd: (data: any) => void;
+    companyId: string;
     data: any[];
 }
 
@@ -27,6 +28,7 @@ const ProcessingsCalModel = ({
     open,
     setOpen,
     onAdd,
+    companyId,
     data
 }: Props) => {
 
@@ -59,7 +61,7 @@ const ProcessingsCalModel = ({
 
         const fetchProcessingNames = async () => {
             try {
-                const data = await getCategories(user.companyId);
+                const data = await getCategories(companyId);
 
                 setProcessingNameList(data.data || []);
 
@@ -149,7 +151,6 @@ const ProcessingsCalModel = ({
         setType("");
         setError("");
 
-        toast.success("Thêm gia công thành công");
     };
 
     if (!open) return null;

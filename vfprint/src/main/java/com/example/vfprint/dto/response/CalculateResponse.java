@@ -10,7 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CalculateResponse {
-    private Long price;
+    private double price;
     private int quantityPaper;
     private int productSheet;
+    private String paperSize;
+    private double processingCost;
+    private double discount;
+    private double paperCost;
 }

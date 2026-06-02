@@ -14,7 +14,6 @@ public class InfoPriceDTO {
     private Integer quantity;
     private List<CalculateRequest> processingIds;
     private UUID paperId;
-    private UUID paperSizeId;
     private UUID companyId;
     private UUID printPrice;
     private UUID profit;

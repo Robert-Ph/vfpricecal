@@ -23,7 +23,7 @@ export const createProcessingByCategory = async (data: processing): Promise<proc
     }
 };
 
-export const getCategories = async (companyId: number) => {
+export const getCategories = async (companyId: string) => {
     try {
         const response = await apiClient.get(`/category?companyId=${companyId}`); 
         return response.data; // Assuming the list of categories is in response.data

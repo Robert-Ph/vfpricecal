@@ -9,6 +9,7 @@ import { formatMoney } from "../../utils/formatMoney";
 import { numberToVietnameseText } from "../../utils/MoneyModel";
 import { getAllDiscountByCompany } from "../../service/DiscountService";
 import type { UserInfo } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import {
   FiFileText,     // Báo giá
   FiRefreshCw,    // Làm mới
@@ -17,23 +18,22 @@ import {
   FiPackage,      // Thông tin sản phẩm
   FiSettings,     // Gia công sau in
   FiGrid,         // Kết quả báo giá
-  FiInfo,         // Thông tin
-  FiPlus,
   FiTrash2
 } from "react-icons/fi";
 
 
 
 
+
 const QuotationPage = () => {
 
+    const navigate = useNavigate();
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [processingList, setProcessingList] = useState<any[]>([]); 
     const [printPriceList, setPrintPriceList] = useState<any[]>([]);
     const [width, setWidth] = useState<number | null>(null);
     const [height, setHeight] = useState<number | null>(null);
     const [printPrice, setPrintPrice] = useState<string | null>(null);
-    const [paperSize, setPaperSize] = useState<string>("");
     const [quantity, setQuantity] = useState<number | null>(null);
     const [vat, setVat] = useState<number | null>(null);
     const [paperList, setPaperList] = useState<any[]>([]); // State để quản lý danh sách giấy/vật liệu trong báo giá
@@ -45,6 +45,7 @@ const QuotationPage = () => {
     const [result, setResult] = useState<any>(null);
     const [discountId, setDiscountId] = useState<string | null>(null);
     const [name, setName] = useState<string>("");
+
     
 
 
@@ -136,7 +137,6 @@ const QuotationPage = () => {
                 quantity: quantity,
                 processingIds: processingList,
                 paperId: selectedPaperId,
-                paperSizeId: paperSize,
                 companyId: user?.companyId ?? "",
                 printPrice: printPrice,
                 profit: profit,
@@ -151,6 +151,9 @@ const QuotationPage = () => {
         }
     }
 
+  const handShare = () => {
+  navigate(`/bao-gia/${user?.companyName}/${user?.companyId}`);
+};
 
     return (
         <div className="quotation-page">
@@ -174,10 +177,14 @@ const QuotationPage = () => {
         Làm mới
       </button>
 
-      <button className="btn-primary">
+      <button className="btn-primary" onClick={() => handShare()}>
         <FiPrinter />
-        In báo giá
+        Chia sẻ
       </button>
+       <button className="btn-primary" onClick={handleSumitCalculate}>
+          <FiGrid />
+          Tính báo giá
+        </button>
     </div>
   </div>
 
@@ -198,11 +205,11 @@ const QuotationPage = () => {
 
           <div className="field">
             <label>Tên báo giá</label>
-            <input placeholder="Nhập tên báo giá" />
+            <input placeholder="Nhập tên báo giá" onChange={(e) => setName(e.target.value)}/>
           </div>
 
           <div className="field">
-            <label>Loại khách hàng</label>
+            <label>Loại khách hàng<span className="required">*</span></label>
             <select onChange={(e) => setDiscountId(e.target.value)}>
               <option>Chọn loại khách hàng</option>
                 {discountList.map((item) => (
@@ -214,7 +221,7 @@ const QuotationPage = () => {
           </div>
 
           <div className="field">
-            <label>Biên lợi nhuận</label>
+            <label>Biên lợi nhuận<span className="required">*</span></label>
             <select onChange={(e) => setProfit(e.target.value)}>
               <option>Chọn</option>
                 {profitList.map((item) => (
@@ -249,7 +256,7 @@ const QuotationPage = () => {
 
           <div className="product-left">
 
-            <label>Kích thước sản phẩm</label>
+            <label>Kích thước sản phẩm<span className="required">*</span></label>
 
             <div className="size-group">
               <input type="number" placeholder="Nhập chiều rộng"  onChange={(e) => setWidth(Number(e.target.value))} />
@@ -261,25 +268,7 @@ const QuotationPage = () => {
               <span className="unit">mm</span>
             </div>
 
-            <label>Khổ giấy in</label>
-
-            <select onChange={(e) => setPaperSize(e.target.value)}>
-              <option>Chọn kích thước</option>
-                {paperSizeList.map((size) => (
-                    <option key={size.id} value={size.id}>
-                        {size.width} x {size.height} mm
-                    </option>
-                ))}
-            </select>
-
-          </div>
-
-          <div className="divider"></div>
-
-          <div className="product-right">
-
-            <div className="field">
-              <label>Loại hình in</label>
+                <label>Loại hình in<span className="required">*</span></label>
               <select onChange={(e) => setPrintPrice(e.target.value)}>
                 <option>Chọn loại</option>
                 {printPriceList.map((item) => (
@@ -288,10 +277,18 @@ const QuotationPage = () => {
                   </option>
                 ))}
               </select>
-            </div>
 
-            <div className="field">
-              <label>Loại giấy in</label>
+
+            
+
+          </div>
+
+          <div className="divider"></div>
+
+          <div className="product-right">
+
+                 <div className="field">
+              <label>Loại giấy in <span className="required">*</span></label>
               <select 
                 onChange={(e) => setSelectedPaperId(e.target.value)}
                 >
@@ -305,7 +302,7 @@ const QuotationPage = () => {
             </div>
 
             <div className="field">
-              <label>Số lượng</label>
+              <label>Số lượng<span className="required">*</span></label>
               <input type="number" placeholder="Nhập số lượng" onChange={(e) => setQuantity(Number(e.target.value))} />
             </div>
 
@@ -326,14 +323,6 @@ const QuotationPage = () => {
         </button>
 
         <table className="processing-table">
-          <thead>
-            <tr>
-              <th>STT</th>
-              <th>Loại gia công</th>
-              <th>Thao tác</th>
-            </tr>
-
-          </thead>
 
           <tbody>
             {processingList.length > 0 ? (
@@ -341,7 +330,6 @@ const QuotationPage = () => {
                     <tr key={index}>
                         <td>{index + 1}</td>
                         <td>{item.name}</td>
-                        <td>{item.description}</td>
                         <td>
                            
                            <button
@@ -384,7 +372,14 @@ const QuotationPage = () => {
 
         <div className="section-title">
           <FiGrid />
-          <span>KẾT QUẢ BÁO GIÁ</span>
+          <span>KẾT QUẢ BÁO GIÁ:</span>
+          
+        </div>
+      <p className="result-subtitle">{name || ""}</p>
+
+         <div className="result-row">
+          <span>Khổ in</span>
+          <strong>{result?.data?.paperSize || 0} mm</strong>
         </div>
 
         <div className="result-row">
@@ -405,6 +400,15 @@ const QuotationPage = () => {
           <strong> {result?.data?.quantityPaper ?? 0} tờ</strong>
         </div>
 
+        <div className="result-row">
+          <span>Giá giấy in</span>
+          <strong> {formatMoney(result?.data?.paperCost|| 0)}/tờ</strong>
+        </div>
+
+        <div className="result-row">
+          <span>Giá gia công</span>
+          <strong> {formatMoney(result?.data?.processingCost || 0)}</strong>
+        </div>
         <hr />
 
         <div className="result-row">
@@ -416,10 +420,18 @@ const QuotationPage = () => {
         </div>
 
         <div className="result-row">
+          <span>Giảm giá</span>
+          <strong> {formatMoney(
+                            (result?.data?.discount || 0)
+                            
+                        )}</strong>
+        </div>
+
+        <div className="result-row">
           <span>VAT (%)</span>
           <strong>{formatMoney(
                             result?.data?.price *
-                            ((vat || 0) / 100)
+                            ((vat || 0) / 100) || 0
                         )}</strong>
         </div>
 
@@ -446,24 +458,13 @@ const QuotationPage = () => {
         </p>
       </div>
 
-      <div className="sidebar-actions">
-        <button className="btn-outline">
-          <FiRefreshCw />
-          Làm mới
-        </button>
-
-        <button className="btn-primary" onClick={handleSumitCalculate}>
-          <FiGrid />
-          Tính báo giá
-        </button>
-      </div>
-
     </div>
   </div>
   <ProcessingsCalModel
         open={openPaperModal}
         setOpen={setOpenPaperModal}
         onAdd={handleAddProcessing}
+        companyId={user?.companyId ?? ""}
         data={processingList}
     />
 </div>
@@ -473,432 +474,3 @@ const QuotationPage = () => {
 
 export default QuotationPage;
 
-{/* <ProcessingsCalModel
-        open={openPaperModal}
-        setOpen={setOpenPaperModal}
-        onAdd={handleAddProcessing}
-        data={processingList}
-    /> */}
-
-//     <div className="quotation-page">
-
-//     {/* HEADER */}
-//     <div className="quotation-header">
-
-//         <div className="header-title">
-//             <FiFileText className="title-icon" />
-
-//             <div>
-//                 <h1>BÁO GIÁ</h1>
-//                 <p>Tính toán và tạo báo giá nhanh chóng</p>
-//             </div>
-//         </div>
-
-//         <div className="header-actions">
-//             <button className="btn-outline">
-//                 <FiRefreshCw />
-//                 Làm mới
-//             </button>
-
-//             <button className="btn-primary">
-//                 <FiPrinter />
-//                 In báo giá
-//             </button>
-//         </div>
-
-//     </div>
-
-//     <div className="quotation-layout">
-
-//         {/* LEFT */}
-//         <div className="quotation-left">
-
-//             {/* THÔNG TIN CHUNG */}
-
-//             <div className="card">
-
-//                 <div className="card-title">
-//                     <FiLayers />
-//                     <span>THÔNG TIN CHUNG</span>
-//                 </div>
-
-//                 <div className="form-grid">
-
-//                     <div className="form-group">
-//                         <label>Tên báo giá</label>
-//                         <input
-//                             type="text"
-//                             placeholder="Nhập tên báo giá"
-//                             onChange={(e) => setName(e.target.value)}
-//                         />
-//                     </div>
-
-//                     <div className="form-group">
-//                         <label>Loại khách hàng</label>
-//                         <select
-//                             onChange={(e) =>
-//                                 setdicountId(Number(e.target.value))
-//                             }
-//                         >
-//                             <option value="">
-//                                 Chọn loại khách hàng
-//                             </option>
-
-//                             {discountList.map((item) => (
-//                                 <option
-//                                     key={item.id}
-//                                     value={item.id}
-//                                 >
-//                                     {item.name}
-//                                 </option>
-//                             ))}
-//                         </select>
-//                     </div>
-
-//                     <div className="form-group">
-//                         <label>Biên lợi nhuận</label>
-
-//                         <select
-//                             onChange={(e) =>
-//                                 setProfit(e.target.value)
-//                             }
-//                         >
-//                             <option value="">
-//                                 Chọn
-//                             </option>
-
-//                             {profitList.map((item) => (
-//                                 <option
-//                                     key={item.id}
-//                                     value={item.id}
-//                                 >
-//                                     {item.name}
-//                                 </option>
-//                             ))}
-//                         </select>
-//                     </div>
-
-//                     <div className="form-group vat">
-//                         <label>VAT (%)</label>
-
-//                         <input
-//                             type="number"
-//                             placeholder="Nhập VAT (%)"
-//                             onChange={(e) =>
-//                                 setVat(Number(e.target.value))
-//                             }
-//                         />
-//                     </div>
-
-//                 </div>
-
-//             </div>
-
-//             {/* THÔNG TIN SẢN PHẨM */}
-
-//             <div className="card">
-
-//                 <div className="card-title">
-//                     <FiBox />
-//                     <span>THÔNG TIN SẢN PHẨM</span>
-//                 </div>
-
-//                 <div className="product-grid">
-
-//                     <div className="product-left">
-
-//                         <label>Kích thước sản phẩm</label>
-
-//                         <div className="size-row">
-
-//                             <input
-//                                 type="number"
-//                                 placeholder="Nhập chiều rộng"
-//                                 onChange={(e) =>
-//                                     setWight(Number(e.target.value))
-//                                 }
-//                             />
-
-//                             <span>x</span>
-
-//                             <input
-//                                 type="number"
-//                                 placeholder="Nhập chiều cao"
-//                                 onChange={(e) =>
-//                                     setHeigth(Number(e.target.value))
-//                                 }
-//                             />
-
-//                             <span>mm</span>
-
-//                         </div>
-
-//                         <label>Khổ giấy in</label>
-
-//                         <select
-//                             onChange={(e) =>
-//                                 setPaperSize(e.target.value)
-//                             }
-//                         >
-//                             <option>
-//                                 Chọn kích thước
-//                             </option>
-
-//                             {paperSizeList.map((size) => (
-//                                 <option
-//                                     key={size.id}
-//                                     value={size.id}
-//                                 >
-//                                     {size.width} x {size.height}
-//                                 </option>
-//                             ))}
-//                         </select>
-
-//                     </div>
-
-//                     <div className="product-right">
-
-//                         <label>Loại hình in</label>
-
-//                         <select
-//                             onChange={(e) =>
-//                                 setPrintPrice(e.target.value)
-//                             }
-//                         >
-//                             <option>
-//                                 Chọn loại
-//                             </option>
-
-//                             {printPriceList.map((item) => (
-//                                 <option
-//                                     key={item.id}
-//                                     value={item.id}
-//                                 >
-//                                     {item.name}
-//                                 </option>
-//                             ))}
-//                         </select>
-
-//                         <label>Loại giấy in</label>
-
-//                         <select
-//                             onChange={(e) =>
-//                                 setSelectedPaperId(
-//                                     e.target.value
-//                                 )
-//                             }
-//                         >
-//                             <option>
-//                                 Chọn giấy
-//                             </option>
-
-//                             {paperList.map((paper) => (
-//                                 <option
-//                                     key={paper.id}
-//                                     value={paper.id}
-//                                 >
-//                                     {paper.name}
-//                                 </option>
-//                             ))}
-//                         </select>
-
-//                         <label>Số lượng</label>
-
-//                         <input
-//                             type="number"
-//                             placeholder="Nhập số lượng"
-//                             onChange={(e) =>
-//                                 setQuantity(Number(e.target.value))
-//                             }
-//                         />
-
-//                     </div>
-
-//                 </div>
-
-//             </div>
-
-//             {/* GIA CÔNG */}
-
-//             <div className="card">
-
-//                 <div className="card-title">
-//                     <FiTool />
-//                     <span>GIA CÔNG SAU IN</span>
-//                 </div>
-
-//                 <button
-//                     className="btn-add"
-//                     onClick={() =>
-//                         setOpenPaperModal(true)
-//                     }
-//                 >
-//                     <FiPlus />
-//                     Thêm gia công
-//                 </button>
-
-//                 <table className="processing-table">
-
-//                     <thead>
-//                         <tr>
-//                             <th>STT</th>
-//                             <th>Loại gia công</th>
-//                             <th>Thao tác</th>
-//                         </tr>
-//                     </thead>
-
-//                     <tbody>
-
-//                         {processingList.map(
-//                             (item, index) => (
-//                                 <tr key={index}>
-//                                     <td>{index + 1}</td>
-
-//                                     <td>{item.name}</td>
-
-//                                     <td>
-//                                         <button
-//                                             className="delete-btn"
-//                                             onClick={() =>
-//                                                 setProcessingList(
-//                                                     processingList.filter(
-//                                                         (_, i) =>
-//                                                             i !== index
-//                                                     )
-//                                                 )
-//                                             }
-//                                         >
-//                                             <FiTrash2 />
-//                                         </button>
-//                                     </td>
-//                                 </tr>
-//                             )
-//                         )}
-
-//                     </tbody>
-
-//                 </table>
-
-//             </div>
-
-//         </div>
-
-//         {/* RIGHT */}
-
-//         <div className="quotation-right">
-
-//             <div className="card result-card">
-
-//                 <div className="card-title">
-//                     <FiGrid />
-//                     <span>KẾT QUẢ BÁO GIÁ</span>
-//                 </div>
-
-//                 <div className="result-row">
-//                     <span>Giá 1 sản phẩm</span>
-//                     <strong>
-//                         {formatMoney(
-//                             result?.data?.price /
-//                             Number(quantity) || 0
-//                         )}
-//                     </strong>
-//                 </div>
-
-//                 <div className="result-row">
-//                     <span>Số sản phẩm/tờ</span>
-//                     <strong>
-//                         {result?.data?.productSheet ?? 0}
-//                     </strong>
-//                 </div>
-
-//                 <div className="result-row">
-//                     <span>Số tờ in</span>
-//                     <strong>
-//                         {result?.data?.quantityPaper ?? 0}
-//                     </strong>
-//                 </div>
-
-//                 <hr />
-
-//                 <div className="result-row">
-//                     <span>Tạm tính</span>
-//                     <strong>
-//                         {formatMoney(
-//                             result?.data?.price || 0
-//                         )}
-//                     </strong>
-//                 </div>
-
-//                 <div className="result-row">
-//                     <span>VAT</span>
-//                     <strong>
-//                         {formatMoney(
-//                             result?.data?.price *
-//                             ((vat || 0) / 100)
-//                         )}
-//                     </strong>
-//                 </div>
-
-//                 <div className="total-box">
-
-//                     <div>
-//                         <h3>TỔNG TIỀN</h3>
-//                         <p>(Đã bao gồm VAT)</p>
-//                     </div>
-
-//                     <h2>
-//                         {formatMoney(
-//                             (result?.data?.price || 0) +
-//                             (result?.data?.price || 0) *
-//                             ((vat || 0) / 100)
-//                         )}
-//                     </h2>
-
-//                 </div>
-
-//             </div>
-
-//             <div className="info-box">
-
-//                 <div className="info-title">
-//                     <FiInfo />
-//                     <span>Thông tin</span>
-//                 </div>
-
-//                 <p>
-//                     Vui lòng nhập đầy đủ thông tin sản phẩm
-//                     và gia công để tính báo giá chính xác
-//                     nhất.
-//                 </p>
-
-//             </div>
-
-//             <div className="right-actions">
-
-//                 <button className="btn-outline">
-//                     <FiRefreshCw />
-//                     Làm mới
-//                 </button>
-
-//                 <button
-//                     className="btn-primary"
-//                     onClick={handSumitCalculate}
-//                 >
-//                     <FiGrid />
-//                     Tính báo giá
-//                 </button>
-
-//             </div>
-
-//         </div>
-
-//     </div>
-
-//     <ProcessingsCalModel
-//         open={openPaperModal}
-//         setOpen={setOpenPaperModal}
-//         onAdd={handleAddProcessing}
-//         data={processingList}
-//     />
-
-// </div>

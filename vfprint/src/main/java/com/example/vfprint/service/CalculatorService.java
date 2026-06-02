@@ -42,9 +42,9 @@ public class CalculatorService {
     public CalculateResponse calculatePrintingCost(InfoPriceDTO infoPriceDTO) {
 
         // Kiem tra xem paper size va paper co ton tai hay khong
-        PaperSizeDTO paperSizeDTO = paperSizeService.getPaperSizeById(infoPriceDTO.getPaperSizeId());
+        PaperSizeDTO paperSizeDTO = selectOptimalPaperSize(infoPriceDTO.getWidthProduct(), infoPriceDTO.getHeightProduct(), infoPriceDTO.getQuantity(), infoPriceDTO.getPaperId());
         if (paperSizeDTO == null) {
-            throw new RuntimeException("Paper size không tồn tại với ID: " + infoPriceDTO.getPaperSizeId());
+            throw new RuntimeException("Paper size không tồn tại với ID: " + infoPriceDTO.getPaperId());
         }
 
         // Kiem tra xem paper co ton tai hay khong
@@ -59,13 +59,23 @@ public class CalculatorService {
                 paperSizeDTO.getWidth(), paperSizeDTO.getHeight(), infoPriceDTO.getQuantity());
         
         float prinPrice = 0;
-        if(priceRepository.existsById(infoPriceDTO.getPrintPrice())){
-            prinPrice = priceRepository.findById(infoPriceDTO.getPrintPrice()).get().getPrice();
+
+        if (infoPriceDTO.getPrintPrice() != null && priceRepository.existsById(infoPriceDTO.getPrintPrice())) {
+
+            prinPrice = priceRepository.findById(infoPriceDTO.getPrintPrice())
+                .get()
+                .getPrice();
         }
         double totalProcessingCost = calculateTotalProcessingCost(infoPriceDTO.getProcessingIds());
+
         float percentage = 1;
-        if (profitRepository.existsById(infoPriceDTO.getProfit())) {
-            percentage = profitRepository.findById(infoPriceDTO.getProfit()).get().getPercentage() / 100;
+
+        if (infoPriceDTO.getProfit() != null &&
+            profitRepository.existsById(infoPriceDTO.getProfit())) {
+
+            percentage = profitRepository.findById(infoPriceDTO.getProfit())
+                .get()
+                .getPercentage() / 100f;
         }
 
         //Lấy chiết khấu cho khách hàng
@@ -79,6 +89,10 @@ public class CalculatorService {
                 .price(Math.round(price))
                 .quantityPaper(sheetsNeeded)
                 .productSheet(calculateProductsPerSheet(infoPriceDTO.getWidthProduct(), infoPriceDTO.getHeightProduct(), paperSizeDTO.getWidth(), paperSizeDTO.getHeight(), true))
+                .paperSize(paperSizeDTO.getWidth() + " x " + paperSizeDTO.getHeight())
+                .processingCost(totalProcessingCost * sheetsNeeded)
+                .discount( ((sheetsNeeded * (paperSizeDTO.getPrice()+ prinPrice + totalProcessingCost)) * percentage) - price)
+                .paperCost(price / sheetsNeeded)
                 .build();
     }
 
@@ -102,6 +116,28 @@ public class CalculatorService {
         // Tinh so luong san pham / to giay can thiet
         int sheetsNeeded = calculateProductsPerSheet(widthProduct, heightProduct, widthPaper, heightPaper, true);
         return (int) Math.ceil((double) quantity / sheetsNeeded);
+    }
+
+
+    //ham lua chon khổ giấy tối ưu nhất trong danh sách khổ giấy có sẵn dựa trên kích thước sản phẩm và số lượng sản phẩm cần in
+    public PaperSizeDTO selectOptimalPaperSize(int widthProduct, int heightProduct, int quantity, UUID paperId) {
+        List<PaperSizeDTO> paperSizes = paperSizeService.getPaperSizesByPaperId(paperId);
+        PaperSizeDTO optimalPaperSize = null;
+        int minSheetsNeeded = Integer.MAX_VALUE;
+
+        for (PaperSizeDTO paperSize : paperSizes) {
+            try {
+                int sheetsNeeded = calculatePaperSheets(widthProduct, heightProduct, paperSize.getWidth(), paperSize.getHeight(), quantity);
+                if (sheetsNeeded < minSheetsNeeded) {
+                    minSheetsNeeded = sheetsNeeded;
+                    optimalPaperSize = paperSize;
+                }
+            } catch (IllegalArgumentException e) {
+                // Bỏ qua các khổ giấy không phù hợp
+            }
+        }
+
+        return optimalPaperSize;
     }
 
     //ham tinh kiemr tra processing tong tien cua processingIds:
@@ -143,12 +179,12 @@ public class CalculatorService {
         return totalProductsPerSheetbyHeight;
     }
 
-    //Lấy thông tin chiết khấu
-    public double getDiscount(UUID id){
-        if (discountRepository.existsById(id)) {
-            return (100 - discountRepository.findById(id).get().getDiscount())/100;
-        }
-        return 1;
-    }
+  public double getDiscount(UUID id) {
+    if (id == null) return 1;
+
+    return discountRepository.findById(id)
+            .map(d -> (100 - d.getDiscount()) / 100.0)
+            .orElse(1.0);
+}
 
 }

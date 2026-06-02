@@ -81,7 +81,7 @@ const Sidebar = () => {
                 }
                 {/* <NavLink className="menu-item" to="/report">
                     <FaChartBar className="menu-icon" />
-                    <span>Báo cáo</span>
+                    <span>Chia sẻ liên k</span>
                 </NavLink> */}
 
                 {/* <div className="menu-item parent"
