@@ -13,7 +13,7 @@ export const create = async (data: printPrice): Promise<printPrice> => {
     }
 }
 
-export const getAllByCompany = async (companyId: number)=>{
+export const getAllByCompany = async (companyId: string)=>{
     try{
         const response = await apiClient.get(`/print-price?companyId=${companyId}`);
         return response.data;
@@ -23,12 +23,22 @@ export const getAllByCompany = async (companyId: number)=>{
     }
 }
 
-export const deleteByCompany = async (id: number, comapanyId: number) => {
+export const deleteByCompany = async (id: number, comapanyId: string) => {
     try{
         const response = await apiClient.delete(`/print-price/${id}?companyId=${comapanyId}`);
         return response.data;
     }catch(error){
         console.error('Failed delete print price by company', error);
+        throw error;
+    }
+}
+
+export const getById = async (id: string) => {
+    try{
+        const response = await apiClient.get(`/print-price/${id}`);
+        return response.data;
+    }catch(error){
+        console.error('Failed to fetch print price details:', error);
         throw error;
     }
 }

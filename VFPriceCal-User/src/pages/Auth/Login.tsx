@@ -35,8 +35,6 @@ const Login = () => {
                     navigate("/quotation");
                 }
 
-                // 4. Thông báo và điều hướng
-                toast.success("Đăng nhập thành công!");
                 navigate("/quotation");
 
             } catch (err: any) {

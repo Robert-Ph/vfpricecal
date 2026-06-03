@@ -1,20 +1,24 @@
-import "./processingDetail.scss";
+import "./styles/discountNew.scss";
 import { FiEdit, FiTrash2, FiLayers, FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { deleteProcessing, getProcessingById } from "../../../service/ProcessingService";
-import ProcessingAddModel from "../../../components/processing/ProcessingAdd";
-import ConfirmModal from "../../../components/ConfirmModal";
+import { deleteProcessing } from "../../../service/ProcessingService";
 import { toast } from "react-toastify";
+import type { UserInfo } from "../../../context/AuthContext";
+import { create, getById } from "../../../service/PrintPriceService";
+import DiscountNewModal from "../../../components/discount/DiscountNewModal";
+import { formatMoney } from "../../../utils/formatMoney";
 
-const ProcessingDetail = () => {
+
+const DiscountNew = () => {
     const [activeTab, setActiveTab] = useState("paper");
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedProcessingId, setSelectedProcessingId] = useState<number | null>(null);
     const {id} = useParams();
-    const [processingData, setProcessingData] = useState<any>(null); // State để lưu chi tiết gia công 
-    const [user] = useState<any>(() => {
+    const [printData, setPrintData] = useState<any[]>([]); // State để lưu chi tiết gia công
+    const [name, setName] = useState("");
+    const [user] = useState<UserInfo>(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
         try {
@@ -26,23 +30,40 @@ const ProcessingDetail = () => {
         return null;
     });
 
-    useEffect(() => {
-        // Gọi API để lấy chi tiết gia công theo id
-        // Ví dụ: getProcessingById(id).then(data => setProcessingData(data));
-        const fetchProcessingDetail = async () => {
-            try {
-                // Giả sử bạn có API getProcessingById
-                // const data = await getProcessingById(id); 
-                // setProcessingData(data);
-                // Tạm thời dùng dữ liệu giả để hiển thị
-                const data = await getProcessingById(id);
-                setProcessingData(data.data);
-            } catch (error) {
-                console.error("Lỗi khi lấy chi tiết gia công:", error);
+     const handleAddSize = (newSize: any) => {
+        setPrintData([...printData, newSize]);
+    };
+
+   const handleSave = async () => {
+        if (!name) {
+            alert("Vui lòng nhập tên giá in");
+            return;
+        }
+        if (printData.length === 0) {
+            alert("Vui lòng thêm ít nhất một kích thước");
+            return;
+        }
+        const payload = {
+            id: null,
+            companyId: user?.companyId,
+            name: name,
+            isActive: true,
+            printPriceRanges: printData
+        };
+        try {
+            const res = await create(payload);
+            if (res.code === 200 || res.code === 201) {
+                toast.success("Lưu giá in thành công");
+
+                setOpenPaperModal(false);
+                setName("");
+                setPrintData([]);
             }
-            };
-            fetchProcessingDetail();
-    }, [id]);
+        } catch (error) {
+            console.error("Lỗi khi lưu giá in:", error);
+            toast.error("Lưu giá in thất bại");
+        }
+    };
 
     const handleOpenDelete = (id: number) => {
             setSelectedProcessingId(id);
@@ -55,7 +76,7 @@ const ProcessingDetail = () => {
         
                 await deleteProcessing(Number(selectedProcessingId), Number(id));
         
-                setProcessingData((prev) => ({
+                setPrintData((prev) => ({
                                 ...prev,
                     processings: prev.processings.filter(
                     (item) => item.id !== selectedProcessingId
@@ -85,8 +106,8 @@ const ProcessingDetail = () => {
                     </div>
 
                     <div>
-                        <h3>Gia công /{processingData?.name || ""}</h3>
-                        <p>Quản lý thông tin gia công</p>
+                        <h3>Giá in mới</h3>
+                        <p>Thêm giá in</p>
                     </div>
 
                     
@@ -114,7 +135,11 @@ const ProcessingDetail = () => {
                 
                                             <div className="field-content">
                                                 <span>Tên gia công</span>
-                                                <strong>{processingData?.name || ""}</strong>
+                                                
+                                                <strong><input type="text" placeholder="Nhập tên giá in" 
+                                                value={name}
+                                                onChange={(e) => setName(e.target.value)}
+                                                /></strong>
                                             </div>
                                             {/* <div className="info-card__status">
                                                 <FiCheck />
@@ -129,16 +154,24 @@ const ProcessingDetail = () => {
                                             </div>
                 
                                             <div className="field-content">
-                                                <span>Trạng thái</span>
-                
-                                                <div className="status">
+                                                <span>Độ ưu tiên</span>
+                                                <select name="" id="">
+                                                    <option value="HIGH">HIGH</option>
+                                                    <option value="NORMAL">NORMAL</option>
+                                                </select>
+                                                {/* <div className="status">
                                                     <span className="dot" />
                                                     Đang hoạt động
-                                                </div>
+                                                </div> */}
                                             </div>
                                         </div>
                                     </div>
-                
+                                    
+                                    <div className="save-state">
+                                                        <button className="btn-save" onClick={handleSave}>
+                                                            Lưu giá in
+                                                        </button>
+                                                    </div>
                 
                                 </div>
 
@@ -148,8 +181,8 @@ const ProcessingDetail = () => {
                                                 <FiGrid />
                                             </div>
                                             <div className="section-title__content">
-                                                <h3>Danh sách kích thước</h3>
-                                                <p>Quản lý các kích thước và giá tương ứng</p>
+                                                <h3>Danh sách</h3>
+                                                <p>Quản lý giá tương ứng</p>
                                             </div>
                     </div>
              
@@ -159,22 +192,21 @@ const ProcessingDetail = () => {
                                     <table className="paper-list">
                                         <thead>
                                             <tr>
-                                                <th>Tên loại màng</th>
-                                                <th>Quy cách</th>
-                                                <th>Giá</th>
+                                              
+                                                <th>Đến giá trị đơn(vnđ)</th>
+                                                <th>Chiếc khấu</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {/* Ví dụ về một sản phẩm */}
-                                            {processingData?.processings.map((material: any) => (
-                                                <tr key={material.id}>
-                                                    <td>{material.name}</td>
-                                                    <td>Tờ</td>
-                                                    <td>{material.price}</td>
+                                            {printData?.map((price: any) => (
+                                                <tr key={price.id}>
+                                                    <td>{formatMoney(price.maxAmount)}</td>
+                                                    <td>{price.discount}%</td>
                                                     <td className="action-buttons">
                                                         <button className=" icon edit-btn"><FiEdit /></button>
-                                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(material.id)}><FiTrash2 /></button>
+                                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(price.id)}><FiTrash2 /></button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -196,21 +228,14 @@ const ProcessingDetail = () => {
                 </div>
             </div>
 
-            <ProcessingAddModel
-            open={openPaperModal}
-            setOpen={setOpenPaperModal}
-            />
-
-            <ConfirmModal
-            isOpen={openDeleteModal}
-            title="Xác nhận xoá"
-            message="Bạn có chắc muốn xoá gia công này?"
-            onCancel={() => setOpenDeleteModal(false)}
-            onConfirm={handleDeletePaper}
+             <DiscountNewModal
+                open={openPaperModal} 
+                setOpen={setOpenPaperModal} 
+                onAdd={handleAddSize}
             />
 
         </div>
     );
 };
 
-export default ProcessingDetail;
+export default DiscountNew;

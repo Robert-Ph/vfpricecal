@@ -1,5 +1,5 @@
 $primary: #2563eb;
-.processing-detail{
+.material-detail{
     display: flex;
     flex-direction: column;
     padding: 5px;
@@ -8,7 +8,7 @@ $primary: #2563eb;
     background: white;
     border-radius: 16px;
 
-    .processing-header {
+    .paper-header {
         display: flex;
         justify-content: space-between;
         align-items: center;

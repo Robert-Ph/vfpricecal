@@ -8,7 +8,7 @@ export type account = {
 
 export type paper = {
     id: number | null;
-    companyId: number;
+    companyId: string;
     name: string;
     gsm: number;
 }
@@ -65,10 +65,16 @@ export type paperResponse = {
 
 export type printPrice = {
     id: number | null;
-    companyId: number;
+    companyId: string;
     name: string;
-    price: number;
     isActive: boolean;
+    printPriceRanges: {
+        id: string | null;
+        printPriceId: string;
+        minLengthCm: number;
+        maxLengthCm: number;
+        pricePerMeter: number;
+    }[];
 }
 
 export type calculate = {

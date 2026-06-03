@@ -1,22 +1,25 @@
-package com.example.vfprint.dto;
-
-import java.util.UUID;
+package com.example.vfprint.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import java.util.List;
-import com.example.vfprint.dto.request.PrintPriceRangeRequest;
+import java.util.UUID;
 
-@Data
+import com.example.vfprint.enums.Priority;
+
+import java.util.List;
+
+
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 @Builder
-public class PrintPriceDTO {
+public class DiscountRequest {
     private UUID id;
     private UUID companyId;
     private String name;
     private boolean isActive;
-    private List<PrintPriceRangeRequest> printPriceRanges;
+    private List<DiscountRangeRequest> discountRanges;
+    private Priority priority;
 }

@@ -5,16 +5,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.UUID;
-
+import java.math.BigDecimal;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class PrintPriceRangeRequest {
+public class DiscountRangeRequest {
     private UUID id;
-    private UUID printPriceId;
-    private Float minLengthCm;
-    private Float maxLengthCm;
-    private Float pricePerMeter;
+    private UUID discountId;
+    private Integer maxQuantity;
+    private BigDecimal discount;
 }

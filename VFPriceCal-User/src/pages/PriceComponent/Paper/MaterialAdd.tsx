@@ -1,12 +1,13 @@
-import "./paperAdd.scss";
+import "./styles/MaterialAdd.scss";
 import { FaPlus } from "react-icons/fa";
 import { FiTrash2 } from "react-icons/fi";
 import {  useState } from "react";
-import PaperModel from "../../../../components/paper/PaperModel";
-import { createPaper } from "../../../../service/PaperService";
+import PaperModel from "../../../components/paper/PaperModel";
+import { createPaper } from "../../../service/PaperService";
 import { toast } from "react-toastify";
+import type { UserInfo } from "../../../context/AuthContext";
 
-const PaperAdd = () => {
+const MaterialAdd = () => {
     const [activeTab, setActiveTab] = useState("paper");
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [paperList, setPaperList] = useState<any[]>([]); 
@@ -19,7 +20,7 @@ const PaperAdd = () => {
         setPaperList([...paperList, newSize]);
     };
 
-    const [user] = useState<any>(() => {
+    const [user] = useState<UserInfo | null>(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
             try {
@@ -54,7 +55,7 @@ const PaperAdd = () => {
         try {
             console.log("Dữ liệu gửi đi:", payload);
             // Thay đổi URL theo API thực tế của bạn
-            const res = await createPaper(payload.companyId, name, gsm, paperList);
+            const res = await createPaper(payload.companyId ?? "", name, gsm, paperList);
             
             if (res.code === 200 || res.code === 201) {
                 // alert("Tạo loại giấy thành công!");
@@ -167,4 +168,4 @@ const PaperAdd = () => {
     );
 }
 
-export default PaperAdd;
+export default MaterialAdd;

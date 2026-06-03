@@ -132,12 +132,13 @@ public class PaperSizeService {
                 .stream()
                 .filter(ps -> ps.getPaper().getId().equals(paperId))
                 .map(ps -> {
-                    PaperSizeDTO dto = new PaperSizeDTO();
-                    dto.setId(ps.getId());
-                    dto.setPaperId(ps.getPaper().getId());
-                    dto.setWidth(ps.getWidth());
-                    dto.setHeight(ps.getHeight());
-                    dto.setPrice(ps.getPrice());
+                    PaperSizeDTO dto = PaperSizeDTO.builder()
+                            .id(ps.getId())
+                            .paperId(ps.getPaper().getId())
+                            .width(ps.getWidth())
+                            .height(ps.getHeight())
+                            .price(ps.getPrice())
+                            .build();
                     return dto;
                 })
                 .toList();

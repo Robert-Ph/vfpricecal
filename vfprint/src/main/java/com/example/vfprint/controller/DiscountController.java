@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.vfprint.dto.DiscountDTO;
+import com.example.vfprint.dto.request.DiscountRequest;
 import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.service.DiscountService;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,7 +26,7 @@ public class DiscountController {
     private DiscountService discountService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createDiscountByCompany(@RequestBody DiscountDTO discountDTO){
+    public ResponseEntity<ApiResponse> createDiscountByCompany(@RequestBody DiscountRequest discountDTO){
             discountService.createDiscountByCompany(discountDTO);
             return ResponseEntity.status(HttpStatus.OK).body(
                 ApiResponse.builder()

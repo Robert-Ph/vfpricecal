@@ -1,20 +1,22 @@
-import "./processingDetail.scss";
+import "./styles/discountDetail.scss";
 import { FiEdit, FiTrash2, FiLayers, FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { deleteProcessing, getProcessingById } from "../../../service/ProcessingService";
+import { deleteProcessing } from "../../../service/ProcessingService";
 import ProcessingAddModel from "../../../components/processing/ProcessingAdd";
 import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
+import type { UserInfo } from "../../../context/AuthContext";
+import { getById } from "../../../service/PrintPriceService";
 
-const ProcessingDetail = () => {
-    const [activeTab, setActiveTab] = useState("paper");
+
+const DiscountDetail = () => {
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedProcessingId, setSelectedProcessingId] = useState<number | null>(null);
     const {id} = useParams();
-    const [processingData, setProcessingData] = useState<any>(null); // State để lưu chi tiết gia công 
-    const [user] = useState<any>(() => {
+    const [data, setData] = useState<any>(null); // State để lưu chi tiết gia công 
+    const [user] = useState<UserInfo>(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
         try {
@@ -35,8 +37,8 @@ const ProcessingDetail = () => {
                 // const data = await getProcessingById(id); 
                 // setProcessingData(data);
                 // Tạm thời dùng dữ liệu giả để hiển thị
-                const data = await getProcessingById(id);
-                setProcessingData(data.data);
+                const data = await getById(id as string); 
+                setData(data.data);
             } catch (error) {
                 console.error("Lỗi khi lấy chi tiết gia công:", error);
             }
@@ -55,7 +57,7 @@ const ProcessingDetail = () => {
         
                 await deleteProcessing(Number(selectedProcessingId), Number(id));
         
-                setProcessingData((prev) => ({
+                setData((prev) => ({
                                 ...prev,
                     processings: prev.processings.filter(
                     (item) => item.id !== selectedProcessingId
@@ -85,8 +87,8 @@ const ProcessingDetail = () => {
                     </div>
 
                     <div>
-                        <h3>Gia công /{processingData?.name || ""}</h3>
-                        <p>Quản lý thông tin gia công</p>
+                        <h3>Giá in /{data?.name || ""}</h3>
+                        <p>Quản lý thông tin giá in</p>
                     </div>
 
                     
@@ -114,7 +116,7 @@ const ProcessingDetail = () => {
                 
                                             <div className="field-content">
                                                 <span>Tên gia công</span>
-                                                <strong>{processingData?.name || ""}</strong>
+                                                <strong>{data?.name || ""}</strong>
                                             </div>
                                             {/* <div className="info-card__status">
                                                 <FiCheck />
@@ -148,8 +150,8 @@ const ProcessingDetail = () => {
                                                 <FiGrid />
                                             </div>
                                             <div className="section-title__content">
-                                                <h3>Danh sách kích thước</h3>
-                                                <p>Quản lý các kích thước và giá tương ứng</p>
+                                                <h3>Danh sách</h3>
+                                                <p>Quản lý giá tương ứng</p>
                                             </div>
                     </div>
              
@@ -159,22 +161,22 @@ const ProcessingDetail = () => {
                                     <table className="paper-list">
                                         <thead>
                                             <tr>
-                                                <th>Tên loại màng</th>
-                                                <th>Quy cách</th>
+                                                <th>Từ</th>
+                                                <th>Đến</th>
                                                 <th>Giá</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {/* Ví dụ về một sản phẩm */}
-                                            {processingData?.processings.map((material: any) => (
-                                                <tr key={material.id}>
-                                                    <td>{material.name}</td>
-                                                    <td>Tờ</td>
-                                                    <td>{material.price}</td>
+                                            {data?.printPriceRanges.map((price: any) => (
+                                                <tr key={price.id}>
+                                                    <td>{price.minLengthCm}</td>
+                                                    <td>{price.maxLengthCm}</td>
+                                                    <td>{price.pricePerMeter}</td>
                                                     <td className="action-buttons">
                                                         <button className=" icon edit-btn"><FiEdit /></button>
-                                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(material.id)}><FiTrash2 /></button>
+                                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(price.id)}><FiTrash2 /></button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -213,4 +215,4 @@ const ProcessingDetail = () => {
     );
 };
 
-export default ProcessingDetail;
+export default DiscountDetail;

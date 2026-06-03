@@ -60,6 +60,7 @@ $primary: #2563eb;
 }
 
 .btn-primary,
+.btn-save,
 .btn-outline {
   height: 50px;
   border-radius: 14px;
@@ -482,11 +483,11 @@ tbody tr {
   }
 }
 
-.empty-state {
+.empty-state, .save-state {
   text-align: center;
 }
 
-.empty-state .btn-primary {
+.empty-state .btn-primary, .save-state .btn-save {
   margin: 0 auto;
   display: flex;
 
@@ -495,3 +496,18 @@ tbody tr {
   gap: 8px;
 }
 
+
+.save-state {
+  text-align: center;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+.btn-save {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: white;
+  background:green;
+}

@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { deleteByCompany, getAllByCompany } from "../../../service/PrintPriceService";
 import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
+import type { UserInfo } from "../../../context/AuthContext";
 
 const PrintCost = () =>{
     const navigate = useNavigate();
@@ -17,7 +18,7 @@ const PrintCost = () =>{
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedPrintId, setSelectedPrintId] = useState<number | null>(null);
 
-    const [user] = useState<any>(() => {
+    const [user] = useState<UserInfo | null>(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
         try {
@@ -76,7 +77,7 @@ const PrintCost = () =>{
                     <div className="papers-header">
                         <h3>Giá in</h3>
         
-                        <button className="add-papers-btn" onClick={() => setOpenPaperModal(true)}>
+                        <button className="add-papers-btn" onClick={() => navigate("/component/printcost/new")}>
                             <FaPlus /> Thêm mới
                         </button>
                     </div>
@@ -116,7 +117,7 @@ const PrintCost = () =>{
                                             <td>{item.price}đ</td>
                                             <td className="action-buttons">
                                                 <button className=" icon edit-btn"
-                                                    onClick={() => navigate("  ")}>
+                                                    onClick={() => navigate(`/component/printcost/detail/${item.id}`)}>
                                                     <FiEdit />
                                                 </button>
                                                 <button className=" icon delete-btn" onClick={() => handleOpenDelete(item.id)}><FiTrash2 /></button>

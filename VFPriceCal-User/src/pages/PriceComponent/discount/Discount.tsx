@@ -75,7 +75,7 @@ const Discount = () => {
             <div className="papers-header">
                 <h3>Chiết khấu khách hàng</h3>
 
-                <button className="add-papers-btn" onClick={() => setOpenPaperModal(true)}>
+                <button className="add-papers-btn" onClick={() => navigate("/component/discount/new")}>
                     <FaPlus /> Thêm mới
                 </button>
             </div>
@@ -109,7 +109,7 @@ const Discount = () => {
                                     <td>{item.discount}</td>
                                     <td className="action-buttons">
                                         <button className=" icon edit-btn"
-                                            onClick={() => navigate(``)}>
+                                            onClick={() => navigate(`/component/discount/${item?.id}`)}>
                                             <FiEdit />
                                         </button>
                                         <button className=" icon delete-btn" onClick={() => handleOpenDelete(String(item.id))}><FiTrash2 /></button>

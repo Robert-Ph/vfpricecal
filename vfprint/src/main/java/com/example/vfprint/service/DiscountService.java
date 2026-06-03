@@ -7,8 +7,9 @@ import java.util.List;
 import java.util.UUID;
 import com.example.vfprint.entity.Companies;
 import com.example.vfprint.dto.DiscountDTO;
+import com.example.vfprint.dto.request.DiscountRangeRequest;
+import com.example.vfprint.dto.request.DiscountRequest;
 import com.example.vfprint.entity.Discount;
-import com.example.vfprint.entity.Paper;
 import com.example.vfprint.repository.DiscountRepository;
 
 @Service
@@ -16,19 +17,31 @@ public class DiscountService {
     @Autowired
     private DiscountRepository discountRepository;
 
+    @Autowired
+    private DiscountRangeService discountRangeService;
+
+
     @Transactional
-    public void createDiscountByCompany(DiscountDTO discountDTO){
+    public void createDiscountByCompany(DiscountRequest discountDTO){
         if (discountRepository.existsByNameAndCompanyId(discountDTO.getName(), discountDTO.getCompanyId())) {
             throw new RuntimeException("Discount with the given name already exists");
         }
 
-        discountRepository.save(
+        Discount discount = discountRepository.save(
             Discount.builder()
             .company(Companies.builder().id(discountDTO.getCompanyId()).build())
             .name(discountDTO.getName())
-            .discount(discountDTO.getDiscount())
+            .isActive(discountDTO.isActive())
+            .priority(discountDTO.getPriority())
             .build()
         );
+
+        List<DiscountRangeRequest> range = discountDTO.getDiscountRanges();
+        if (!range.isEmpty() && range != null) {
+            discountRangeService.createPrintPriceRange(range, discount.getId());
+        } 
+
+
     }
 
     @Transactional(readOnly = true)
@@ -38,7 +51,8 @@ public class DiscountService {
                                     .id(item.getId())
                                     .companyId(item.getCompany().getId())
                                     .name(item.getName())
-                                    .discount(item.getDiscount())
+                                    // .discount(item.getDiscount())
+                                 
                                     .build()
                                 ).toList();
 

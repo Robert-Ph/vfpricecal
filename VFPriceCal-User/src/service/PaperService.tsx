@@ -1,7 +1,7 @@
 import { apiClient } from "../api/APIConfig";
 import {type paperSize} from "../model/model";
 
-export const createPaper = async (companyId: number, name: string, gsm: string, paperSizes: { width: number; height: number; price: number }[]) => {
+export const createPaper = async (companyId: string, name: string, gsm: string, paperSizes: { width: number; height: number; price: number }[]) => {
     try {
         const response = await apiClient.post('/papers', { companyId, name,  gsm, paperSizes });
         return response.data; // Assuming the created paper is in response.data
@@ -44,7 +44,7 @@ export const deletePaper = async (id: number, comapanyId: string) => {
     }
 }
 
-export const deletePaperSize = async (id: number, paperId: string) => {
+export const deletePaperSize = async (id: string, paperId: string) => {
     try{
         const response = await apiClient.delete(`/paper-sizes/${id}?paperId=${paperId}`);
         return response.data;

@@ -79,10 +79,10 @@ public class CalculatorService {
         }
 
         //Lấy chiết khấu cho khách hàng
-        double discount = getDiscount(infoPriceDTO.getDiscount());
+        //double discount = getDiscount(infoPriceDTO.getDiscount());
 
         //Kết quả báo giá in ấn
-        double price = ((sheetsNeeded * (paperSizeDTO.getPrice()+ prinPrice + totalProcessingCost)) * percentage) * discount;
+        double price = ((sheetsNeeded * (paperSizeDTO.getPrice()+ prinPrice + totalProcessingCost)) * percentage) /** discount*/;
 
                 // Tinh tong chi phi in an
         return CalculateResponse.builder()
@@ -179,12 +179,12 @@ public class CalculatorService {
         return totalProductsPerSheetbyHeight;
     }
 
-  public double getDiscount(UUID id) {
-    if (id == null) return 1;
+//   public double getDiscount(UUID id) {
+//     if (id == null) return 1;
 
-    return discountRepository.findById(id)
-            .map(d -> (100 - d.getDiscount()) / 100.0)
-            .orElse(1.0);
-}
+//     return discountRepository.findById(id)
+//             .map(d -> (100 - d.getDiscount()) / 100.0)
+//             .orElse(1.0);
+// }
 
 }

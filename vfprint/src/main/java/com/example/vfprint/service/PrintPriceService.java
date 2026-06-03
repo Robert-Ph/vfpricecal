@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
-
+import com.example.vfprint.dto.request.PrintPriceRangeRequest;
 import com.example.vfprint.dto.PrintPriceDTO;
 import com.example.vfprint.entity.Companies;
 import com.example.vfprint.entity.PrintPrice;
@@ -17,6 +17,9 @@ public class PrintPriceService {
     @Autowired
     private PrintPriceRepository priceRepository;
 
+    @Autowired
+    private PrintPriceRangeService printPriceRangeService;
+
 
     @Transactional
     public void createPrintPrice(PrintPriceDTO priceDTO){
@@ -24,14 +27,21 @@ public class PrintPriceService {
             throw new RuntimeException("Print price with the given name already exists");
         }
 
-        priceRepository.save(
+        
+        PrintPrice savedPrice = priceRepository.save(
             PrintPrice.builder()
             .company(Companies.builder().id(priceDTO.getCompanyId()).build())
             .name(priceDTO.getName())
-            .price(priceDTO.getPrice())
             .is_active(priceDTO.isActive())
             .build()
         );
+
+        // Sau khi lưu PrintPrice, chúng ta cần lưu các PrintPriceRange liên quan
+        List<PrintPriceRangeRequest> ranges = priceDTO.getPrintPriceRanges();
+        if (ranges != null && !ranges.isEmpty()) {
+            printPriceRangeService.createPrintPriceRange(ranges, savedPrice.getId());
+        }
+
     }
 
 
@@ -42,9 +52,28 @@ public class PrintPriceService {
                                             .id(item.getId())
                                             .companyId(companyId)
                                             .name(item.getName())
-                                            .price(item.getPrice())
                                             .isActive(item.getIs_active())
+                                            .printPriceRanges(List.of())
                                         .build()).toList();
+    }
+
+    @Transactional
+    public PrintPriceDTO getById(UUID id){
+        PrintPrice printPrice = priceRepository.findById(id)
+        .orElseThrow(() ->
+                    new IllegalArgumentException(
+                            "Print price not found with id: " + id
+                    )
+            );
+
+        List<PrintPriceRangeRequest> lRanges = printPriceRangeService.getAllByPrintPriceId(id);
+        return PrintPriceDTO.builder()
+                .id(printPrice.getId())
+                .companyId(printPrice.getCompany().getId())
+                .name(printPrice.getName())
+                .isActive(printPrice.getIs_active())
+                .printPriceRanges(lRanges)
+                .build();
     }
 
     @Transactional

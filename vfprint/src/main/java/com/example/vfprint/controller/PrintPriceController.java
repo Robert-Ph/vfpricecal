@@ -52,6 +52,18 @@ public class PrintPriceController {
             );
     }
     
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse> getPrintPriceById(@PathVariable UUID id){
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse.builder()
+            .code(200)
+            .message("Get print price by id successfully")
+            .data(priceService.getById(id))
+            .build()
+        );
+    }
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteByCompany(@PathVariable UUID id, @RequestParam UUID companyId){
         priceService.deletePrintPrice(id, companyId);

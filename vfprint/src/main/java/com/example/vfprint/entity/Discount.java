@@ -2,6 +2,8 @@ package com.example.vfprint.entity;
 
 import java.util.UUID;
 
+import com.example.vfprint.enums.Priority;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,5 +39,10 @@ public class Discount {
     private Companies company;
 
     private String name;
-    private float discount;
+
+    @Column(name = "is_active")
+    private boolean isActive;
+
+    @Column(nullable = false)
+    private Priority priority = Priority.NORMAL;
 }

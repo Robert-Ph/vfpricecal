@@ -1,4 +1,4 @@
-// import "./componentPaper.scss";
+
 import "../component.scss"
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
@@ -7,16 +7,17 @@ import { useState, useEffect } from "react";
 import { deletePaper, getPapers } from "../../../service/PaperService";
 import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
+import type { UserInfo } from "../../../context/AuthContext";
 
 
 
-const ComponentPaper = () => {
+const Material = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
     const [paperList, setPaperList] = useState<any[]>([]);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
-    const [user] = useState<any>(() => {
+    const [user] = useState<UserInfo | null>(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
         try {
@@ -137,4 +138,4 @@ const ComponentPaper = () => {
     );
 }
 
-export default ComponentPaper;
+export default Material;

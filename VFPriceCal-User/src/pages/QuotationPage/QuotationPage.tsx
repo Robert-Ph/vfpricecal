@@ -194,21 +194,21 @@ const QuotationPage = () => {
     <div className="quotation-main">
 
       {/* THÔNG TIN CHUNG */}
-      <div className="card">
+      <div className="card-quotation">
 
-        <div className="section-title">
+        <div className="section-title-quote">
           <FiLayers />
           <span>THÔNG TIN CHUNG</span>
         </div>
 
         <div className="general-form">
 
-          <div className="field">
+          <div className="field-quotation">
             <label>Tên báo giá</label>
             <input placeholder="Nhập tên báo giá" onChange={(e) => setName(e.target.value)}/>
           </div>
 
-          <div className="field">
+          <div className="field-quotation">
             <label>Loại khách hàng<span className="required">*</span></label>
             <select onChange={(e) => setDiscountId(e.target.value)}>
               <option>Chọn loại khách hàng</option>
@@ -220,7 +220,7 @@ const QuotationPage = () => {
             </select>
           </div>
 
-          <div className="field">
+          <div className="field-quotation">
             <label>Biên lợi nhuận<span className="required">*</span></label>
             <select onChange={(e) => setProfit(e.target.value)}>
               <option>Chọn</option>
@@ -232,7 +232,7 @@ const QuotationPage = () => {
             </select>
           </div>
 
-          <div className="field vat-field">
+          <div className="field-quotation vat-field">
             <label>VAT (%)</label>
 
             <div className="input-addon">
@@ -245,9 +245,9 @@ const QuotationPage = () => {
       </div>
 
       {/* THÔNG TIN SẢN PHẨM */}
-      <div className="card">
+      <div className="card-quotation">
 
-        <div className="section-title">
+        <div className="section-title-quote">
           <FiPackage />
           <span>THÔNG TIN SẢN PHẨM</span>
         </div>
@@ -287,7 +287,7 @@ const QuotationPage = () => {
 
           <div className="product-right">
 
-                 <div className="field">
+                 <div className="field-quotation">
               <label>Loại giấy in <span className="required">*</span></label>
               <select 
                 onChange={(e) => setSelectedPaperId(e.target.value)}
@@ -301,7 +301,7 @@ const QuotationPage = () => {
               </select>
             </div>
 
-            <div className="field">
+            <div className="field-quotation">
               <label>Số lượng<span className="required">*</span></label>
               <input type="number" placeholder="Nhập số lượng" onChange={(e) => setQuantity(Number(e.target.value))} />
             </div>
@@ -311,9 +311,9 @@ const QuotationPage = () => {
       </div>
 
       {/* GIA CÔNG */}
-      <div className="card">
+      <div className="card-quotation">
 
-        <div className="section-title">
+        <div className="section-title-quote">
           <FiSettings />
           <span>GIA CÔNG SAU IN</span>
         </div>
@@ -370,7 +370,7 @@ const QuotationPage = () => {
 
       <div className="result-card">
 
-        <div className="section-title">
+        <div className="section-title-quote">
           <FiGrid />
           <span>KẾT QUẢ BÁO GIÁ:</span>
           

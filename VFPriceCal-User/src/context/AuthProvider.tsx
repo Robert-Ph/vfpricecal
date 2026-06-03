@@ -75,7 +75,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setUser(null);
     setRole(null);
     // Điều hướng về trang login
-    window.location.href = "/login";
+    // window.location.href = "/login";
   };
 
   return (

@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import Topbar from "./Topbar";
 import Sidebar from "./Sidebar";
 import "./layout.scss";
 
@@ -8,10 +7,6 @@ const MainLayout = () => {
         <div className="layout">
             <Sidebar />
             <div className="main">
-                {/* <div className="nav">
-                    <Topbar />
-                </div> */}
-
                 <div className="content">
                     <Outlet />
                 </div>

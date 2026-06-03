@@ -87,13 +87,13 @@ const QuotationMobile = () => {
     <div className="quotation-mobile">
       {/* Header */}
       <header className="mobile-header">
-        <button className="icon-btn">
+        <button className="icon-btn-mobile">
           {/* <FaArrowLeft /> */}
         </button>
 
         <h1>BÁO GIÁ</h1>
 
-        <button className="icon-btn">
+        <button className="icon-btn-mobile">
           <FaPrint />
         </button>
       </header>
