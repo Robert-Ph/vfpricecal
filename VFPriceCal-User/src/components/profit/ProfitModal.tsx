@@ -1,16 +1,28 @@
-import {useState} from "react";
+import { useState} from "react";
 import "./profitModal.scss";
 import { toast } from "react-toastify";
-import { create } from "../../service/ProfitService";
+import { create, updateProfitById } from "../../service/ProfitService";
 import type { UserInfo } from "../../context/AuthContext";
 
+type Profit = {
+  id: string | null;
+  companyId: string;
+  name: string;
+  percentage: number;
+};
 
-const ProfitModal = ({ open, setOpen }) => {
+type Props = {
+  key: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  data?: Profit | null;
+};
 
-  const [profitName, setProfitName] = useState<string>("");
-  const [percentage, setpercentage] = useState<number>(0);
+const ProfitModal = ({key, open, setOpen, data }: Props) => {
+
+  const [profitName, setProfitName] = useState(data?.name ?? "");
+  const [percentage, setPercentage] = useState(data?.percentage ?? 0);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
-
 
    const [user] = useState<UserInfo | null>(() => {
         const savedUser = localStorage.getItem("user");
@@ -32,31 +44,40 @@ const ProfitModal = ({ open, setOpen }) => {
       toast.error("Vui lòng điền đầy đủ thông tin.");
       return;
     }
-    // setOpen(false);
-    // // Reset fields
-    // setCategoryName("");
+
     setError(""); // Reset error message
     const payload = {
-        id: null, // ID sẽ được backend tạo tự động
+        id: data?.id ?? "", // ID sẽ được backend tạo tự động
         companyId: user?.companyId ?? "", // ID ẩn từ context
         name: profitName,
         percentage: percentage
 
     };
-    console.log("Payload gửi đi:", user?.companyId); // Kiểm tra payload trước khi gửi API
+    let response;
 
-    // Gọi API để tạo mới danh mục
-    // Ví dụ: createCategory(payload).then(() => { ... });
-    const response = await create(payload); // Giả sử createCategory là hàm API đã được định nghĩa
+if (data?.id) {
+    response = await updateProfitById(payload);
+} else {
+    response = await create(payload);
+}
 
-    if (response.code === 200 || response.code === 201) {
-        toast.success(`Tạo  ${profitName} thành công!`);
-        setTimeout(() => {
-            window.location.reload(); // Hoặc navigate("/component/processing") nếu bạn dùng react-router
-        }, 500); // Đợi 0.5 giây trước khi reload hoặc navigate
-    } else {
-        toast.error(`Có lỗi xảy ra khi tạo danh mục ${profitName}.`);
-    }
+if (response.code === 200 || response.code === 201) {
+    toast.success(
+        data?.id
+            ? `Cập nhật ${profitName} thành công!`
+            : `Tạo ${profitName} thành công!`
+    );
+
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
+} else {
+    toast.error(
+        data?.id
+            ? `Có lỗi xảy ra khi cập nhật ${profitName}.`
+            : `Có lỗi xảy ra khi tạo ${profitName}.`
+    );
+}
   };
 
     if (!open) return null;
@@ -91,7 +112,7 @@ const ProfitModal = ({ open, setOpen }) => {
               type="text"
               placeholder="Nhập tỷ lệ..."
               value={percentage}
-              onChange={(e) => {setpercentage(Number(e.target.value))
+              onChange={(e) => {setPercentage(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />

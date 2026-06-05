@@ -5,8 +5,9 @@ import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import ProfitModal from "../../../components/profit/ProfitModal";
 import { deleteProfitByCompany, getAllProfitByCompany } from "../../../service/ProfitService";
-import ConfirmModal from "../../../components/confirmModal";
+import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
+import type { profitRequest } from "../../../model/model";
 
 const Profit = () => {
     const navigate = useNavigate();
@@ -16,7 +17,7 @@ const Profit = () => {
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [profit, setProfit] = useState<any[]>([]); // State để quản lý danh mục lọc
      // item đang edit
-  const [selectedProfit, setSelectedProfit] = useState<any>(null);
+  const [selectedProfit, setSelectedProfit] = useState<profitRequest>();
 
     const [user] = useState<any>(() => {
         const savedUser = localStorage.getItem("user");
@@ -133,8 +134,10 @@ const Profit = () => {
             </div>
 
         <ProfitModal
+            key ={selectedProfit?.id ?? "new"}
             open={openPaperModal}
             setOpen={setOpenPaperModal}
+            data ={selectedProfit}
         
         />
 

@@ -1,11 +1,11 @@
 import "./styles/discountNew.scss";
 import { FiEdit, FiTrash2, FiLayers, FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useParams } from "react-router-dom";
 import { deleteProcessing } from "../../../service/ProcessingService";
 import { toast } from "react-toastify";
 import type { UserInfo } from "../../../context/AuthContext";
-import { create, getById } from "../../../service/PrintPriceService";
+import { createDiscount} from "../../../service/DiscountService";
 import DiscountNewModal from "../../../components/discount/DiscountNewModal";
 import { formatMoney } from "../../../utils/formatMoney";
 
@@ -15,8 +15,9 @@ const DiscountNew = () => {
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedProcessingId, setSelectedProcessingId] = useState<number | null>(null);
+    const [priority, setPrioity] = useState<string>("");
     const {id} = useParams();
-    const [printData, setPrintData] = useState<any[]>([]); // State để lưu chi tiết gia công
+    const [data, setData] = useState<any[]>([]); // State để lưu chi tiết gia công
     const [name, setName] = useState("");
     const [user] = useState<UserInfo>(() => {
     const savedUser = localStorage.getItem("user");
@@ -31,15 +32,21 @@ const DiscountNew = () => {
     });
 
      const handleAddSize = (newSize: any) => {
-        setPrintData([...printData, newSize]);
+        setData([...data, newSize]);
     };
 
    const handleSave = async () => {
         if (!name) {
-            alert("Vui lòng nhập tên giá in");
+            toast.error("Vui lòng nhập tên giá in");
             return;
         }
-        if (printData.length === 0) {
+
+        if(!priority){
+            toast.error("Vui lòng chọn độ ưu tiên!")
+            return;
+        }
+
+        if (data.length === 0) {
             alert("Vui lòng thêm ít nhất một kích thước");
             return;
         }
@@ -48,16 +55,17 @@ const DiscountNew = () => {
             companyId: user?.companyId,
             name: name,
             isActive: true,
-            printPriceRanges: printData
+            priority: priority,
+            discountRanges: data
         };
         try {
-            const res = await create(payload);
+            const res = await createDiscount(payload);
             if (res.code === 200 || res.code === 201) {
                 toast.success("Lưu giá in thành công");
 
                 setOpenPaperModal(false);
                 setName("");
-                setPrintData([]);
+                setData([]);
             }
         } catch (error) {
             console.error("Lỗi khi lưu giá in:", error);
@@ -76,7 +84,7 @@ const DiscountNew = () => {
         
                 await deleteProcessing(Number(selectedProcessingId), Number(id));
         
-                setPrintData((prev) => ({
+                setData((prev) => ({
                                 ...prev,
                     processings: prev.processings.filter(
                     (item) => item.id !== selectedProcessingId
@@ -106,8 +114,8 @@ const DiscountNew = () => {
                     </div>
 
                     <div>
-                        <h3>Giá in mới</h3>
-                        <p>Thêm giá in</p>
+                        <h3>Chiếc khấu khách hàng</h3>
+                        <p>Thêm chiếc khấu mới</p>
                     </div>
 
                     
@@ -134,7 +142,7 @@ const DiscountNew = () => {
                                             </div>
                 
                                             <div className="field-content">
-                                                <span>Tên gia công</span>
+                                                <span>Loại khách hàng</span>
                                                 
                                                 <strong><input type="text" placeholder="Nhập tên giá in" 
                                                 value={name}
@@ -155,14 +163,13 @@ const DiscountNew = () => {
                 
                                             <div className="field-content">
                                                 <span>Độ ưu tiên</span>
-                                                <select name="" id="">
-                                                    <option value="HIGH">HIGH</option>
-                                                    <option value="NORMAL">NORMAL</option>
+                                               
+                                                <select name="" id="" onChange={(e) => setPrioity(e.target.value)}>
+                                                    <option value="">Chọn</option>
+                                                    <option value="HIGH">Ưu tiên</option>
+                                                    <option value="NORMAL">Mặc định</option>
                                                 </select>
-                                                {/* <div className="status">
-                                                    <span className="dot" />
-                                                    Đang hoạt động
-                                                </div> */}
+                                        
                                             </div>
                                         </div>
                                     </div>
@@ -200,7 +207,7 @@ const DiscountNew = () => {
                                         </thead>
                                         <tbody>
                                             {/* Ví dụ về một sản phẩm */}
-                                            {printData?.map((price: any) => (
+                                            {data?.map((price: any) => (
                                                 <tr key={price.id}>
                                                     <td>{formatMoney(price.maxAmount)}</td>
                                                     <td>{price.discount}%</td>

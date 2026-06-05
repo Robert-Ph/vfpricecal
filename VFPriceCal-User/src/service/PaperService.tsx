@@ -1,3 +1,4 @@
+import { data } from "react-router-dom";
 import { apiClient } from "../api/APIConfig";
 import {type paperSize} from "../model/model";
 
@@ -60,6 +61,16 @@ export const createOne = async (data: paperSize ): Promise<paperSize> =>{
         return response.data;
     }catch (error) {
         console.error('Failed to create paper:', error);
+        throw error;
+    }
+}
+
+export const updatePaperSize = async (data: paperSize): Promise<paperSize> =>{
+    try{
+        const response = await apiClient.put(`/paper-sizes/update`, data);
+        return response.data;
+    }catch(error){
+        console.error('Failed to update paper:', error);
         throw error;
     }
 }

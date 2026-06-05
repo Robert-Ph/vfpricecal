@@ -1,20 +1,43 @@
-import { useState} from "react";
+import {useEffect, useState} from "react";
 import "./paperModel.scss";
-import { v4 as uuidv4 } from 'uuid';
 import { toast } from "react-toastify";
-import { createOne } from "../../service/PaperService";
+import { createOne, updatePaperSize } from "../../service/PaperService";
 
+type paperSize ={
+    id: string | null;
+    paperId: string | null;
+    width: number;
+    height: number;
+    price: number;
+}
 
-const PaperSizeModal = ({ open, setOpen, id }) => {
+type Props = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  data?: paperSize | null;
+  id: string;
+};
 
-  const [width, setWidth] = useState("");
-  const [height, setHeight] = useState("");
-  const [price, setPrice] = useState("");
-  const [role, setRole] = useState("User");
+const PaperSizeModal = ({ open, setOpen, id, data }: Props) => {
+
+  const [width, setWidth] = useState(data?.width);
+  const [height, setHeight] = useState(data?.height);
+  const [price, setPrice] = useState(data?.price);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
 
-  if (!open) return null;
+  
 
+  useEffect (()=>{
+    if(data){
+      setWidth(data?.width);
+      setHeight(data?.height);
+      setPrice(data?.price);
+    }else{
+      setWidth(0);
+      setHeight(0);
+      setPrice(0);
+    }
+  },[data])
   const handleSubmit = async () => {
         // Validate inputs
     if (!width || !height || !price) {
@@ -23,26 +46,40 @@ const PaperSizeModal = ({ open, setOpen, id }) => {
       return;
     }
     const payload = {
-            id: null, // ID sẽ được backend tạo tự động
-            paperId: id, // ID ẩn từ context
+            id: data?.id ?? "",
+            paperId: id, 
             width: Number(width),
             height: Number(height),
             price: Number(price)
-        };
+    };
     
-        // Gọi API để tạo mới danh mục
-        // Ví dụ: createCategory(payload).then(() => { ... });
-        const response = await createOne(payload); // Giả sử createCategory là hàm API đã được định nghĩa
-    
-        if (response.code === 200 || response.code === 201) {
-            toast.success(`Tạo thành công!`);
-            setTimeout(() => {
-                window.location.reload(); // Hoặc navigate("/component/processing") nếu bạn dùng react-router
-            }, 500); // Đợi 0.5 giây trước khi reload hoặc navigate
-        } else {
-            toast.error(`Có lỗi xảy ra khi tạo.`);
-        }
+      
+    let response;
 
+    if(data?.id){
+      response = await updatePaperSize(payload);
+    }else{
+      response = await createOne(payload); 
+    }
+      
+    
+    if (response.code === 200 || response.code === 201) {
+       toast.success(
+           data?.id
+               ? `Cập nhật thành công!`
+               : `Tạo  thành công!`
+       );
+   
+       setTimeout(() => {
+           window.location.reload();
+       }, 500);
+   } else {
+       toast.error(
+           data?.id
+               ? `Có lỗi xảy ra khi cập nhật .`
+               : `Có lỗi xảy ra khi tạo .`
+       );
+   }
 
 
 
@@ -51,6 +88,7 @@ const PaperSizeModal = ({ open, setOpen, id }) => {
     setWidth(""); setHeight(""); setPrice("");
     setError(""); // Reset error message
   };
+  if (!open) return null;
 
   return (
     <div className="overlay">

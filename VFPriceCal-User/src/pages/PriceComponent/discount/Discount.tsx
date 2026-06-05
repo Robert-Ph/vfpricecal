@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import DiscountModel from "../../../components/discount/DiscountModel";
 import { deleteDiscount, getAllDiscountByCompany } from "../../../service/DiscountService";
 import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
@@ -13,7 +12,6 @@ import type { UserInfo } from "../../../context/AuthContext";
 const Discount = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
-    const [openPaperModal, setOpenPaperModal] = useState(false);
     const [discount, setDiscount] = useState<discountRequest[]>([]); // State để quản lý danh mục lọc
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedDiscountId, setSelectedDiscountId] = useState<string | null>(null);
@@ -96,7 +94,6 @@ const Discount = () => {
                         <thead>
                             <tr>
                                 <th>Loại khách hàng </th>
-                                <th>Chiếc khấu(%)</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -106,7 +103,6 @@ const Discount = () => {
                             {discount.map((item) => (
                                 <tr key={item.id}>
                                     <td>{item.name}</td>
-                                    <td>{item.discount}</td>
                                     <td className="action-buttons">
                                         <button className=" icon edit-btn"
                                             onClick={() => navigate(`/component/discount/${item?.id}`)}>
@@ -122,11 +118,6 @@ const Discount = () => {
                     
                 </div>
             </div>
-
-        <DiscountModel
-            open={openPaperModal}
-            setOpen={setOpenPaperModal}
-        />
 
         <ConfirmModal
             isOpen={openDeleteModal}

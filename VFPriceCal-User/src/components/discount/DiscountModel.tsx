@@ -1,14 +1,29 @@
-import { useState} from "react";
+import {useEffect, useState} from "react";
 import "./discountModel.scss";
 import { toast } from "react-toastify";
-import { createDiscount } from "../../service/DiscountService";
+import {  createDiscountRange, updateDiscountRange } from "../../service/DiscountService";
 import type { UserInfo } from "../../context/AuthContext";
+import { formatMoney } from "../../utils/formatMoney";
+
+type discountRange = {
+  id: string | null;
+  discountId: string;
+  maxAmount: number;
+  discount: number;
+};
+
+type Props = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  data?: discountRange | null;
+  id: string;
+};
 
 
-const DiscountModel = ({ open, setOpen }) => {
+const DiscountModel = ({ open, setOpen, data, id }: Props) => {
 
-  const [discountName, setDistcountName] = useState("");
-  const [discount, setDiscount] = useState(Number);
+  const [maxMount, setmaxMount] = useState(data?.maxAmount ?? 0);
+  const [discount, setDiscount] = useState(data?.discount ?? 0);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
 
 
@@ -24,37 +39,58 @@ const DiscountModel = ({ open, setOpen }) => {
         return null;
     });
 
+  useEffect(() => {
+    if (data) {
+        setmaxMount(data.maxAmount);
+        setDiscount(data.discount);
+    } else {
+        setmaxMount(0);
+        setDiscount(0);
+    }
+}, [data]);
+
   const handleSubmit = async () => {
         // Validate inputs
-    if (!discountName) {
+    if (!maxMount) {
       setError("Vui lòng điền đầy đủ thông tin.");
       toast.error("Vui lòng điền đầy đủ thông tin.");
       return;
     }
-    // setOpen(false);
-    // // Reset fields
-    // setCategoryName("");
+
     setError(""); // Reset error message
     const payload = {
-        id: null, // ID sẽ được backend tạo tự động
-        companyId: user?.companyId ?? "", // ID ẩn từ context
-        name: discountName,
+        id: data?.id ?? "", // ID sẽ được backend tạo tự động
+        discountId: id, // ID ẩn từ context
+        maxAmount: maxMount,
         discount: discount
 
     };
 
-    // Gọi API để tạo mới danh mục
-    // Ví dụ: createCategory(payload).then(() => { ... });
-    const response = await createDiscount(payload); // Giả sử createCategory là hàm API đã được định nghĩa
-
-    if (response.code === 200 || response.code === 201) {
-        toast.success(`Tạo  ${discountName} thành công!`);
-        setTimeout(() => {
-            window.location.reload(); // Hoặc navigate("/component/processing") nếu bạn dùng react-router
-        }, 500); // Đợi 0.5 giây trước khi reload hoặc navigate
-    } else {
-        toast.error(`Có lỗi xảy ra khi tạo danh mục ${discountName}.`);
-    }
+    let response;
+   
+   if (data?.id) {
+       response = await updateDiscountRange(payload);
+   } else {
+       response = await createDiscountRange(payload);
+   }
+   
+   if (response.code === 200 || response.code === 201) {
+       toast.success(
+           data?.id
+               ? `Cập nhật ${maxMount} thành công!`
+               : `Tạo ${maxMount} thành công!`
+       );
+   
+       setTimeout(() => {
+           window.location.reload();
+       }, 500);
+   } else {
+       toast.error(
+           data?.id
+               ? `Có lỗi xảy ra khi cập nhật ${maxMount}.`
+               : `Có lỗi xảy ra khi tạo ${maxMount}.`
+       );
+   }
   };
 
     if (!open) return null;
@@ -70,13 +106,13 @@ const DiscountModel = ({ open, setOpen }) => {
         <div className="main">
 
           <div className="info">
-            <label>Tên </label>
+            <label>Đến giá trị đơn(vnđ) </label>
             <input
-            className={!discountName && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
+            className={!maxMount && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
               type="text"
               placeholder="Nhập tên..."
-              value={discountName}
-              onChange={(e) => {setDistcountName(e.target.value)
+              value={maxMount}
+              onChange={(e) => {setmaxMount(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />

@@ -104,7 +104,6 @@ const PrintCost = () =>{
                                     <tr>
                                         <th>Tên </th>
                                         <th>Đơn vị tính</th>
-                                        <th>Giá</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -114,7 +113,6 @@ const PrintCost = () =>{
                                         <tr key={item.id}>
                                             <td>{item.name}</td>
                                             <td>Tờ</td>
-                                            <td>{item.price}đ</td>
                                             <td className="action-buttons">
                                                 <button className=" icon edit-btn"
                                                     onClick={() => navigate(`/component/printcost/detail/${item.id}`)}>

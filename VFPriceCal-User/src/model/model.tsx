@@ -14,8 +14,8 @@ export type paper = {
 }
 
 export type paperSize = {
-    id: number | null;
-    paperId: number;
+    id: string| null;
+    paperId: string;
     width: number;
     height: number;
     price: number;
@@ -91,7 +91,7 @@ export type calculate = {
 }
 
 export type profitRequest = {
-    id: number | null;
+    id: string;
     companyId: string ;
     name: string;
     percentage: number | null;
@@ -101,5 +101,15 @@ export type discountRequest = {
     id: number | null;
     companyId: string ;
     name: string;
-    discount: number | null;
+    isActive: boolean;
+    priority: string;
+    discountRanges: discountRanges[]
+    
+}
+
+export type discountRanges = {
+        id: string;
+        discountId: string;
+        maxAmount: number;
+        discount: number;
 }

@@ -442,7 +442,8 @@ const QuotationPage = () => {
           </div>
 
           <span>{formatMoney(
-                            (result?.data?.price || 0) +
+                            ((result?.data?.price || 0) - 
+                            (result?.data?.discount || 0)) +
                             (result?.data?.price || 0) *
                             ((vat || 0) / 100)
                         )}</span>

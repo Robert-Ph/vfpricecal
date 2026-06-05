@@ -31,3 +31,13 @@ export const deleteProfitByCompany = async (id: string, companyId: string) => {
         throw error;
     }
 }
+
+export const updateProfitById = async (data :profitRequest): Promise<profitRequest> =>{
+    try{
+        const response = await apiClient.put('/profit/update', data);
+        return response.data;
+    }catch(error){
+        console.error('Failed to create profit:', error);
+        throw error;
+    }
+}

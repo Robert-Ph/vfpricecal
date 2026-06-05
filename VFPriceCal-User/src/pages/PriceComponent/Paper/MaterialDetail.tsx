@@ -1,5 +1,4 @@
 import "./styles/MaterialDetail.scss";
-import { FaPlus } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { deletePaperSize, getPaperById } from "../../../service/PaperService";
@@ -7,19 +6,15 @@ import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
 import PaperSizeModal from "../../../components/paper/PaperSizeModal";
 import type { UserInfo } from "../../../context/AuthContext";
+import type {paperSize} from "../../../model/model";
 import {
-  FiArrowLeft,
-  FiRefreshCw,
   FiPlus,
-  FiEdit2,
   FiTrash2,
   FiEdit,
   FiFileText,
   FiTag,
   FiLayers,
-  FiInfo,
   FiImage,
-  FiCheck,
   FiGrid 
 } from "react-icons/fi";
 
@@ -28,6 +23,7 @@ const MaterialDetail = () => {
     const [paperData, setPaperData] = useState<any[]>([]); // State để lưu chi tiết giấy/vật liệu
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedPaperId, setSelectedPaperId] = useState<string>("");
+    const [dataSize, setDataSize] = useState<paperSize>();
     const {id} = useParams();
     const [openPaperModal, setOpenPaperModal] = useState(false);
 
@@ -43,6 +39,7 @@ const MaterialDetail = () => {
         return null;
     });
 
+    
 
     useEffect(() => {
         // Gọi API để lấy chi tiết giấy/vật liệu theo id
@@ -62,10 +59,14 @@ const MaterialDetail = () => {
             fetchPaperDetail();
     }, [id, user?.companyId]);
 
+    const handleOpenUpdate = (item: paperSize) => {
+        setDataSize(item);
+        setOpenPaperModal(true);
+    };
     const handleOpenDelete = (id: string) => {
         setSelectedPaperId(id);
         setOpenDeleteModal(true);
-        };
+    };
     
         const handleDeletePaper = async () => {
         try {
@@ -203,7 +204,7 @@ const MaterialDetail = () => {
                                         <tbody>
                                             {/* Dữ liệu chi tiết kích thước sẽ hiển thị ở đây. Mỗi kích thước sẽ có thông tin như chiều rộng, chiều cao, giá. Bạn có thể nhấp vào một kích thước để xem chi tiết hoặc chỉnh sửa thông tin của nó. */}
                                             {paperData?.paperSizes?.length > 0 ? (
-                                                paperData?.paperSizes?.map((size: any) => (
+                                                paperData?.paperSizes?.map((size: paperSize) => (
                                                 <tr key={size.id}>
                                                     <td>{size.width}mm</td>
                                                     <td>{size.height}mm</td>
@@ -213,7 +214,7 @@ const MaterialDetail = () => {
                                                             <span className="price">{size.price.toLocaleString()}đ</span>
 
                                                             <div className="action-buttons">
-                                                                <button className="action-btn edit-btn">
+                                                                <button className="action-btn edit-btn" onClick={() => handleOpenUpdate(size)}>
                                                                     <FiEdit />
                                                                 </button>
 
@@ -260,7 +261,8 @@ const MaterialDetail = () => {
             <PaperSizeModal 
                 open={openPaperModal} 
                 setOpen={setOpenPaperModal} 
-                id={id}
+                data = {dataSize}
+                id={id!}
             />
 
             <ConfirmModal

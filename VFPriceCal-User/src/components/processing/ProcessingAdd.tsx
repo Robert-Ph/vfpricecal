@@ -1,7 +1,7 @@
 import { useState} from "react";
 import "./processingAdd.scss";
 import { toast } from "react-toastify";
-import { createCategory, createProcessingByCategory } from "../../service/ProcessingService";
+import { createProcessingByCategory } from "../../service/ProcessingService";
 import { useParams } from "react-router-dom";
 
 
