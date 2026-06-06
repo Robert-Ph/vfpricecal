@@ -1,19 +1,31 @@
-import { useState} from "react";
+import { useEffect, useState} from "react";
 import "./processingAdd.scss";
 import { toast } from "react-toastify";
-import { createProcessingByCategory } from "../../service/ProcessingService";
+import { createProcessingByCategory, updateProcessingById } from "../../service/ProcessingService";
 import { useParams } from "react-router-dom";
 
+type processing = {
+    id: string | null;
+    categoryId: string | null;
+    name: string;
+    price: number;
+}
+type Props = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  data?: processing | null;
+  id: string;
+};
 
-const ProcessingAddModel = ({ open, setOpen }) => {
+const ProcessingAddModel = ({ open, setOpen, data, id }: Props) => {
 
-  const [categoryName, setCategoryName] = useState("");
+  const [processingName, setProcessingName] = useState("");
   const [priceProcessing, setPriceProcessing] = useState(Number);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
-  const {id} = useParams();
+ 
 
 
-   const [user] = useState<any>(() => {
+  const [user] = useState<any>(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
             try {
@@ -23,37 +35,49 @@ const ProcessingAddModel = ({ open, setOpen }) => {
             }
         }
         return null;
-    });
+  });
+
+  useEffect(()=>{
+    if(data){
+      setProcessingName(data?.name);
+      setPriceProcessing(data?.price);
+    }else{
+      setProcessingName("");
+      setPriceProcessing(0);
+    }
+    
+  },[data])
 
   const handleSubmit = async () => {
-        // Validate inputs
-    if (!categoryName) {
+    if (!processingName) {
       setError("Vui lòng điền đầy đủ thông tin.");
       toast.error("Vui lòng điền đầy đủ thông tin.");
       return;
     }
-    // setOpen(false);
-    // // Reset fields
-    // setCategoryName("");
-    setError(""); // Reset error message
+
+    setError(""); 
     const payload = {
-        id: null, // ID sẽ được backend tạo tự động
+        id: data?.id ?? "", // ID sẽ được backend tạo tự động
         categoryId: id, // ID ẩn từ context
-        name: categoryName,
+        name: processingName,
         price: priceProcessing
     };
 
-    // Gọi API để tạo mới danh mục
-    // Ví dụ: createCategory(payload).then(() => { ... });
-    const response = await createProcessingByCategory(payload); // Giả sử createCategory là hàm API đã được định nghĩa
+    let response;
+
+    if(data?.id){
+      response = await updateProcessingById(payload);
+    }else{
+      response = await createProcessingByCategory(payload);
+    }
 
     if (response.code === 200 || response.code === 201) {
-        toast.success(`Tạo danh mục ${categoryName} thành công!`);
+        toast.success(`Tạo danh mục ${processingName} thành công!`);
         setTimeout(() => {
             window.location.reload(); // Hoặc navigate("/component/processing") nếu bạn dùng react-router
         }, 500); // Đợi 0.5 giây trước khi reload hoặc navigate
     } else {
-        toast.error(`Có lỗi xảy ra khi tạo danh mục ${categoryName}.`);
+        toast.error(`Có lỗi xảy ra khi tạo danh mục ${processingName}.`);
     }
   };
 
@@ -72,11 +96,11 @@ const ProcessingAddModel = ({ open, setOpen }) => {
           <div className="info">
             <label>Tên loại gia công</label>
             <input
-            className={!categoryName && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
+            className={!processingName && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
               type="text"
               placeholder="Nhập tên danh mục..."
-              value={categoryName}
-              onChange={(e) => {setCategoryName(e.target.value)
+              value={processingName}
+              onChange={(e) => {setPriceProcessing(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />

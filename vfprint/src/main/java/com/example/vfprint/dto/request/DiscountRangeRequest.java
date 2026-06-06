@@ -14,6 +14,6 @@ import java.math.BigDecimal;
 public class DiscountRangeRequest {
     private UUID id;
     private UUID discountId;
-    private Integer maxQuantity;
-    private BigDecimal discount;
+    private BigDecimal maxAmount;
+    private double discount;
 }

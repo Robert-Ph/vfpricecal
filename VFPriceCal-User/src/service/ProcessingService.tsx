@@ -44,7 +44,7 @@ export const getProcessingById = async (processingId: string) => {
     }
 };
 
-export const deleteProcessing = async (id: number, categoryId: number) => {
+export const deleteProcessing = async (id: string, categoryId: string) => {
     try{
         const response = await apiClient.delete(`/processing/${id}?categoryId=${categoryId}`)
         return response.data;
@@ -54,12 +54,22 @@ export const deleteProcessing = async (id: number, categoryId: number) => {
     }
 }
 
-export const deleteCategoryByCompany = async (id: number, companyId: number) => {
+export const deleteCategoryByCompany = async (id: string, companyId: string) => {
     try{
         const response = await apiClient.delete(`/category/${id}?companyId=${companyId}`);
         return response.data;
     }catch(error){
         console.error('Failed delete to fetch processing:', error);
+        throw error;
+    }
+}
+
+export const updateProcessingById = async (data: processing): Promise<processing> => {
+    try{
+        const response = await apiClient.put(`/processing/update`, data);
+        return response.data;
+    }catch(error){
+         console.error('Failed update to fetch processing:', error);
         throw error;
     }
 }

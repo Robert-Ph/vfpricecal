@@ -112,4 +112,21 @@ public class ProcessingService {
 
         processingRepository.delete(processing);
     }
+
+   @Transactional
+public void updateProcessingById(ProcessingDTO dto) {
+
+    Processing processing = processingRepository.findById(dto.getId())
+        .orElseThrow(() -> new RuntimeException("Processing not found"));
+
+    processing.setName(dto.getName());
+    processing.setPrice(dto.getPrice());
+
+    Category category = categoryRepository.findById(dto.getCategoryId())
+        .orElseThrow(() -> new RuntimeException("Category not found"));
+
+    processing.setCategory(category);
+
+    processingRepository.save(processing); // optional vì @Transactional đã đủ
+}
 }

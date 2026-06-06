@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.vfprint.dto.request.ProfitRequest;
 import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.service.ProfitService;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/api/profit")
@@ -59,5 +61,18 @@ public class ProfitController {
             .build()
         );
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<ApiResponse> updateProfitById(@RequestBody ProfitRequest request){
+        profitService.updateProfitById(request);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse.builder()
+            .code(200)
+            .message("Update successFully")
+            .data(request)
+            .build()
+        );
+    }
+    
     
 }

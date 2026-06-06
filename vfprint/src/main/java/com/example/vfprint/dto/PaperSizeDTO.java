@@ -17,6 +17,6 @@ public class PaperSizeDTO {
     private UUID paperId;
     private int width;
     private int height;
-    private Float price; // Giá của size này
+    private double price; // Giá của size này
 
 }

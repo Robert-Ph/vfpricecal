@@ -7,6 +7,8 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import com.example.vfprint.entity.Profit;
+import com.example.vfprint.enums.Priority;
+
 
 @Repository
 public interface ProfitRepository extends JpaRepository<Profit, UUID> {
@@ -14,4 +16,5 @@ public interface ProfitRepository extends JpaRepository<Profit, UUID> {
     Optional<Profit> findById(UUID id);
     List<Profit> findByCompanyId(UUID companyId);
     Optional<Profit> findByIdAndCompanyId(UUID id, UUID companyId);
+    List<Profit> findByPriority(Priority priority);
 }

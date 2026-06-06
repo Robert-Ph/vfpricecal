@@ -7,21 +7,24 @@ import { deleteCategoryByCompany, getCategories } from "../../../service/Process
 import CategoryModal from "../../../components/category/CategoryModel";
 import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
+import type { UserInfo } from "../../../context/AuthContext";
+import type { category } from "../../../model/model";
 
 const Processing = () => {
     const navigate = useNavigate();
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [category, setCategory] = useState<any[]>([]); // State để quản lý danh mục lọc
+    const [category, setCategory] = useState<category[]>([]); // State để quản lý danh mục lọc
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    const [selectedProcessingId, setSelectedProcessingId] = useState<number | null>(null);
-    const [user] = useState<any>(() => {
+    const [selectedProcessingId, setSelectedProcessingId] = useState<string>();
+    const [user] = useState<UserInfo>(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
             try {
                 return JSON.parse(savedUser);
-            } catch (e) {
-                return null;
+            } catch (error) {
+
+                return error;
             }
         }
         return null;
@@ -44,7 +47,7 @@ const Processing = () => {
     }, [user?.companyId]);
 
             
-    const handleOpenDelete = (id: number) => {
+    const handleOpenDelete = (id: string) => {
                 setSelectedProcessingId(id);
                 setOpenDeleteModal(true);
                 };
@@ -53,11 +56,8 @@ const Processing = () => {
                 try {
                     if (!selectedProcessingId) return;
             
-                    await deleteCategoryByCompany(Number(selectedProcessingId), user.companyId);
+                    await deleteCategoryByCompany(selectedProcessingId, user?.companyId);
             
-                    setCategory((prev) =>
-                        prev.filter((item) => item.id !== selectedProcessingId)
-                    );
             
                     toast.success("Xoá chiết khấu  thành công");
             
@@ -108,7 +108,7 @@ const Processing = () => {
                                         onClick={() => navigate(`/component/processing/${item.id}`)}>
                                         <FiEdit />
                                     </button>
-                                    <button className=" icon delete-btn" onClick={() => handleOpenDelete(item.id)}><FiTrash2 /></button>
+                                    <button className=" icon delete-btn" onClick={() => handleOpenDelete(item?.id ?? "")}><FiTrash2 /></button>
                                 </td>
                                 </tr>
                             ))}

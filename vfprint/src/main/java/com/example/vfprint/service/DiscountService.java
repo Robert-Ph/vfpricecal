@@ -10,6 +10,8 @@ import com.example.vfprint.dto.DiscountDTO;
 import com.example.vfprint.dto.request.DiscountRangeRequest;
 import com.example.vfprint.dto.request.DiscountRequest;
 import com.example.vfprint.entity.Discount;
+import com.example.vfprint.entity.DiscountRange;
+import com.example.vfprint.repository.DiscountRangeRepository;
 import com.example.vfprint.repository.DiscountRepository;
 
 @Service
@@ -19,6 +21,10 @@ public class DiscountService {
 
     @Autowired
     private DiscountRangeService discountRangeService;
+
+    @Autowired
+    private DiscountRangeRepository discountRangeRepository;
+
 
 
     @Transactional
@@ -40,6 +46,23 @@ public class DiscountService {
         if (!range.isEmpty() && range != null) {
             discountRangeService.createPrintPriceRange(range, discount.getId());
         } 
+
+
+    }
+
+    @Transactional
+    public DiscountRequest getDiscountRangeByDiscountId(UUID disUuid){
+        List<DiscountRangeRequest> discountRequests = discountRangeService.getAllDiscountByDiscountId(disUuid);
+        Discount discount = discountRepository.findDiscountById(disUuid);
+
+        return DiscountRequest.builder()
+            .id(discount.getId())
+            .companyId(discount.getCompany().getId())
+            .name(discount.getName())
+            .isActive(discount.isActive())
+            .priority(discount.getPriority())
+            .discountRanges(discountRequests)
+            .build();
 
 
     }
@@ -67,6 +90,9 @@ public class DiscountService {
                             "Paper not found with id: " + id
                     )
             );
+
+        List<DiscountRange> discountRanges = discountRangeRepository.findByDiscountId(id);
+        discountRangeRepository.deleteAll(discountRanges);
 
         discountRepository.delete(discount);
     }

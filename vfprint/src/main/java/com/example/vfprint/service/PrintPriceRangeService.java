@@ -38,46 +38,90 @@ public class PrintPriceRangeService {
                                         .build()).toList();
     }
 
-   @Transactional
-public void createPrintPriceRange(List<PrintPriceRangeRequest> rangeDTO, UUID printPriceId) {
-    if (rangeDTO == null || rangeDTO.isEmpty()) return;
+    @Transactional
+    public void createOnePrintRange(PrintPriceRangeRequest request){
 
-    // 2. Duyệt qua từng item để kiểm tra logic và chuẩn bị lưu
-    List<PrintPriceRange> rangesToSave = new ArrayList<>();
+        
 
-    for (PrintPriceRangeRequest item : rangeDTO) {
-        // Kiểm tra xem PrintPrice có tồn tại không
-        PrintPrice printPrice = printPriceRepository.findById(printPriceId)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("Print price not found for ID: " + printPriceId)
-                );
+       float max = request.getMaxLengthCm();
 
-        // 3. Logic check Overlap chuẩn: Khoảng mới (min, max) giao với bất kỳ khoảng nào đã có trong DB
-        // Công thức SQL: db.minLength <= item.maxLength AND db.maxLength >= item.minLength
-        boolean isOverlapped = printPriceRangeRepository
-                .existsByPrintPriceIdAndMinLengthCmLessThanEqualAndMaxLengthCmGreaterThanEqual(
-                        printPriceId, 
-                        item.getMaxLengthCm(), // Đổi chỗ: db.min <= item.max
-                        item.getMinLengthCm()  // Đổi chỗ: db.max >= item.min
-                );
+       if (request.getMinLengthCm() > request.getMaxLengthCm()) {
+                        request.setMaxLengthCm(request.getMinLengthCm());
+                        request.setMinLengthCm(max);
+       }
 
-        if (isOverlapped) {
-            throw new RuntimeException("Print price range [" + item.getMinLengthCm() + " - " + item.getMaxLengthCm() + "] overlaps with an existing range.");
-        }
+       PrintPrice printPrice = printPriceRepository.findById(request.getPrintPriceId()).orElseThrow(() -> new RuntimeException("Print not found"));
 
-        // 4. Sửa lại cú pháp Builder chuẩn của Lombok
-        PrintPriceRange newRange = PrintPriceRange.builder()
-                .printPrice(printPrice)
-                .minLengthCm(item.getMinLengthCm())
-                .maxLengthCm(item.getMaxLengthCm())
-                .pricePerMeter(item.getPricePerMeter())
-                .build();
-
-        rangesToSave.add(newRange);
+       PrintPriceRange range = PrintPriceRange.builder()
+                                .printPrice(printPrice)
+                                .maxLengthCm(request.getMaxLengthCm())
+                                .minLengthCm(request.getMinLengthCm())
+                                .pricePerMeter(request.getPricePerMeter())
+                                .build();
+                                
+        printPriceRangeRepository.save(range);
+        
     }
 
-    // 5. Tối ưu: Lưu tất cả trong 1 câu lệnh Batch Save thay vì lưu từng cái trong vòng lặp
-    printPriceRangeRepository.saveAll(rangesToSave);
-}
+   @Transactional
+   public void createPrintPriceRange(List<PrintPriceRangeRequest> rangeDTO, UUID printPriceId) {
+        if (rangeDTO == null || rangeDTO.isEmpty()) return;
+
+        // 2. Duyệt qua từng item để kiểm tra logic và chuẩn bị lưu
+        List<PrintPriceRange> rangesToSave = new ArrayList<>();
+
+        for (PrintPriceRangeRequest item : rangeDTO) {
+                // Kiểm tra xem PrintPrice có tồn tại không
+                PrintPrice printPrice = printPriceRepository.findById(printPriceId)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException("Print price not found for ID: " + printPriceId)
+                        );
+
+                // 3. Logic check Overlap chuẩn: Khoảng mới (min, max) giao với bất kỳ khoảng nào đã có trong DB
+                // Công thức SQL: db.minLength <= item.maxLength AND db.maxLength >= item.minLength
+                boolean isOverlapped = printPriceRangeRepository
+                        .existsByPrintPriceIdAndMinLengthCmLessThanEqualAndMaxLengthCmGreaterThanEqual(
+                                printPriceId, 
+                                item.getMaxLengthCm(), // Đổi chỗ: db.min <= item.max
+                                item.getMinLengthCm()  // Đổi chỗ: db.max >= item.min
+                        );
+
+                if (isOverlapped) {
+                        throw new RuntimeException("Print price range [" + item.getMinLengthCm() + " - " + item.getMaxLengthCm() + "] overlaps with an existing range.");
+                }
+
+                // 4. Sửa lại cú pháp Builder chuẩn của Lombok
+                PrintPriceRange newRange = PrintPriceRange.builder()
+                        .printPrice(printPrice)
+                        .minLengthCm(item.getMinLengthCm())
+                        .maxLengthCm(item.getMaxLengthCm())
+                        .pricePerMeter(item.getPricePerMeter())
+                        .build();
+
+                rangesToSave.add(newRange);
+        }
+
+        // 5. Tối ưu: Lưu tất cả trong 1 câu lệnh Batch Save thay vì lưu từng cái trong vòng lặp
+        printPriceRangeRepository.saveAll(rangesToSave);
+        }
+
+
+        @Transactional
+        public void updatePrintRange(PrintPriceRangeRequest request){
+                PrintPriceRange print = printPriceRangeRepository.findById(request.getId()).orElseThrow(() -> new RuntimeException());
+
+                print.setMinLengthCm(request.getMinLengthCm());
+                print.setMaxLengthCm(request.getMaxLengthCm());
+                print.setPricePerMeter(request.getPricePerMeter());
+
+                printPriceRangeRepository.save(print);
+        }
+
+
+        @Transactional
+        public void deletePrintRangeById(UUID id){
+                PrintPriceRange print = printPriceRangeRepository.findById(id).orElseThrow(() -> new RuntimeException());
+                printPriceRangeRepository.delete(print);
+        }
     
 }

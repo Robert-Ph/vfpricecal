@@ -193,3 +193,75 @@ $text-light: #ffffff;
     }
   }
 }
+
+.info-account {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    .brand__logo-wrapper{
+      border-radius: 20px;
+    }
+    
+    
+
+}
+
+.info-account {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand__logo-wrapper {
+    flex-shrink: 0;
+}
+
+.brand__logo--horizontal {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.brand__text-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 160px;
+}
+
+.brand__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.brand__title--horizontal {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.brand__subtitle--horizontal {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+/* Logout button */
+.logout-btn {
+    margin-top: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+    border: none;
+    background: transparent;
+    color: #ff4d4f;
+    cursor: pointer;
+    text-align: left;
+}
+
+.logout-btn:hover {
+    text-decoration: underline;
+}

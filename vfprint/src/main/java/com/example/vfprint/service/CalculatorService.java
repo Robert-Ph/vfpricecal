@@ -7,12 +7,20 @@ import com.example.vfprint.dto.InfoPriceDTO;
 import com.example.vfprint.dto.PaperSizeDTO;
 import com.example.vfprint.dto.request.CalculateRequest;
 import com.example.vfprint.dto.response.CalculateResponse;
+import com.example.vfprint.entity.Discount;
+import com.example.vfprint.entity.DiscountRange;
+import com.example.vfprint.entity.PrintPriceRange;
 import com.example.vfprint.entity.Processing;
+import com.example.vfprint.entity.Profit;
+import com.example.vfprint.enums.Priority;
+import com.example.vfprint.repository.DiscountRangeRepository;
 import com.example.vfprint.repository.DiscountRepository;
+import com.example.vfprint.repository.PrintPriceRangeRepository;
 import com.example.vfprint.repository.PrintPriceRepository;
 import com.example.vfprint.repository.ProcessingRepository;
 import com.example.vfprint.repository.ProfitRepository;
-
+import java.util.Comparator;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 @Service
@@ -32,7 +40,10 @@ public class CalculatorService {
     private ProfitRepository profitRepository;
 
     @Autowired
-    private PrintPriceRepository priceRepository;
+    private DiscountRangeRepository discountRangeRepository;
+
+    @Autowired
+    private PrintPriceRangeRepository printPriceRangeRepository;
 
     @Autowired
     private DiscountRepository discountRepository;
@@ -55,17 +66,11 @@ public class CalculatorService {
 
     
         // Tinh so luong to giay can thiet de in an san pham
-        int sheetsNeeded = calculatePaperSheets(infoPriceDTO.getWidthProduct(), infoPriceDTO.getHeightProduct(),
-                paperSizeDTO.getWidth(), paperSizeDTO.getHeight(), infoPriceDTO.getQuantity());
+        int sheetsNeeded = calculatePaperSheets(infoPriceDTO.getWidthProduct() + 3, infoPriceDTO.getHeightProduct() + 3,
+                paperSizeDTO.getWidth() - 10, paperSizeDTO.getHeight() - 10, infoPriceDTO.getQuantity());
         
-        float prinPrice = 0;
+        double prinPrice = getPrintPrice(infoPriceDTO.getPrintPrice(), paperSizeDTO.getHeight());
 
-        if (infoPriceDTO.getPrintPrice() != null && priceRepository.existsById(infoPriceDTO.getPrintPrice())) {
-
-            prinPrice = priceRepository.findById(infoPriceDTO.getPrintPrice())
-                .get()
-                .getPrice();
-        }
         double totalProcessingCost = calculateTotalProcessingCost(infoPriceDTO.getProcessingIds());
 
         float percentage = 1;
@@ -75,23 +80,39 @@ public class CalculatorService {
 
             percentage = profitRepository.findById(infoPriceDTO.getProfit())
                 .get()
-                .getPercentage() / 100f;
+                .getPercentage() / 100;
+        }else{
+            List<Profit> profits = profitRepository.findByPriority(Priority.HIGH);
+            System.out.println(profits.size());
+            percentage=profits.get(0).getPercentage()/100;
         }
 
-        //Lấy chiết khấu cho khách hàng
-        //double discount = getDiscount(infoPriceDTO.getDiscount());
+        System.out.println(percentage);
+
 
         //Kết quả báo giá in ấn
-        double price = ((sheetsNeeded * (paperSizeDTO.getPrice()+ prinPrice + totalProcessingCost)) * percentage) /** discount*/;
+        double price = ((sheetsNeeded * (paperSizeDTO.getPrice() + prinPrice + totalProcessingCost)) * percentage);
+        UUID discountId = null;
+        if (infoPriceDTO.getDiscount() == null) {
+            List<Discount> dList = discountRepository.findByPriority(Priority.HIGH);
+            System.out.println(dList.size());
+            discountId = dList.get(0).getId();
+        }else{
+            discountId = infoPriceDTO.getDiscount();
+        }
+        //Lấy chiết khấu cho khách hàng
+        double discount = getDiscount(discountId, BigDecimal.valueOf(price));
 
+        System.out.println(price);
+       
                 // Tinh tong chi phi in an
         return CalculateResponse.builder()
                 .price(Math.round(price))
                 .quantityPaper(sheetsNeeded)
-                .productSheet(calculateProductsPerSheet(infoPriceDTO.getWidthProduct(), infoPriceDTO.getHeightProduct(), paperSizeDTO.getWidth(), paperSizeDTO.getHeight(), true))
+                .productSheet(calculateProductsPerSheet(infoPriceDTO.getWidthProduct() + 3, infoPriceDTO.getHeightProduct() + 3, paperSizeDTO.getWidth() - 10, paperSizeDTO.getHeight() - 10, true))
                 .paperSize(paperSizeDTO.getWidth() + " x " + paperSizeDTO.getHeight())
                 .processingCost(totalProcessingCost * sheetsNeeded)
-                .discount( ((sheetsNeeded * (paperSizeDTO.getPrice()+ prinPrice + totalProcessingCost)) * percentage) - price)
+                .discount(price - (price*(1-discount/100)))
                 .paperCost(price / sheetsNeeded)
                 .build();
     }
@@ -179,12 +200,45 @@ public class CalculatorService {
         return totalProductsPerSheetbyHeight;
     }
 
-//   public double getDiscount(UUID id) {
-//     if (id == null) return 1;
+    public int getDiscount(UUID id, BigDecimal amount) {
 
-//     return discountRepository.findById(id)
-//             .map(d -> (100 - d.getDiscount()) / 100.0)
-//             .orElse(1.0);
-// }
+        List<DiscountRange> discountRange =
+            discountRangeRepository.findByDiscountId(id);
+
+        if (discountRange.isEmpty()) {
+            return 100;
+        }
+
+        discountRange.sort(
+            Comparator.comparing(DiscountRange::getMaxAmount)
+        );
+
+        for (DiscountRange d : discountRange) {
+            if (amount.compareTo(d.getMaxAmount()) <= 0) {
+                return (int) d.getDiscount();
+            }
+        }
+
+        // Không có mức nào phù hợp => lấy mức chiết khấu lớn nhất
+        return (int) discountRange.get(discountRange.size() - 1)
+            .getDiscount();
+    }
+
+    public double getPrintPrice(UUID id, int height ){
+        double result = 0;
+
+        List<PrintPriceRange> pRanges = printPriceRangeRepository.findByPrintPriceId(id);
+        if(pRanges.size() == 1){
+           result = pRanges.get(0).getPricePerMeter();
+        }else{
+            for(PrintPriceRange print: pRanges){
+                if (height <= print.getMaxLengthCm()) {
+                    result = print.getPricePerMeter();
+                }
+            }
+        }
+    
+        return result;
+    }
 
 }

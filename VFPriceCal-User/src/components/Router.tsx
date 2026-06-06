@@ -33,7 +33,7 @@ export const router = createBrowserRouter([
     element: <ForgotPassword />,
   },
   {
-    path: "/bao-gia/:companyName/:companyId",
+    path: "/bao-gia/:companyName/:phone/:companyId",
     element: <QuotationMobile />,
   },
   {

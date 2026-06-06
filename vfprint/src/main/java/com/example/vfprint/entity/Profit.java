@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import jakarta.persistence.ForeignKey;
+import com.example.vfprint.enums.Priority;
 
 @Getter
 @Setter
@@ -38,5 +39,8 @@ public class Profit {
 
     private String name;
     private float percentage;
+
+    @Column(nullable = false)
+    private Priority priority = Priority.NORMAL;
     
 }

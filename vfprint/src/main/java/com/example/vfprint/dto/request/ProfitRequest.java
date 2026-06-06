@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.vfprint.enums.Priority;
 
 @Data
 @NoArgsConstructor
@@ -16,4 +17,5 @@ public class ProfitRequest {
     private UUID companyId;
     private String name;
     private float percentage;
+    private Priority priority;
 }

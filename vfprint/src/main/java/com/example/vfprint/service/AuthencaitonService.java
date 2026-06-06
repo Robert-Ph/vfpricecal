@@ -102,6 +102,7 @@ public class AuthencaitonService {
             .username(account.getUsername())
             .email(account.getEmail())
             .role(account.getRole().getName()) // Gửi role để FE phân quyền Menu
+            .phone(company.getPhone())
             .build();
 
 }

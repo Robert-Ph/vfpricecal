@@ -1,6 +1,6 @@
 
 import { apiClient } from "../api/APIConfig";
-import { type printPrice } from "../model/model";
+import { type printPrice, type printPriceRanges } from "../model/model";
 
 export const create = async (data: printPrice): Promise<printPrice> => {
     try{
@@ -23,7 +23,7 @@ export const getAllByCompany = async (companyId: string)=>{
     }
 }
 
-export const deleteByCompany = async (id: number, comapanyId: string) => {
+export const deleteByCompany = async (id: string, comapanyId: string) => {
     try{
         const response = await apiClient.delete(`/print-price/${id}?companyId=${comapanyId}`);
         return response.data;
@@ -39,6 +39,38 @@ export const getById = async (id: string) => {
         return response.data;
     }catch(error){
         console.error('Failed to fetch print price details:', error);
+        throw error;
+    }
+}
+
+export const createOneRange = async (data: printPriceRanges): Promise<printPriceRanges> => {
+    try{
+        const response = await apiClient.post(`/print-price/new-range`, data);
+        return response.data;
+
+    }catch(error){
+        console.error('Failed to create print price:', error);
+        throw error;
+    }
+}
+
+export const deleteOnrRange = async (id: string) => {
+    try{
+        const response = await apiClient.delete(`/print-price/delete-range/${id}`);
+        return response.data;
+
+    }catch(error){
+        console.error('Failed to delete print range price:', error);
+        throw error;
+    }
+}
+
+export const updateRange = async (data: printPriceRanges): Promise<printPriceRanges> =>{
+    try{
+        const response = await apiClient.put(`/print-price/update`, data);
+        return response.data;
+    }catch(error){
+        console.error('Failed to update print range price:', error);
         throw error;
     }
 }

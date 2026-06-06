@@ -6,7 +6,7 @@ import { getAllProfitByCompany } from "../../service/ProfitService";
 import "./quotationPage.scss";
 import { useEffect ,useState } from "react";
 import { formatMoney } from "../../utils/formatMoney";
-import { numberToVietnameseText } from "../../utils/MoneyModel";
+// import { numberToVietnameseText } from "../../utils/MoneyModel";
 import { getAllDiscountByCompany } from "../../service/DiscountService";
 import type { UserInfo } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -152,7 +152,7 @@ const QuotationPage = () => {
     }
 
   const handShare = () => {
-  navigate(`/bao-gia/${user?.companyName}/${user?.companyId}`);
+  navigate(`/bao-gia/${user?.companyName}/${user?.phone}/${user?.companyId}`);
 };
 
     return (

@@ -40,5 +40,5 @@ public class PaperSize {
 
     @Column(name = "is_active")
     private Boolean isActive;
-    private Float price; // Giá của size này
+    private double price; // Giá của size này
 }

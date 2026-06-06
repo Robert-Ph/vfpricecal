@@ -1,33 +1,38 @@
-import { useState} from "react";
+import { useEffect, useState} from "react";
 import "./printPriceModel.scss";
 import { toast } from "react-toastify";
-import { create } from "../../service/PrintPriceService";
-import { useParams } from "react-router-dom";
+import { createOneRange, updateRange } from "../../service/PrintPriceService";
+import type { printPriceRanges } from "../../model/model";
 
+type Props = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  data?: printPriceRanges | null;
+  id: string;
+};
 
-const PrintPriceModel = ({ open, setOpen }) => {
+const PrintPriceModel = ({ open, setOpen, data, id} : Props) => {
 
-  const [categoryName, setCategoryName] = useState("");
-  const [priceProcessing, setPriceProcessing] = useState(Number);
+  const [minLengthCm, setMinLengthCm] = useState<number | null>(null);
+  const [maxLengthCm, setMaxLengthCm] = useState<number | null>(null);
+  const [pricePerMeter, setPricePerMeter] = useState<number | null>(null);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
-  const {id} = useParams();
 
-
-   const [user] = useState<any>(() => {
-        const savedUser = localStorage.getItem("user");
-        if (savedUser) {
-            try {
-                return JSON.parse(savedUser);
-            } catch (e) {
-                return null;
-            }
-        }
-        return null;
-    });
+  useEffect(() => {
+    if(data){
+      setMinLengthCm(data?.minLengthCm ?? 0);
+      setMaxLengthCm(data?.maxLengthCm ?? 0);
+      setPricePerMeter(data?.pricePerMeter ?? 0);
+    }else{
+      setMinLengthCm(0);
+      setMaxLengthCm(0);
+      setPricePerMeter(0);
+    }
+  },[data])
 
   const handleSubmit = async () => {
         // Validate inputs
-    if (!categoryName) {
+    if (!maxLengthCm && !minLengthCm && !pricePerMeter) {
       setError("Vui lòng điền đầy đủ thông tin.");
       toast.error("Vui lòng điền đầy đủ thông tin.");
       return;
@@ -37,25 +42,29 @@ const PrintPriceModel = ({ open, setOpen }) => {
     // setCategoryName("");
     setError(""); // Reset error message
     const payload = {
-        id: null, // ID sẽ được backend tạo tự động
-        companyId: user?.companyId, // ID ẩn từ context
-        name: categoryName,
-        price: priceProcessing,
-        isActive: true
+        id: data?.id ?? "", // Tạo chuỗi ID duy nhất như: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
+        printPriceId: id, // Giá trị này sẽ được backend gán khi lưu vào database
+        minLengthCm: minLengthCm,
+        maxLengthCm: maxLengthCm,
+        pricePerMeter: pricePerMeter
 
     };
 
-    // Gọi API để tạo mới danh mục
-    // Ví dụ: createCategory(payload).then(() => { ... });
-    const response = await create(payload); // Giả sử createCategory là hàm API đã được định nghĩa
+    let response;
+    if(data?.id){
+      response = await updateRange(payload); 
+    }else{
+      response = await createOneRange(payload); 
+    }
+
 
     if (response.code === 200 || response.code === 201) {
-        toast.success(`Tạo danh mục ${categoryName} thành công!`);
+        toast.success(`Tạo danh mục thành công!`);
         setTimeout(() => {
-            window.location.reload(); // Hoặc navigate("/component/processing") nếu bạn dùng react-router
-        }, 500); // Đợi 0.5 giây trước khi reload hoặc navigate
+            window.location.reload(); 
+        }, 500); 
     } else {
-        toast.error(`Có lỗi xảy ra khi tạo danh mục ${categoryName}.`);
+        toast.error(`Có lỗi xảy ra khi tạo danh mục.`);
     }
   };
 
@@ -66,32 +75,45 @@ const PrintPriceModel = ({ open, setOpen }) => {
       <div className="modal">
 
         <div className="modal-header">
-          Thông tin loại gia công
+          Thông tin
         </div>
 
         <div className="main">
 
           <div className="info">
-            <label>Tên loại in</label>
+            <label>Từ(mm)<span className="required">*</span></label>
             <input
-            className={!categoryName && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
-              type="text"
-              placeholder="Nhập tên danh mục..."
-              value={categoryName}
-              onChange={(e) => {setCategoryName(e.target.value)
+            className={!minLengthCm && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
+              type="number"
+              placeholder="Từ kích thước..."
+              value={minLengthCm || ""}
+              onChange={(e) => {setMinLengthCm(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />
           </div>
 
           <div className="info">
-            <label>Giá</label>
+            <label>Đến(mm)<span className="required">*</span></label>
             <input
-            className={!priceProcessing && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
-              type="text"
+              className={!maxLengthCm && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
+              type="number"
+              placeholder="Đến kích thước..."
+              value={maxLengthCm || ""}
+              onChange={(e) => {setMaxLengthCm(Number(e.target.value))
+                if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
+              }}
+            />
+          </div>
+
+          <div className="info">
+            <label>Giá (VNĐ)<span className="required">*</span></label>
+            <input
+              className={!pricePerMeter && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
+              type="number"
               placeholder="Nhập giá..."
-              value={priceProcessing}
-              onChange={(e) => {setPriceProcessing(Number(e.target.value))
+              value={pricePerMeter || ""}
+              onChange={(e) => {setPricePerMeter(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />

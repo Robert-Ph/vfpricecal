@@ -6,25 +6,17 @@ import { deleteProcessing, getProcessingById } from "../../../service/Processing
 import ProcessingAddModel from "../../../components/processing/ProcessingAdd";
 import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
+import type { category, processing } from "../../../model/model";
 
 const ProcessingDetail = () => {
-    const [activeTab, setActiveTab] = useState("paper");
+
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    const [selectedProcessingId, setSelectedProcessingId] = useState<number | null>(null);
+    const [selectedProcessingId, setSelectedProcessingId] = useState<string>();
+    const [dataProcessing, setDataProcessing] = useState<processing>();
     const {id} = useParams();
-    const [processingData, setProcessingData] = useState<any>(null); // State để lưu chi tiết gia công 
-    const [user] = useState<any>(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-        try {
-            return JSON.parse(savedUser);
-        } catch (e) {
-            return null;
-        }
-    }
-        return null;
-    });
+    const [processingData, setProcessingData] = useState<category>(); // State để lưu chi tiết gia công 
+    
 
     useEffect(() => {
         // Gọi API để lấy chi tiết gia công theo id
@@ -35,7 +27,7 @@ const ProcessingDetail = () => {
                 // const data = await getProcessingById(id); 
                 // setProcessingData(data);
                 // Tạm thời dùng dữ liệu giả để hiển thị
-                const data = await getProcessingById(id);
+                const data = await getProcessingById(id!);
                 setProcessingData(data.data);
             } catch (error) {
                 console.error("Lỗi khi lấy chi tiết gia công:", error);
@@ -44,10 +36,15 @@ const ProcessingDetail = () => {
             fetchProcessingDetail();
     }, [id]);
 
-    const handleOpenDelete = (id: number) => {
+        const handleOpenUpdate = (item: processing) => {
+            setDataProcessing(item);
+            setOpenPaperModal(true);
+    };
+
+    const handleOpenDelete = (id: string) => {
             setSelectedProcessingId(id);
             setOpenDeleteModal(true);
-            };
+    };
         
     const handleDeletePaper = async () => {
             try {
@@ -55,14 +52,8 @@ const ProcessingDetail = () => {
         
                 await deleteProcessing(Number(selectedProcessingId), Number(id));
         
-                setProcessingData((prev) => ({
-                                ...prev,
-                    processings: prev.processings.filter(
-                    (item) => item.id !== selectedProcessingId
-                    ),
-                }));
         
-                toast.success("Xoá chiết khấu  thành công");
+                toast.success("Xoá thành công");
         
                 setOpenDeleteModal(false);
             } catch (error) {
@@ -167,14 +158,14 @@ const ProcessingDetail = () => {
                                         </thead>
                                         <tbody>
                                             {/* Ví dụ về một sản phẩm */}
-                                            {processingData?.processings.map((material: any) => (
+                                            {processingData?.processings.map((material: processing) => (
                                                 <tr key={material.id}>
                                                     <td>{material.name}</td>
                                                     <td>Tờ</td>
                                                     <td>{material.price}</td>
                                                     <td className="action-buttons">
-                                                        <button className=" icon edit-btn"><FiEdit /></button>
-                                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(material.id)}><FiTrash2 /></button>
+                                                        <button className=" icon edit-btn" onClick={()=> handleOpenUpdate(material)}><FiEdit /></button>
+                                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(material.id ?? "")}><FiTrash2 /></button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -197,8 +188,10 @@ const ProcessingDetail = () => {
             </div>
 
             <ProcessingAddModel
-            open={openPaperModal}
-            setOpen={setOpenPaperModal}
+                open={openPaperModal}
+                setOpen={setOpenPaperModal}
+                data = {dataProcessing}
+                id = {id!}
             />
 
             <ConfirmModal

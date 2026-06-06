@@ -2,42 +2,27 @@ import "./styles/printCostDetail.scss";
 import { FiEdit, FiTrash2, FiLayers, FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { deleteProcessing } from "../../../service/ProcessingService";
-import ProcessingAddModel from "../../../components/processing/ProcessingAdd";
+import PrintPriceAddModel from "../../../components/printPrice/PrintPriceModel";
 import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
-import type { UserInfo } from "../../../context/AuthContext";
-import { getById } from "../../../service/PrintPriceService";
+import { deleteOnrRange, getById } from "../../../service/PrintPriceService";
+import type { printPrice, printPriceRanges } from "../../../model/model";
 
 
 const PrintCostDetail = () => {
-    const [activeTab, setActiveTab] = useState("paper");
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    const [selectedProcessingId, setSelectedProcessingId] = useState<number | null>(null);
+    const [selectedId, setSelectedId] = useState<string>();
+    const [rangeData, setRangeData] = useState<printPriceRanges>();
     const {id} = useParams();
-    const [printData, setPrintData] = useState<any>(null); // State để lưu chi tiết gia công 
-    const [user] = useState<UserInfo>(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-        try {
-            return JSON.parse(savedUser);
-        } catch (e) {
-            return null;
-        }
-    }
-        return null;
-    });
+    const [printData, setPrintData] = useState<printPrice>(); // State để lưu chi tiết gia công 
+
 
     useEffect(() => {
         // Gọi API để lấy chi tiết gia công theo id
         // Ví dụ: getProcessingById(id).then(data => setProcessingData(data));
         const fetchProcessingDetail = async () => {
             try {
-                // Giả sử bạn có API getProcessingById
-                // const data = await getProcessingById(id); 
-                // setProcessingData(data);
-                // Tạm thời dùng dữ liệu giả để hiển thị
                 const data = await getById(id as string); 
                 setPrintData(data.data);
             } catch (error) {
@@ -47,25 +32,24 @@ const PrintCostDetail = () => {
             fetchProcessingDetail();
     }, [id]);
 
-    const handleOpenDelete = (id: number) => {
-            setSelectedProcessingId(id);
+    const handleOpenUpdate = (item: printPriceRanges) => {
+            setRangeData(item);
+            setOpenPaperModal(true);
+    };
+
+    const handleOpenDelete = (id: string) => {
+            setSelectedId(id);
             setOpenDeleteModal(true);
-            };
+    };
         
     const handleDeletePaper = async () => {
             try {
-                if (!selectedProcessingId) return;
+                if (!selectedId) return;
         
-                await deleteProcessing(Number(selectedProcessingId), Number(id));
+                await deleteOnrRange(selectedId);
         
-                setProcessingData((prev) => ({
-                                ...prev,
-                    processings: prev.processings.filter(
-                    (item) => item.id !== selectedProcessingId
-                    ),
-                }));
         
-                toast.success("Xoá chiết khấu  thành công");
+                toast.success("Xoá thành công");
         
                 setOpenDeleteModal(false);
             } catch (error) {
@@ -170,14 +154,14 @@ const PrintCostDetail = () => {
                                         </thead>
                                         <tbody>
                                             {/* Ví dụ về một sản phẩm */}
-                                            {printData?.printPriceRanges.map((price: any) => (
+                                            {printData?.printPriceRanges.map((price: printPriceRanges) => (
                                                 <tr key={price.id}>
                                                     <td>{price.minLengthCm}</td>
                                                     <td>{price.maxLengthCm}</td>
                                                     <td>{price.pricePerMeter}</td>
                                                     <td className="action-buttons">
-                                                        <button className=" icon edit-btn"><FiEdit /></button>
-                                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(price.id)}><FiTrash2 /></button>
+                                                        <button className=" icon edit-btn" onClick={() => handleOpenUpdate(price)}><FiEdit /></button>
+                                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(price.id ?? "")}><FiTrash2 /></button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -199,17 +183,19 @@ const PrintCostDetail = () => {
                 </div>
             </div>
 
-            <ProcessingAddModel
-            open={openPaperModal}
-            setOpen={setOpenPaperModal}
+            <PrintPriceAddModel
+                open={openPaperModal}
+                setOpen={setOpenPaperModal}
+                data = {rangeData}
+                id ={id!}
             />
 
             <ConfirmModal
-            isOpen={openDeleteModal}
-            title="Xác nhận xoá"
-            message="Bạn có chắc muốn xoá gia công này?"
-            onCancel={() => setOpenDeleteModal(false)}
-            onConfirm={handleDeletePaper}
+                isOpen={openDeleteModal}
+                title="Xác nhận xoá"
+                message="Bạn có chắc muốn xoá?"
+                onCancel={() => setOpenDeleteModal(false)}
+                onConfirm={handleDeletePaper}
             />
 
         </div>

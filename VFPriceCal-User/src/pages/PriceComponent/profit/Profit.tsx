@@ -1,5 +1,4 @@
 import "../component.scss";
-import { useNavigate } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
@@ -8,31 +7,31 @@ import { deleteProfitByCompany, getAllProfitByCompany } from "../../../service/P
 import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
 import type { profitRequest } from "../../../model/model";
+import type { UserInfo } from "../../../context/AuthContext";
 
 const Profit = () => {
-    const navigate = useNavigate();
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedProfitId, setSelectedProfitId] = useState<string>("");
     const [openPaperModal, setOpenPaperModal] = useState(false);
-    const [profit, setProfit] = useState<any[]>([]); // State để quản lý danh mục lọc
+    const [profit, setProfit] = useState<profitRequest[]>([]); // State để quản lý danh mục lọc
      // item đang edit
   const [selectedProfit, setSelectedProfit] = useState<profitRequest>();
 
-    const [user] = useState<any>(() => {
+    const [user] = useState<UserInfo>(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
             try {
                 return JSON.parse(savedUser);
             } catch (e) {
-                return null;
+                return e;
             }
         }
         return null;
     });
 
       // mở modal update
-    const handleEdit = (item: any) => {
+    const handleEdit = (item: profitRequest) => {
         setSelectedProfit(item);
         setOpenPaperModal(true);
     };

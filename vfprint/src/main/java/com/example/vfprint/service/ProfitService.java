@@ -36,6 +36,7 @@ public class ProfitService {
             .company(company)
             .name(profitRequest.getName())
             .percentage(profitRequest.getPercentage())
+            .priority(profitRequest.getPriority())
             .build()
         );
     }
@@ -66,4 +67,25 @@ public class ProfitService {
 
             profitRepository.delete(profit);
     }
+
+   @Transactional
+    public void updateProfitById(ProfitRequest request){
+
+        Profit profit = profitRepository.findById(request.getId())
+            .orElseThrow(() -> new RuntimeException("Profit not found"));
+
+        profit.setName(request.getName());
+        profit.setPercentage(request.getPercentage());
+
+        if (request.getCompanyId() != null) {
+            profit.setCompany(
+                companyRepository.findById(request.getCompanyId())
+                .orElseThrow(() -> new RuntimeException("Company not found"))
+            );
+        }
+
+        profitRepository.save(profit);
+    }
 }
+
+

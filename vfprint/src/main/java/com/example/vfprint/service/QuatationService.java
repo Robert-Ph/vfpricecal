@@ -36,12 +36,11 @@ public class QuatationService {
     @Transactional
     public QuatationResquest getQuatationByCompanyId(UUID companyId) {
        
-    //     // Lấy dữ liệu print price của công ty
-    //    List<PrintPriceQuatation> printPriceQuatations = printPriceService.getAllByCompanyId(companyId).stream().map( item -> PrintPriceQuatation.builder()
-    //                                         .id(item.getId())
-    //                                         .name(item.getName())
-    //                                         .price(item.getPrice())
-    //                                     .build()).toList();
+        // Lấy dữ liệu print price của công ty
+       List<PrintPriceQuatation> printPriceQuatations = printPriceService.getAllByCompanyId(companyId).stream().map( item -> PrintPriceQuatation.builder()
+                                            .id(item.getId())
+                                            .name(item.getName())
+                                        .build()).toList();
 
                                              // Lấy dữ liệu paper của công ty
 
@@ -80,7 +79,7 @@ public class QuatationService {
 
         return QuatationResquest.builder()
                 .companyId(companyId)
-                // .printPrices(printPriceQuatations)
+                .printPrices(printPriceQuatations)
                 .papers(paperQuatations)
                 .categories(categoryQuatations)
                 .build();

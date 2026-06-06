@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "./QuotationMobile.scss";
 import {
-//   FaArrowLeft,
   FaPrint,
   FaCalculator,
   FaPlus,
@@ -18,10 +17,11 @@ import { getQuotations } from "../../service/QuotationService";
 import ProcessingsCalModel from "../../components/processing/ProcessingsCalModel";
 import {calculatePrint} from "../../service/CalculateService";
 import { formatMoney } from "../../utils/formatMoney";
+import zalo from "../../assets/zalo.png";
 
 
 const QuotationMobile = () => {
-    const { companyName, companyId } = useParams();
+    const { companyName, phone, companyId} = useParams();
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [list, setList] = useState([]);
     const [processingList, setProcessingList] = useState<any[]>([]); 
@@ -30,17 +30,9 @@ const QuotationMobile = () => {
     const [quantity, setQuantity] = useState<number>(0);
     const [paperId, setPaperId] = useState<string>("");
     const [printPriceId, setprintPriceId] = useState<string>("");
-    const [profitId, setProfitId] = useState<string>("");
-    const [paperSizeId, setPaperSizeId] = useState<string>("");
-    const [discountId, setDiscountId] = useState<string>("");
     const [result, setResult] = useState<any>(null);
 
 
-    const selectedPaper = list?.papers?.find(
-  (p) => p.id === paperId
-);
-
-  const paperSizes = selectedPaper?.paperSizes || [];
 
     const handleSumitCalculate = async () =>{
             try{
@@ -50,11 +42,10 @@ const QuotationMobile = () => {
                     quantity: quantity,
                     processingIds: processingList,
                     paperId: paperId,
-                    paperSizeId: paperSizeId,
-                    companyId: companyId,
+                    companyId: companyId ?? "",
                     printPrice: printPriceId,
-                    profit: profitId,
-                    discount: discountId
+                    profit: null,
+                    discount: null
                 }
     
                 const response = await calculatePrint(data);
@@ -72,7 +63,7 @@ const QuotationMobile = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await getQuotations(String(companyId));
+                const response = await getQuotations(companyId ?? "");
                 setList(response.data);
             } catch (error) {
                 console.error("Failed to fetch quotations:", error);
@@ -81,8 +72,9 @@ const QuotationMobile = () => {
         fetchData();
     }, [companyId]);
 
-    console.log(companyName);
-    console.log(companyId);
+ const handleContactZalo = () => {
+  window.open(  `https://zalo.me/${phone}`, "_blank", "noopener,noreferrer");
+};
   return (
     <div className="quotation-mobile">
       {/* Header */}
@@ -120,7 +112,7 @@ const QuotationMobile = () => {
         </div>
 
         <label>Loại hình in</label>
-        <select>
+        <select onChange={(e) => setprintPriceId(e.target.value)}>
           <option>Chọn loại</option>
           {list?.printPrices?.map((item) =>(
             <option key={item.id} value={item.id}>
@@ -210,22 +202,28 @@ const QuotationMobile = () => {
 
         <div className="result-row">
           <span>Giá 1 sản phẩm</span>
-          <strong>0 đ</strong>
+          <strong>{formatMoney(
+                            result?.data?.price /
+                            Number(quantity) || 0
+                        )}</strong>
         </div>
 
         <div className="result-row">
           <span>Số sản phẩm/tờ</span>
-          <strong>0</strong>
+          <strong>{result?.data?.productSheet ?? 0}</strong>
         </div>
 
         <div className="result-row">
           <span>Số tờ in</span>
-          <strong>0 tờ</strong>
+          <strong>{result?.data?.quantityPaper ?? 0} tờ</strong>
         </div>
 
         <div className="result-row">
           <span>Tạm tính</span>
-          <strong>0 đ</strong>
+          <strong>{formatMoney(
+                            (result?.data?.price || 0)
+                            
+                        )}</strong>
         </div>
 
         <div className="divider" />
@@ -255,8 +253,8 @@ const QuotationMobile = () => {
           Tính báo giá
         </button>
 
-        <button className="btn-primary">
-          <FaPrint />
+        <button className="btn-primary" onClick={() => handleContactZalo()}>
+          <img src={zalo} alt="Zalo" style={{width:"20px", height: "20px"}}/>
           In báo giá
         </button>
       </div>

@@ -41,6 +41,6 @@ public class PrintPriceRange {
     private Float maxLengthCm;
 
     @Column(name = "price_per_meter")
-    private Float pricePerMeter;
+    private double pricePerMeter;
     
 }

@@ -16,5 +16,5 @@ public class PrintPriceRangeRequest {
     private UUID printPriceId;
     private Float minLengthCm;
     private Float maxLengthCm;
-    private Float pricePerMeter;
+    private double pricePerMeter;
 }

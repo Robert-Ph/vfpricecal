@@ -1,5 +1,6 @@
 package com.example.vfprint.controller;
 
+import com.example.vfprint.service.PrintPriceRangeService;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.vfprint.dto.PrintPriceDTO;
+import com.example.vfprint.dto.request.PrintPriceRangeRequest;
 import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.service.PrintPriceService;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,8 +28,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping("api/print-price")
 public class PrintPriceController {
     
+    private final PrintPriceRangeService printPriceRangeService;
     @Autowired
     private PrintPriceService priceService;
+
+
+    PrintPriceController(PrintPriceRangeService printPriceRangeService) {
+        this.printPriceRangeService = printPriceRangeService;
+    }
 
 
     @PostMapping
@@ -74,6 +83,38 @@ public class PrintPriceController {
             .build()
         );
     }
+
+    @PostMapping("/new-range")
+    public ResponseEntity<ApiResponse> crateOnePrintRange(@RequestBody PrintPriceRangeRequest request){
+        printPriceRangeService.createOnePrintRange(request);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse.builder()
+            .code(200)
+            .message("Create new print range successfully")
+            .build()
+        );
+    }
     
+    @PutMapping("/update")
+    public ResponseEntity<ApiResponse> updatePrintPrice(@RequestBody PrintPriceRangeRequest request){
+        printPriceRangeService.updatePrintRange(request);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse.builder()
+            .code(200)
+            .message("Update print range successfully")
+            .build()
+        );
+    }
+
+    @DeleteMapping("/delete-range/{id}")
+    public ResponseEntity<ApiResponse> deleteRangeById(@PathVariable UUID id){
+        printPriceRangeService.deletePrintRangeById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse.builder()
+            .code(200)
+            .message("Delete successfully")
+            .build()
+        );
+    }
 
 }

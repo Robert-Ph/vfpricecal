@@ -31,8 +31,8 @@ public class DiscountRange {
     private UUID discountId;
 
     @Column(name = "max_amount")
-    private int maxAmount;
+    private BigDecimal maxAmount;
 
-    @Column(name = "discount", precision = 18, scale = 0)
-    private BigDecimal discount;
+    @Column(name = "discount")
+    private double discount;
 }

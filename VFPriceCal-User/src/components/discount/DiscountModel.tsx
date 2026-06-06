@@ -3,7 +3,7 @@ import "./discountModel.scss";
 import { toast } from "react-toastify";
 import {  createDiscountRange, updateDiscountRange } from "../../service/DiscountService";
 import type { UserInfo } from "../../context/AuthContext";
-import { formatMoney } from "../../utils/formatMoney";
+
 
 type discountRange = {
   id: string | null;

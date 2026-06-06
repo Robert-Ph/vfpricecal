@@ -89,6 +89,7 @@ public class PaperSizeService {
         
         existingPaperSize.setWidth(paperSize.getWidth());
         existingPaperSize.setHeight(paperSize.getHeight());
+        existingPaperSize.setPrice(paperSize.getPrice());
         
         return paperSizeRepository.save(existingPaperSize);
     }

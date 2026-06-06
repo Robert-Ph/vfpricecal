@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import com.example.vfprint.dto.PaperSizeDTO;
 import com.example.vfprint.dto.response.ApiResponse;
-
+import com.example.vfprint.entity.PaperSize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -68,6 +70,15 @@ public class PaperSizeController {
         );
     }
     
-    
+    @PutMapping("/update")
+    public ResponseEntity<ApiResponse> updatePaperSize(@RequestBody PaperSize request){
+        paperSizeService.updatePaperSize(request);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse.builder()
+            .code(200)
+            .message("Update successfully")
+            .build()
+        );
+    }
     
 }

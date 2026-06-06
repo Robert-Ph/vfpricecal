@@ -9,6 +9,7 @@ type Profit = {
   companyId: string;
   name: string;
   percentage: number;
+  priority: string
 };
 
 type Props = {
@@ -30,7 +31,7 @@ const ProfitModal = ({key, open, setOpen, data }: Props) => {
             try {
                 return JSON.parse(savedUser);
             } catch (e) {
-                return null;
+                return e;
             }
         }
         return null;
@@ -50,7 +51,8 @@ const ProfitModal = ({key, open, setOpen, data }: Props) => {
         id: data?.id ?? "", // ID sẽ được backend tạo tự động
         companyId: user?.companyId ?? "", // ID ẩn từ context
         name: profitName,
-        percentage: percentage
+        percentage: percentage,
+        priority: "NORMAL"
 
     };
     let response;

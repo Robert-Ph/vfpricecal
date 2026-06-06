@@ -9,6 +9,8 @@ import com.example.vfprint.dto.request.PrintPriceRangeRequest;
 import com.example.vfprint.dto.PrintPriceDTO;
 import com.example.vfprint.entity.Companies;
 import com.example.vfprint.entity.PrintPrice;
+import com.example.vfprint.entity.PrintPriceRange;
+import com.example.vfprint.repository.PrintPriceRangeRepository;
 import com.example.vfprint.repository.PrintPriceRepository;
 
 @Service
@@ -19,6 +21,9 @@ public class PrintPriceService {
 
     @Autowired
     private PrintPriceRangeService printPriceRangeService;
+
+    @Autowired
+    private PrintPriceRangeRepository printPriceRangeRepository;
 
 
     @Transactional
@@ -85,6 +90,10 @@ public class PrintPriceService {
                             "Paper not found with id: " + id
                     )
             );
+
+        List<PrintPriceRange> ranges = printPriceRangeRepository.findByPrintPriceId(id);
+
+        printPriceRangeRepository.deleteAll(ranges);
         
         priceRepository.delete(printPrice);
     }
