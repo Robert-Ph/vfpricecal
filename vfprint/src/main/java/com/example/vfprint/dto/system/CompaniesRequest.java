@@ -1,23 +1,29 @@
-package com.example.vfprint.dto;
+package com.example.vfprint.dto.system;
 
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Data
-public class CompaniesDto {
+public class CompaniesRequest {
+    private UUID id;
     private String code;
     private String name;
     private String phone;
     private String address;
     private String taxCode;
     private String email;
-    private UUID statusId;
-    private UUID plan;
-    private String duration;
-    private String isPay;
+    private String statusId;
+    private String plan;
     private String logoUrl;
     private Timestamp createAt;
+    private Timestamp endTime;
     private Timestamp updateAt;
 
 }

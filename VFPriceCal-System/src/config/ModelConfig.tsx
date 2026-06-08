@@ -12,9 +12,20 @@ export type Companies = {
     taxCode: string;
     email: string;
     statusId: string;
+    plan: string;
     logoUrl: string;
+    duration: string;
+    isPay: string;
     createAt: string;
+    endTime: string;
     updateAt: string;
+}
+
+export type plans = {
+    id: string;
+    code: string;
+    name: string;
+    price: number
 }
 
    

@@ -30,14 +30,15 @@ public class CompaniesController {
 
 
     @GetMapping
-    public List<CompaniesDto> getAllCompanies() {
-        return companiesService.getAllCompanies();
+    public ResponseEntity<ApiResponse> getAllCompanies() {
+        // return companiesService.getAllCompanies();
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse.builder()
+            .code(200)
+            .data(companiesService.getAllCompanies())
+            .build()
+        );
     }
-    
-    // @GetMapping("/search")
-    // public List<CompaniesDto> searchCompanies(@RequestParam("param") String param) {
-    //     return companiesService.searchCompanies(param);
-    // }
 
     @GetMapping("{id}")
     public CompaniesDto getCompanyById(@PathVariable UUID id) {

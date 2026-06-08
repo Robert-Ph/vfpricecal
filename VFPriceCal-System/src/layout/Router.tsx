@@ -1,10 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
 import Dashboard from "../page/dashboard/Dashboard";
-import UserManagement from "../page/userManagement/UserManagement";
-import AddCompany from "../page/userManagement/AddCompany";
+import UserManagement from "../page/companyManagement/UserManagement";
+import AddCompany from "../page/companyManagement/AddCompany";
 import Login from "../page/login/Login";
 import { Navigate } from "react-router-dom";
+import SubscriptionPage from "../page/Subscription/SubscriptionPage";
+import CompanyDetail from "../page/companyDetail/CompanyDetail";
 
 export const router = createBrowserRouter([
 
@@ -26,12 +28,20 @@ export const router = createBrowserRouter([
             element: <Dashboard />
         },
         {
-          path: "/user-management",
+          path: "/company-management",
           element: <UserManagement />
         },
         {
-          path:"/user-management/add",
+          path:"/company-management/add",
           element: <AddCompany />
+        },
+        {
+          path:"/subscription",
+          element: <SubscriptionPage/>
+        },
+        {
+          path: "/company-management/detail",
+          element: <CompanyDetail/>
         }
 
     ],

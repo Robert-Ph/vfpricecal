@@ -32,12 +32,13 @@ const MenuBar = () => {
             Dashboard
         </NavLink>
 
-        <NavLink to="/user-management" className={({ isActive }) =>
+        <NavLink to="/company-management" className={({ isActive }) =>
             isActive ? "menu-item active" : "menu-item"
         }>
             <span>👤</span>
             Quản lý doanh nghiệp
         </NavLink>
+
 
         <NavLink to="/roles" className={({ isActive }) =>
             isActive ? "menu-item active" : "menu-item"

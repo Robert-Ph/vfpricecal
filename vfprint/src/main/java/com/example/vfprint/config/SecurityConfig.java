@@ -70,7 +70,8 @@ public class SecurityConfig {
                                 "/api/companies/**",
                                 "/api/accounts/**",
                                 "/api/system/**",
-                                "/api/bao-gia/**"
+                                "/api/bao-gia/**",
+                                "/api/plans/**"
                         ).permitAll()
 
                         /**

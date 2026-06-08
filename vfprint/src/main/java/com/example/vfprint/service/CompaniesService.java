@@ -9,6 +9,8 @@ import java.util.UUID;
 import com.example.vfprint.repository.CompanyStatusRepository;
 import com.example.vfprint.repository.CompaniesRepository;
 import com.example.vfprint.dto.CompaniesDto;
+import com.example.vfprint.dto.system.CompaniesRequest;
+import com.example.vfprint.dto.system.CompansySubscriptionsDTO;
 import com.example.vfprint.entity.Companies;
 import com.example.vfprint.entity.CompaniesStatus;
 import com.example.vfprint.repository.RolesRepository;
@@ -17,6 +19,8 @@ import com.example.vfprint.entity.Roles;
 import com.example.vfprint.config.UltiService;
 import com.example.vfprint.config.EmailService;
 import com.example.vfprint.repository.UserStatusREpository;
+import com.example.vfprint.repository.systemRepository.CompansySubscriptionsRepository;
+import com.example.vfprint.service.system.CompansySubscriptionsService;
 import com.example.vfprint.entity.UserStatus;
 
 
@@ -47,6 +51,12 @@ public class CompaniesService {
     @Autowired
     private UserStatusREpository userStatusRepository;
 
+    @Autowired
+    private CompansySubscriptionsService compansySubscriptionsService;
+
+    @Autowired
+    private CompansySubscriptionsRepository compansySubscriptionsRepository;
+
 
     // Create a new company
     @Transactional
@@ -72,6 +82,16 @@ public class CompaniesService {
                 .build();
 
         companiesRepository.save(entity);
+
+
+        CompansySubscriptionsDTO compansySubscriptionsDTO = CompansySubscriptionsDTO.builder()
+                                                            .companyId(entity.getId())
+                                                            .planId(company.getPlan())
+                                                            .time(company.getDuration())
+                                                            .build();
+
+        compansySubscriptionsService.createCompansySubscriptions(compansySubscriptionsDTO);
+
 
         Roles role = roleRepository.findByName("OWNER")
                 .orElseThrow(() -> new RuntimeException("Role not found"));
@@ -136,21 +156,33 @@ public class CompaniesService {
         return dto;
     }
 
-    //get all companies
     @Transactional(readOnly = true)
-    public List<CompaniesDto> getAllCompanies(){
-        return companiesRepository.findAll()
-                .stream()
-                .map(company -> {
-                    CompaniesDto dto = new CompaniesDto();
-                    dto.setCode(company.getCode());
-                    dto.setName(company.getName());
-                    dto.setPhone(company.getPhone());
-                    dto.setAddress(company.getAddress());
-                    return dto;
-                })
-                .toList();
-    }
+public List<CompaniesRequest> getAllCompanies() {
+    
+    return companiesRepository.findAll()
+            .stream()
+            .map(company -> 
+                CompaniesRequest.builder()
+                    .id(company.getId())
+                    .address(company.getAddress())
+                    .code(company.getCode())
+                    .name(company.getName())
+                    .phone(company.getPhone())
+                    .statusId(company.getStatus().getCode())
+                    .createAt(company.getCreateAt())
+                    .plan(compansySubscriptionsRepository.findByCompany(company)
+                            .map(subscription -> subscription.getPlan().getCode())
+                            .orElse(null))
+                    
+                    // SỬA Ở ĐÂY: Gọi trực tiếp .map() vì findByCompany đã là một Optional rồi
+                    .endTime(compansySubscriptionsRepository.findByCompany(company)
+                            .map(subscription -> subscription.getEndDate())
+                            .orElse(null)) // Nếu không có gói đăng ký, tự động trả về null
+                    
+                    .build()
+            )
+            .toList();
+}
 
     // @Transactional
     // public List<CompaniesDto> searchCompanies(String param){

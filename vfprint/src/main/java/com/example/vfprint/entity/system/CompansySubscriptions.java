@@ -60,7 +60,7 @@ public class CompansySubscriptions {
     private Timestamp endDate;
 
     @Column(name = "auto_renewal_date")
-    private Timestamp autoRenewalDate;
+    private Boolean autoRenewalDate;
 
     @Column(name = "created_at")
     private Timestamp createdAt;

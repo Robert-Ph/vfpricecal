@@ -1,0 +1,36 @@
+package com.example.vfprint.service.system;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.text.Collator;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.example.vfprint.dto.system.PlansRequest;
+import com.example.vfprint.repository.systemRepository.PlansRepository;
+import com.example.vfprint.entity.system.Plans;
+
+@Service
+public class PlansService {
+    @Autowired
+    private PlansRepository plansRepository;
+
+    @Transactional
+    public List<PlansRequest> getAllPlansRequest(){
+        List<Plans> plans = plansRepository.findAll();
+        
+       return plans.stream()
+                .map(plan -> 
+                    PlansRequest.builder()
+                    .id(plan.getId())
+                    .name(plan.getName())
+                    .code(plan.getCode())
+                    .price(plan.getPrice())
+                    .build()
+                )
+                .collect(Collectors.toList());
+    }
+}
+        
