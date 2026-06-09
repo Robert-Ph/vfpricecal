@@ -5,7 +5,9 @@ export interface UserInfo {
   companyId: string; // Hoặc number nếu companyId là số
   companyName: string;
   username: string;
+  fullname: string;
   email: string;
+  plan: string;
   role: string;
   phone: string
 }

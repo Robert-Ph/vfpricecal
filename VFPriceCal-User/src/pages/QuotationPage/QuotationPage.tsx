@@ -20,6 +20,7 @@ import {
   FiGrid,         // Kết quả báo giá
   FiTrash2
 } from "react-icons/fi";
+import type { processing } from "../../model/model";
 
 
 
@@ -56,13 +57,13 @@ const QuotationPage = () => {
                 try {
                     return JSON.parse(savedUser);
                 } catch (e) {
-                    return null;
+                    return e;
                 }
             }
             return null;
     });
 
-       const handleAddProcessing = (newProcessing: any) => {
+       const handleAddProcessing = (newProcessing: processing) => {
         setProcessingList([...processingList, newProcessing]);
     };
     

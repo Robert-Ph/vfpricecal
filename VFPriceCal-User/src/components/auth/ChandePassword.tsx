@@ -2,6 +2,8 @@ import { useEffect, useState} from "react";
 import "./changePassword.scss";
 import { toast } from "react-toastify";
 import { changePassword } from "../../service/AuthService";
+import type { UserInfo } from "../../context/AuthContext";
+import { createPortal } from "react-dom";
 
 const ChangePasswordModal = ({ open, setOpen }) => {
 
@@ -11,13 +13,13 @@ const ChangePasswordModal = ({ open, setOpen }) => {
 
 
 
-   const [user] = useState<any>(() => {
+   const [user] = useState<UserInfo>(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
             try {
                 return JSON.parse(savedUser);
             } catch (e) {
-                return null;
+                return e;
             }
         }
         return null;
@@ -64,10 +66,11 @@ const ChangePasswordModal = ({ open, setOpen }) => {
 
     if (!open) return null;
 
-  return (
+  return createPortal (
     <div className="overlay">
+      
       <div className="modal">
-
+        
         <div className="modal-header">
           Đổi mật khẩu
         </div>
@@ -121,7 +124,8 @@ const ChangePasswordModal = ({ open, setOpen }) => {
         </div>
 
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

@@ -3,8 +3,12 @@ package com.example.vfprint.service;
 import java.util.Date;
 import com.example.vfprint.entity.Account;
 import com.example.vfprint.entity.Token;
+import com.example.vfprint.entity.system.CompansySubscriptions;
+import com.example.vfprint.entity.system.Plans;
 import com.example.vfprint.repository.AccountRepository;
 import com.example.vfprint.repository.TokenRepository;
+import com.example.vfprint.repository.systemRepository.CompansySubscriptionsRepository;
+import com.example.vfprint.repository.systemRepository.PlansRepository;
 import com.nimbusds.jose.JOSEException;
 import com.example.vfprint.repository.CompaniesRepository;
 import java.text.ParseException;
@@ -18,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.vfprint.config.EmailService;
 import com.example.vfprint.config.UltiService;
 import com.example.vfprint.entity.Companies;
+import java.util.Optional;
 @Service
 public class AuthencaitonService {
 
@@ -41,6 +46,12 @@ public class AuthencaitonService {
 
     @Autowired
     private UltiService ultiService;
+
+    @Autowired
+    private CompansySubscriptionsRepository compansySubscriptionsRepository;
+
+    @Autowired
+    private PlansRepository plansRepository;
 
 
       /**
@@ -94,6 +105,17 @@ public class AuthencaitonService {
                         .orElseThrow(() -> 
                         new NoSuchElementException("Company not found")    
                     );
+
+       String plan = "";
+
+Optional<CompansySubscriptions> subscriptionOpt = compansySubscriptionsRepository.findByCompany(company);
+
+if (subscriptionOpt.isPresent()) {
+    plan = subscriptionOpt.get().getPlan().getCode();
+} else {
+    // Logic dự phòng (fallback): Nếu không có gói thì gán mặc định là gói FREE chẳng hạn
+    plan = "FREE"; 
+}
         //response FE
         return AuthenticationResponse.builder()
             .token(jwtToken)
@@ -103,6 +125,8 @@ public class AuthencaitonService {
             .email(account.getEmail())
             .role(account.getRole().getName()) // Gửi role để FE phân quyền Menu
             .phone(company.getPhone())
+            .fullname(company.getName())
+            .plan(plan)
             .build();
 
 }

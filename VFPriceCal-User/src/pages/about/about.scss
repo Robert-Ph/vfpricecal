@@ -1,0 +1,300 @@
+/* ==========================================================================
+   1. KHUNG CHỨA TOÀN TRANG ABOUT (CO GIÃN THEO MÀN HÌNH CHUẨN UX)
+   ========================================================================== */
+.about-container {
+  padding: 20px;
+  gap: 20px;
+  display: flex;
+  border-radius: 20px;
+  flex-direction: column;
+  height: calc(100vh - 40px); /* Khít màn hình, không tạo scroll trang chính */
+  box-sizing: border-box;
+  background: #f1f5f9; /* Màu nền xám nhạt dịu mắt giống layout chính */
+}
+
+/* ==========================================================================
+   2. HEADER TRANG (TIÊU ĐỀ & PHIÊN BẢN)
+   ========================================================================== */
+.about-header {
+  display: flex;
+  align-items: center; 
+  padding: 0 24px;
+  height: 90px; 
+  flex-shrink: 0; /* Không cho phép header bị bóp méo khi thu nhỏ màn hình */
+  background: #ffffff; 
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+
+  /* Nút bấm hiển thị version */
+  .button-vesion {
+    margin-left: 20px;
+    width: 120px;
+    height: 30px;
+    background: #0284c7; /* Tone màu xanh công nghệ đồng bộ */
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+  }
+}
+
+/* ==========================================================================
+   3. PHẦN THÂN CHÍNH (ĐÃ FIX: BUNG 100% CHIỀU NGANG THEO TỶ LỆ)
+   ========================================================================== */
+.about-main {
+  display: flex;
+  gap: 20px; 
+  flex: 1; /* Tự động kéo giãn lấp đầy khoảng trống ở giữa màn hình */
+  min-height: 0; /* Bắt buộc flexbox con không phình vượt quá cha */
+  width: 100%;
+  box-sizing: border-box;
+  background: transparent;
+
+  /* Cột trái: Chiếm tỷ lệ 1.2 */
+  .about-main-left {
+    flex: 1.2; 
+    display: flex;
+    width: 0; /* Khử lỗi phình nội dung của Flexbox, giúp ép card bung ra */
+  }
+
+  /* Cột phải (Bar gói dịch vụ): Chiếm tỷ lệ 1 */
+  .about-main-right {
+    flex: 1; 
+    display: flex;
+    width: 0; /* Khử lỗi phình nội dung, ép bar bên phải mở rộng tối đa */
+  }
+}
+
+/* ==========================================================================
+   4. THÀNH PHẦN CARD DÙNG CHUNG TRONG CÁC CỘT (ÉP FULL WIDTH)
+   ========================================================================== */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+  width: 100%; /* Đảm bảo card phủ kín 100% không gian cột cha */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+
+  h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 20px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4.1. CHI TIẾT CARD VỀ CHÚNG TÔI & CORE FEATURES (CỘT TRÁI)
+   -------------------------------------------------------------------------- */
+.features-card {
+  /* Khối text giới thiệu chung */
+  .about-us-section {
+    h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 12px;
+    }
+    p {
+      font-size: 14px;
+      color: #475569;
+      line-height: 1.6;
+    }
+  }
+
+  /* Đường phân cách nhạt mảnh */
+  .divider {
+    height: 1px;
+    background-color: #f1f5f9;
+    margin: 20px 0;
+  }
+
+  /* Khối danh sách icon tính năng */
+  .core-features-section {
+    h4 {
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 16px;
+      letter-spacing: 0.3px;
+    }
+
+    /* Lưới chia làm 2 cột tự động co giãn đều nhau */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    /* Từng ô tính năng con */
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      border: 1px solid #f1f5f9;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: #f8fafc;
+        border-color: #e2e8f0;
+      }
+
+      /* Khung vuông bọc bên ngoài icon */
+      .feature-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+
+        &.icon-blue {
+          background-color: #e0f2fe; /* Nền xanh dương nhạt dịu mắt */
+          color: #0284c7;            /* Màu xanh đậm nét vẽ */
+        }
+      }
+
+      /* Chữ hiển thị tên tính năng */
+      .feature-text {
+        font-size: 14px;
+        font-weight: 500;
+        color: #334155;
+      }
+    }
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4.2. CHI TIẾT CARD GÓI DỊCH VỤ (CỘT PHẢI)
+   -------------------------------------------------------------------------- */
+.subscription-card {
+  gap: 16px;
+
+  .sub-info-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    label {
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    /* Khối dòng ngang chứa Icon indicator bên cạnh text */
+    &.flex-row {
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      margin-top: 4px;
+    }
+  }
+
+  .company-name {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+  }
+
+  /* THU NHỎ VÀ CĂN GIỮA BADGE GÓI DỊCH VỤ */
+    /* KHUNG BADGE DÙNG CHUNG (KÍCH THƯỚC VÀ CĂN GIỮA) */
+.plan-badge {
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 16px;       
+  width: fit-content;      
+  margin: 0 auto;          /* Căn giữa badge trong card */
+  border-radius: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  gap: 6px;
+  box-sizing: border-box;
+
+  /* 1. GÓI TRIAL: Màu xanh lá cây dịu mắt (Mặc định nếu chưa có gói) */
+  &.trial-plan {
+    background: linear-gradient(135deg, #4ade80 0%, #16a34a 100%);
+    box-shadow: 0 4px 10px rgba(22, 163, 74, 0.2);
+  }
+
+  /* 2. GÓI BASIC: Màu xanh dương công nghệ đồng bộ hệ thống */
+  &.basic-plan {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+    box-shadow: 0 4px 10px rgba(2, 132, 199, 0.2);
+  }
+
+  /* 3. GÓI PRO (PREMIUM): Màu vàng đồng sang trọng */
+  &.pro-plan, &.premium-plan {
+    background: linear-gradient(135deg, #dfba6b 0%, #c29947 100%);
+    box-shadow: 0 4px 10px rgba(194, 153, 71, 0.2);
+  }
+}
+  .icon-indicator {
+    width: 36px;
+    height: 36px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .text-data {
+    display: flex;
+    flex-direction: column;
+    
+    span {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1e293b;
+    }
+    .highlight-days {
+      color: #0284c7; /* Số ngày còn lại hiển thị màu xanh lam nổi bật */
+    }
+  }
+
+  /* THANH TIẾN TRÌNH THỜI GIAN THUÊ */
+  .progress-wrapper {
+    background: #e2e8f0;
+    height: 8px;
+    border-radius: 4px;
+    margin-top: auto; /* Đẩy thanh tiến trình luôn neo chặt xuống đáy Card */
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    background: linear-gradient(90deg, #0284c7 0%, #0ea5e9 100%);
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+}
+
+/* ==========================================================================
+   5. FOOTER (BẢN QUYỀN HỆ THỐNG)
+   ========================================================================== */
+.about-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  height: 60px; 
+  flex-shrink: 0; 
+  background: #ffffff; 
+  border-radius: 16px;
+  color: #94a3b8;
+  font-size: 14px;
+  border: 1px solid #e2e8f0;
+}

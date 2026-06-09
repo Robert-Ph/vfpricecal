@@ -2,18 +2,20 @@ import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { FaFileAlt} from "react-icons/fa";
 import { IoLayers } from "react-icons/io5";
-import { FiChevronDown } from "react-icons/fi";
+import { FiChevronDown, FiInfo } from "react-icons/fi";
 import "./sidebar.scss";
 import logo from "../assets/logo.png";
 import avata from "../assets/avata.png";
 import type { UserInfo } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import {logout} from "../service/AuthService";
+import ChangePasswordModal from "../components/auth/ChandePassword";
 
 const Sidebar = () => {
     const [openSubMenu, setOpenSubMenu] = useState(false);
     // const [openSubMenuSystem, setOpenSubMenuSystem] = useState(false);
     const navigate = useNavigate();
+     const [openPaperModal, setOpenPaperModal] = useState(false);
 
      const [user] = useState<UserInfo | null>(() => {
             const savedUser = localStorage.getItem("user");
@@ -21,7 +23,7 @@ const Sidebar = () => {
                 try {
                     return JSON.parse(savedUser);
                 } catch (e) {
-                    return null;
+                    return e;
                 }
             }
             return null;
@@ -46,7 +48,9 @@ const Sidebar = () => {
                     console.log(e);
         
                 } 
-            };
+        };
+
+       
 
     return (
         <div className="sidebar">
@@ -117,10 +121,10 @@ const Sidebar = () => {
                     </div>
                 )
                 }
-                {/* <NavLink className="menu-item" to="/report">
-                    <FaChartBar className="menu-icon" />
-                    <span>Chia sẻ liên k</span>
-                </NavLink> */}
+                <NavLink className="menu-item" to="/about">
+                    <FiInfo className="menu-icon" />
+                    <span>About</span>
+                </NavLink>
 
                 {/* <div className="menu-item parent"
                     onClick={() => setOpenSubMenuSystem(!openSubMenuSystem)}>
@@ -161,16 +165,24 @@ const Sidebar = () => {
                     <div className="brand__text-wrapper">
                         <div className="brand__info">
                             <h3 title="version 1.0" className="brand__title--horizontal">
-                                <span className="text-cyan">{user?.companyName}</span>
+                                <span className="text-cyan">{user?.username}</span>
                             </h3>
-                            <p className="brand__subtitle--horizontal">{user?.username}</p>
+                            {/* <p className="brand__subtitle--horizontal">{user?.username}</p> */}
                         </div>
+                        <button className="logout-btn" onClick={() => setOpenPaperModal(true)}>
+                            Đổi mật khẩu
+                        </button>
 
                         <button className="logout-btn" onClick={handleLogout}>
                             Đăng xuất
                         </button>
                     </div>
             </div>
+
+            <ChangePasswordModal
+                open={openPaperModal}
+                setOpen={setOpenPaperModal}
+            />
         </div>
     );
 };
