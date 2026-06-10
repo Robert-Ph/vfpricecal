@@ -18,12 +18,13 @@ import ProcessingsCalModel from "../../components/processing/ProcessingsCalModel
 import {calculatePrint} from "../../service/CalculateService";
 import { formatMoney } from "../../utils/formatMoney";
 import zalo from "../../assets/zalo.png";
+import type { paper, printPrice, processing } from "../../model/model";
 
 
 const QuotationMobile = () => {
-    const { companyName, phone, companyId} = useParams();
+    const { phone, companyId} = useParams();
     const [openPaperModal, setOpenPaperModal] = useState(false);
-    const [list, setList] = useState([]);
+    const [list, setList] = useState();
     const [processingList, setProcessingList] = useState<any[]>([]); 
     const [width, setWidth] = useState<number>(0);
     const [height, setHeight] = useState<number>(0);
@@ -56,7 +57,7 @@ const QuotationMobile = () => {
             }
         }
 
-       const handleAddProcessing = (newProcessing: any) => {
+       const handleAddProcessing = (newProcessing: processing) => {
         setProcessingList([...processingList, newProcessing]);
     };
 
@@ -114,8 +115,8 @@ const QuotationMobile = () => {
         <label>Loại hình in</label>
         <select onChange={(e) => setprintPriceId(e.target.value)}>
           <option>Chọn loại</option>
-          {list?.printPrices?.map((item) =>(
-            <option key={item.id} value={item.id}>
+          {list?.printPrices?.map((item: printPrice) =>(
+            <option key={item.id} value={item.id ?? ""}>
                     {item.name}
                   </option>
           ))}
@@ -124,8 +125,8 @@ const QuotationMobile = () => {
         <label>Loại giấy in</label>
         <select onChange={(e) => setPaperId(e.target.value)}>
           <option>Chọn giấy</option>
-          {list?.papers?.map((item) =>(
-            <option key={item.id} value={item.id}>
+          {list?.papers?.map((item: paper) =>(
+            <option key={item.id} value={item.id ?? ""}>
                     {item.name}
                   </option>
           ))}

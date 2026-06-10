@@ -1,5 +1,6 @@
 package com.example.vfprint.dto.response;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -21,4 +22,6 @@ public class AuthenticationResponse {
     private String email;
     private String role;
     private String phone;
+    private Timestamp startTime;
+    private Timestamp endTime;
 }

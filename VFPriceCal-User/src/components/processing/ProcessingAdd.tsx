@@ -1,8 +1,7 @@
-import { useEffect, useState} from "react";
+import { useState} from "react";
 import "./processingAdd.scss";
 import { toast } from "react-toastify";
 import { createProcessingByCategory, updateProcessingById } from "../../service/ProcessingService";
-import { useParams } from "react-router-dom";
 
 type processing = {
     id: string | null;
@@ -19,34 +18,13 @@ type Props = {
 
 const ProcessingAddModel = ({ open, setOpen, data, id }: Props) => {
 
-  const [processingName, setProcessingName] = useState("");
-  const [priceProcessing, setPriceProcessing] = useState(Number);
+  const [processingName
+    // , setProcessingName
+  ] = useState(data?.name ?? "");
+  const [priceProcessing, setPriceProcessing] = useState(data?.price ?? 0);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
  
 
-
-  const [user] = useState<any>(() => {
-        const savedUser = localStorage.getItem("user");
-        if (savedUser) {
-            try {
-                return JSON.parse(savedUser);
-            } catch (e) {
-                return null;
-            }
-        }
-        return null;
-  });
-
-  useEffect(()=>{
-    if(data){
-      setProcessingName(data?.name);
-      setPriceProcessing(data?.price);
-    }else{
-      setProcessingName("");
-      setPriceProcessing(0);
-    }
-    
-  },[data])
 
   const handleSubmit = async () => {
     if (!processingName) {

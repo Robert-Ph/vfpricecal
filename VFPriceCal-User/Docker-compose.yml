@@ -1,0 +1,11 @@
+services:
+  frontend-user:
+    build: . # Build Dockerfile của User
+    container_name: vf-web-user
+    restart: always
+    networks:
+      - vf-network
+
+networks:
+  vf-network:
+    external: true

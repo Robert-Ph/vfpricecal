@@ -11,6 +11,8 @@ import com.example.vfprint.repository.systemRepository.CompansySubscriptionsRepo
 import com.example.vfprint.repository.systemRepository.PlansRepository;
 import com.nimbusds.jose.JOSEException;
 import com.example.vfprint.repository.CompaniesRepository;
+
+import java.sql.Timestamp;
 import java.text.ParseException;
 import com.example.vfprint.dto.request.LoginRequest;
 import com.example.vfprint.dto.response.AuthenticationResponse;
@@ -65,7 +67,8 @@ public class AuthencaitonService {
                         new NoSuchElementException("Email not found")    
                     );
         
-
+    System.out.println("Input password : " + loginRequest.getPassword());
+    System.out.println("DB password    : " + account.getPassword());
 
         return passwordEncoder.matches(loginRequest.getPassword(), account.getPassword());
     }
@@ -106,16 +109,20 @@ public class AuthencaitonService {
                         new NoSuchElementException("Company not found")    
                     );
 
-       String plan = "";
+        String plan = "";
+        Timestamp start = null;
+        Timestamp end = null;
 
-Optional<CompansySubscriptions> subscriptionOpt = compansySubscriptionsRepository.findByCompany(company);
+        Optional<CompansySubscriptions> subscriptionOpt = compansySubscriptionsRepository.findByCompany(company);
 
-if (subscriptionOpt.isPresent()) {
-    plan = subscriptionOpt.get().getPlan().getCode();
-} else {
-    // Logic dự phòng (fallback): Nếu không có gói thì gán mặc định là gói FREE chẳng hạn
-    plan = "FREE"; 
-}
+        if (subscriptionOpt.isPresent()) {
+            plan = subscriptionOpt.get().getPlan().getCode();
+            start = subscriptionOpt.get().getStartDate();
+            end = subscriptionOpt.get().getEndDate();
+        } else {
+         // Logic dự phòng (fallback): Nếu không có gói thì gán mặc định là gói FREE chẳng hạn
+            plan = "FREE"; 
+        }
         //response FE
         return AuthenticationResponse.builder()
             .token(jwtToken)
@@ -127,6 +134,8 @@ if (subscriptionOpt.isPresent()) {
             .phone(company.getPhone())
             .fullname(company.getName())
             .plan(plan)
+            .startTime(start)
+            .endTime(end)
             .build();
 
 }

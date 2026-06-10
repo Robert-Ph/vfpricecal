@@ -2,8 +2,14 @@ import { useState} from "react";
 import "./discountNewModal.scss";
 import { v4 as uuidv4 } from 'uuid';
 
+interface Props {
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onAdd: (data: any) => void;
 
-const DiscountNewModal = ({ open, setOpen, onAdd }) => {
+}
+
+const DiscountNewModal = ({ open, setOpen, onAdd }: Props) => {
 
   const [maxAmount, setMaxAmount] = useState<number | null>(null);
   const [discount, setDiscount] = useState<number | null>(null);

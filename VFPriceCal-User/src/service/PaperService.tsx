@@ -1,4 +1,4 @@
-import { data } from "react-router-dom";
+
 import { apiClient } from "../api/APIConfig";
 import {type paperSize} from "../model/model";
 
@@ -55,7 +55,7 @@ export const deletePaperSize = async (id: string, paperId: string) => {
     }
 }
 
-export const createOne = async (data: paperSize ): Promise<paperSize> =>{
+export const createOne = async (data: paperSize ) =>{
     try{
         const response = await apiClient.post(`/paper-sizes/create`,data);
         return response.data;
@@ -65,7 +65,7 @@ export const createOne = async (data: paperSize ): Promise<paperSize> =>{
     }
 }
 
-export const updatePaperSize = async (data: paperSize): Promise<paperSize> =>{
+export const updatePaperSize = async (data: paperSize) =>{
     try{
         const response = await apiClient.put(`/paper-sizes/update`, data);
         return response.data;

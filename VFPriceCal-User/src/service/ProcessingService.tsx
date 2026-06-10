@@ -1,7 +1,7 @@
 import { apiClient } from "../api/APIConfig";
 import { type category, type processing } from "../model/model";
 
-export const createCategory = async (data: category): Promise<category> => {
+export const createCategory = async (data: category) => {
     try {
         const response = await apiClient.post('/category', data);
         return response.data; // Assuming the created category is in response.data
@@ -12,7 +12,7 @@ export const createCategory = async (data: category): Promise<category> => {
     }
 };
 
-export const createProcessingByCategory = async (data: processing): Promise<processing> =>{
+export const createProcessingByCategory = async (data: processing) =>{
     try{
         const response = await apiClient.post('/processing', data);
         return response.data;
@@ -64,7 +64,7 @@ export const deleteCategoryByCompany = async (id: string, companyId: string) => 
     }
 }
 
-export const updateProcessingById = async (data: processing): Promise<processing> => {
+export const updateProcessingById = async (data: processing) => {
     try{
         const response = await apiClient.put(`/processing/update`, data);
         return response.data;

@@ -6,7 +6,7 @@ import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
 import PaperSizeModal from "../../../components/paper/PaperSizeModal";
 import type { UserInfo } from "../../../context/AuthContext";
-import type {paperSize} from "../../../model/model";
+import type {paper, paperSize} from "../../../model/model";
 import {
   FiPlus,
   FiTrash2,
@@ -76,7 +76,7 @@ const MaterialDetail = () => {
     
             setPaperData((prev) => ({
                 ...prev,
-                paperSizes: prev.paperSizes.filter((item) => item.id !== selectedPaperId),
+                paperSizes: prev.paperSizes.filter((item: any) => item.id !== selectedPaperId),
             }));
     
             toast.success("Xoá kích thước giấy/vật liệu thành công");
@@ -220,7 +220,7 @@ const MaterialDetail = () => {
 
                                                                 <button
                                                                     className="action-btn delete-btn"
-                                                                    onClick={() => handleOpenDelete(size.id)}
+                                                                    onClick={() => handleOpenDelete(size.id ?? "")}
                                                                 >
                                                                     <FiTrash2 />
                                                                 </button>

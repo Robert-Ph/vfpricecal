@@ -1,8 +1,8 @@
-import {useEffect, useState} from "react";
+import { useState} from "react";
 import "./discountModel.scss";
 import { toast } from "react-toastify";
 import {  createDiscountRange, updateDiscountRange } from "../../service/DiscountService";
-import type { UserInfo } from "../../context/AuthContext";
+// import type { UserInfo } from "../../context/AuthContext";
 
 
 type discountRange = {
@@ -25,29 +25,6 @@ const DiscountModel = ({ open, setOpen, data, id }: Props) => {
   const [maxMount, setmaxMount] = useState(data?.maxAmount ?? 0);
   const [discount, setDiscount] = useState(data?.discount ?? 0);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
-
-
-   const [user] = useState<UserInfo | null>(() => {
-        const savedUser = localStorage.getItem("user");
-        if (savedUser) {
-            try {
-                return JSON.parse(savedUser);
-            } catch (e) {
-                return null;
-            }
-        }
-        return null;
-    });
-
-  useEffect(() => {
-    if (data) {
-        setmaxMount(data.maxAmount);
-        setDiscount(data.discount);
-    } else {
-        setmaxMount(0);
-        setDiscount(0);
-    }
-}, [data]);
 
   const handleSubmit = async () => {
         // Validate inputs

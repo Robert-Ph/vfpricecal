@@ -1,7 +1,7 @@
 import { apiClient } from "../api/APIConfig";
 import { type profitRequest } from "../model/model";
 
-export const create = async (data:profitRequest): Promise<profitRequest> => {
+export const create = async (data:profitRequest) => {
     try{
         const response = await apiClient.post('/profit', data);
         return response.data;
@@ -32,7 +32,7 @@ export const deleteProfitByCompany = async (id: string, companyId: string) => {
     }
 }
 
-export const updateProfitById = async (data :profitRequest): Promise<profitRequest> =>{
+export const updateProfitById = async (data :profitRequest) =>{
     try{
         const response = await apiClient.put('/profit/update', data);
         return response.data;

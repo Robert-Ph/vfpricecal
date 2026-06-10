@@ -2,22 +2,27 @@ import { useState} from "react";
 import "./categoryModel.scss";
 import { toast } from "react-toastify";
 import { createCategory } from "../../service/ProcessingService";
+import type { UserInfo } from "../../context/AuthContext";
 
+type Props = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
 
-const CategoryModal = ({ open, setOpen }) => {
+const CategoryModal = ({ open, setOpen }: Props) => {
 
   const [categoryName, setCategoryName] = useState("");
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
 
 
 
-   const [user] = useState<any>(() => {
+   const [user] = useState<UserInfo | null>(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
             try {
                 return JSON.parse(savedUser);
             } catch (e) {
-                return null;
+                return e;
             }
         }
         return null;
@@ -35,9 +40,10 @@ const CategoryModal = ({ open, setOpen }) => {
     // setCategoryName("");
     setError(""); // Reset error message
     const payload = {
-        id: null, // ID sẽ được backend tạo tự động
-        companyId: user?.companyId, // ID ẩn từ context
-        name: categoryName,
+        id: "", // ID sẽ được backend tạo tự động
+        companyId: user?.companyId ?? "", // ID ẩn từ context
+        name: categoryName ?? "",
+        processings: null
     };
 
     // Gọi API để tạo mới danh mục

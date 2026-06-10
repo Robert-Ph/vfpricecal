@@ -2,7 +2,7 @@
 import { apiClient } from "../api/APIConfig";
 import { type printPrice, type printPriceRanges } from "../model/model";
 
-export const create = async (data: printPrice): Promise<printPrice> => {
+export const create = async (data: printPrice) => {
     try{
         const response = await apiClient.post('/print-price', data);
         return response.data;
@@ -43,7 +43,7 @@ export const getById = async (id: string) => {
     }
 }
 
-export const createOneRange = async (data: printPriceRanges): Promise<printPriceRanges> => {
+export const createOneRange = async (data: printPriceRanges) => {
     try{
         const response = await apiClient.post(`/print-price/new-range`, data);
         return response.data;
@@ -65,7 +65,7 @@ export const deleteOnrRange = async (id: string) => {
     }
 }
 
-export const updateRange = async (data: printPriceRanges): Promise<printPriceRanges> =>{
+export const updateRange = async (data: printPriceRanges) =>{
     try{
         const response = await apiClient.put(`/print-price/update`, data);
         return response.data;

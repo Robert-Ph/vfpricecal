@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useState} from "react";
 import "./paperModel.scss";
 import { toast } from "react-toastify";
 import { createOne, updatePaperSize } from "../../service/PaperService";
@@ -20,24 +20,12 @@ type Props = {
 
 const PaperSizeModal = ({ open, setOpen, id, data }: Props) => {
 
-  const [width, setWidth] = useState(data?.width);
-  const [height, setHeight] = useState(data?.height);
-  const [price, setPrice] = useState(data?.price);
+  const [width, setWidth] = useState(data?.width ?? "");
+  const [height, setHeight] = useState(data?.height ?? "");
+  const [price, setPrice] = useState(data?.price ?? 0);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
 
   
-
-  useEffect (()=>{
-    if(data){
-      setWidth(data?.width);
-      setHeight(data?.height);
-      setPrice(data?.price);
-    }else{
-      setWidth(0);
-      setHeight(0);
-      setPrice(0);
-    }
-  },[data])
   const handleSubmit = async () => {
         // Validate inputs
     if (!width || !height || !price) {
@@ -85,8 +73,8 @@ const PaperSizeModal = ({ open, setOpen, id, data }: Props) => {
 
     setOpen(false);
     // Reset fields
-    setWidth(""); setHeight(""); setPrice("");
-    setError(""); // Reset error message
+    // setWidth(""); setHeight(""); setPrice("");
+    // setError(""); // Reset error message
   };
   if (!open) return null;
 
@@ -107,7 +95,7 @@ const PaperSizeModal = ({ open, setOpen, id, data }: Props) => {
               type="number"
               placeholder="Nhập chiều rộng..."
               value={width}
-              onChange={(e) => {setWidth(e.target.value)
+              onChange={(e) => {setWidth(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />
@@ -120,7 +108,7 @@ const PaperSizeModal = ({ open, setOpen, id, data }: Props) => {
               type="number"
               placeholder="Nhập chiều cao..."
               value={height}
-              onChange={(e) => {setHeight(e.target.value)
+              onChange={(e) => {setHeight(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />
@@ -133,7 +121,7 @@ const PaperSizeModal = ({ open, setOpen, id, data }: Props) => {
               type="number"
               placeholder="Nhập giá..."
               value={price}
-              onChange={(e) => {setPrice(e.target.value)
+              onChange={(e) => {setPrice(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />

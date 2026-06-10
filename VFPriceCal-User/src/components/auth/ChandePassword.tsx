@@ -5,7 +5,11 @@ import { changePassword } from "../../service/AuthService";
 import type { UserInfo } from "../../context/AuthContext";
 import { createPortal } from "react-dom";
 
-const ChangePasswordModal = ({ open, setOpen }) => {
+type Props = {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+};
+const ChangePasswordModal = ({ open, setOpen }: Props) => {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");

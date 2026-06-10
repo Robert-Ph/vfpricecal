@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import "./processingsCalModel.scss";
-import { v4 as uuidv4 } from "uuid";
 import { toast } from "react-toastify";
 import {
     getCategories,
     getProcessingById,
 } from "../../service/ProcessingService";
+import type { processing } from "../../model/model";
 
 interface ProcessingItem {
-    id: TemplateStringsArray;
+    id: string;
     name: string;
 }
 
@@ -21,7 +21,7 @@ interface Props {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
     onAdd: (data: any) => void;
     companyId: string;
-    data: any[];
+    data: processing[];
 }
 
 const ProcessingsCalModel = ({
@@ -41,20 +41,6 @@ const ProcessingsCalModel = ({
     const [type, setType] =useState("");
 
     const [error, setError] = useState("");
-
-    const [user] = useState(() => {
-        const savedUser = localStorage.getItem("user");
-
-        if (savedUser) {
-            try {
-                return JSON.parse(savedUser);
-            } catch (e) {
-                return null;
-            }
-        }
-
-        return null;
-    });
 
     // Lấy danh sách tên gia công
     useEffect(() => {
@@ -217,7 +203,7 @@ const ProcessingsCalModel = ({
 
                                 <option
                                     key={item.id}
-                                    value={item.name}
+                                    value={item.id}
                                 >
                                     {item.name}
                                 </option>

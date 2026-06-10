@@ -1,4 +1,4 @@
-import { useEffect, useState} from "react";
+import { useState} from "react";
 import "./printPriceModel.scss";
 import { toast } from "react-toastify";
 import { createOneRange, updateRange } from "../../service/PrintPriceService";
@@ -13,22 +13,11 @@ type Props = {
 
 const PrintPriceModel = ({ open, setOpen, data, id} : Props) => {
 
-  const [minLengthCm, setMinLengthCm] = useState<number | null>(null);
-  const [maxLengthCm, setMaxLengthCm] = useState<number | null>(null);
-  const [pricePerMeter, setPricePerMeter] = useState<number | null>(null);
+  const [minLengthCm, setMinLengthCm] = useState(data?.minLengthCm ?? 0);
+  const [maxLengthCm, setMaxLengthCm] = useState(data?.maxLengthCm ?? 0);
+  const [pricePerMeter, setPricePerMeter] = useState(data?.pricePerMeter ?? 0);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
 
-  useEffect(() => {
-    if(data){
-      setMinLengthCm(data?.minLengthCm ?? 0);
-      setMaxLengthCm(data?.maxLengthCm ?? 0);
-      setPricePerMeter(data?.pricePerMeter ?? 0);
-    }else{
-      setMinLengthCm(0);
-      setMaxLengthCm(0);
-      setPricePerMeter(0);
-    }
-  },[data])
 
   const handleSubmit = async () => {
         // Validate inputs

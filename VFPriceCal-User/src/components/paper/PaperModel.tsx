@@ -3,13 +3,17 @@ import "./paperModel.scss";
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from "react-toastify";
 
+interface Props {
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onAdd: (data: any) => void;
+}
 
-const PaperModal = ({ open, setOpen, onAdd }) => {
+const PaperModal = ({ open, setOpen, onAdd }: Props) => {
 
   const [width, setWidth] = useState("");
   const [height, setHeight] = useState("");
   const [price, setPrice] = useState("");
-  const [role, setRole] = useState("User");
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
 
   if (!open) return null;

@@ -5,6 +5,7 @@ import "./login.scss";
 import { toast } from "react-toastify";
 import { login } from "../../service/AuthService";
 import logo from "../../assets/logo.png";
+import ExpiredAccountModal from "../../components/auth/ExpiredAccountModal";
 
 
 const Login = () => {
@@ -12,39 +13,86 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false); // Nên thêm state này để quản lý UI
-    // const [error, setError] = useState("");
-    //  const { loginUser, logoutUser } = useAuth(); 
-    // const [loginuser, logoutuser] = useState("");
     const [showPass, setShowPass] = useState(false);
     const navigate = useNavigate();
+    const [showExpiredModal, setShowExpiredModal] = useState(false);
+    const [planMess, setPlanMess] = useState<string>("TRIAL");
 
     const handleLogin = async (e: React.FormEvent) => {
-            e.preventDefault();
-            setLoading(true);
+    e.preventDefault();
+    setLoading(true);
 
-            try {
-       
-                const response = await login(email, password);
-                // Vì response chính là object {companyId: 1, username: 'admin', ...}
-                if (response && response.username) {
-                    localStorage.setItem("user", JSON.stringify(response));
+    try {
+        const response = await login(email, password);
+
+        if (response && response.username) {
+
+            // Kiểm tra hết hạn
+            if (response.endTime) {
+                const isExpired =
+                    new Date(response.endTime).getTime() <
+                    new Date().getTime();
+
+                if (isExpired) {
+                    setPlanMess(response.plan ?? "TRIAL")
+                    setShowExpiredModal(true);
+                    return;
+                }
+            }
+
     
-                    localStorage.setItem("token", response.token);
+
+            localStorage.setItem("user", JSON.stringify(response));
+            localStorage.setItem("token", response.token);
+
+            navigate("/quotation");
+        }
+    } catch (err: unknown) {
+        const error = err as {
+            response?: {
+                data?: {
+                    message?: string;
+                };
+            };
+        };
+
+        const errorMessage =
+            error.response?.data?.message ||
+            "Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.";
+
+        toast.error(errorMessage);
+    } finally {
+        setLoading(false);
+    }
+};
+
+    // const handleLogin = async (e: React.FormEvent) => {
+    //         e.preventDefault();
+    //         setLoading(true);
+
+    //         try {
+       
+    //             const response = await login(email, password);
+    //             // Vì response chính là object {companyId: 1, username: 'admin', ...}
+    //             if (response && response.username) {
+    //                 localStorage.setItem("user", JSON.stringify(response));
+    
+    //                 localStorage.setItem("token", response.token);
                     
 
-                    navigate("/quotation");
-                }
+    //                 navigate("/quotation");
+    //             }
 
-                navigate("/quotation");
+    //             navigate("/quotation");
 
-            } catch (err: any) {
-                // 5. Xử lý lỗi
-                const errorMessage = err.response?.data?.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.";
-                toast.error(errorMessage);
-            } finally {
-                setLoading(false);
-            }
-        };
+    //         } catch (err: any) {
+    //             // 5. Xử lý lỗi
+    //             const errorMessage = err.response?.data?.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại email và mật khẩu.";
+    //             toast.error(errorMessage);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
 
     const handleForgotPassword = () => {
         navigate("/forgot-password");
@@ -117,6 +165,11 @@ const Login = () => {
 
             </div>
             
+            <ExpiredAccountModal
+                open={showExpiredModal}
+                planMess={planMess}
+                onClose={() => setShowExpiredModal(false)}
+            />
 
         </div>
     );

@@ -1,11 +1,19 @@
 import { useState } from "react";
 import "./userModal.scss";
 
-const UserModal = ({ open, setOpen }) => {
+interface Props {
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+
+
+}
+const UserModal = ({ open, setOpen }: Props) => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState("User");
+  const [role
+    // , setRole
+  ] = useState("User");
 
   if (!open) return null;
 

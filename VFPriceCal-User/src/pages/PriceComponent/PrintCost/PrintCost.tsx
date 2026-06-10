@@ -16,7 +16,7 @@ const PrintCost = () =>{
     const [printPriceList, setPrintPriceList] = useState<any[]>([]);
     const [search, setSearch] = useState("");
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    const [selectedPrintId, setSelectedPrintId] = useState<number | null>(null);
+    const [selectedPrintId, setSelectedPrintId] = useState<string>("");
 
     const [user] = useState<UserInfo | null>(() => {
     const savedUser = localStorage.getItem("user");
@@ -47,7 +47,7 @@ const PrintCost = () =>{
             fetchPrintPrice();
     }, [user?.companyId]);
 
-    const handleOpenDelete = (id: number) => {
+    const handleOpenDelete = (id: string) => {
                     setSelectedPrintId(id);
                     setOpenDeleteModal(true);
                     };
@@ -56,7 +56,7 @@ const PrintCost = () =>{
                     try {
                         if (!selectedPrintId) return;
                 
-                        await deleteByCompany(Number(selectedPrintId), user.companyId);
+                        await deleteByCompany(selectedPrintId, user?.companyId ?? "");
                 
                         setPrintPriceList((prev) =>
                             prev.filter((item) => item.id !== selectedPrintId)
@@ -133,6 +133,7 @@ const PrintCost = () =>{
         <PrintPriceModel
             open={openPaperModal}
             setOpen={setOpenPaperModal}
+            id={selectedPrintId}
         />
 
         <ConfirmModal

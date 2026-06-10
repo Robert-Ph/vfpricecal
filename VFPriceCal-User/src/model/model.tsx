@@ -7,7 +7,7 @@ export type account = {
 }
 
 export type paper = {
-    id: number | null;
+    id: string | null;
     companyId: string;
     name: string;
     gsm: number;
@@ -29,10 +29,10 @@ export type paperPrice = {
 }
 
 export type category = {
-    id:  string | null;
+    id:  string;
     companyId: string;
     name: string;
-    processings: processing[]
+    processings: processing[] | null
 }
 
 // processing
@@ -69,7 +69,7 @@ export type paperResponse = {
 
 //du lieu loai hinh in
 export type printPrice = {
-    id: number | null;
+    id: string | null;
     companyId: string;
     name: string;
     isActive: boolean;

@@ -41,7 +41,7 @@ export const deleteDiscount = async (id: string, companyId: string) => {
     }
 }
 
-export const createDiscountRange = async (data: discountRanges): Promise<discountRanges> =>{
+export const createDiscountRange = async (data: discountRanges) =>{
     try{
         const response = await apiClient.post(`/discount/create-range`, data);
         return response.data;
@@ -51,7 +51,7 @@ export const createDiscountRange = async (data: discountRanges): Promise<discoun
     }
 }
 
-export const updateDiscountRange = async (data: discountRanges): Promise<discountRanges> =>{
+export const updateDiscountRange = async (data: discountRanges) =>{
     try{
         const response = await apiClient.put(`/discount/update`,data);
         return response.data;

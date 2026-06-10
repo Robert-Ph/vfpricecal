@@ -1,21 +1,18 @@
 import "./styles/printCostNew.scss";
 import { FiEdit, FiTrash2, FiLayers, FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { deleteProcessing } from "../../../service/ProcessingService";
+import { useState } from "react";
 import { toast } from "react-toastify";
 import type { UserInfo } from "../../../context/AuthContext";
-import { create, getById } from "../../../service/PrintPriceService";
+import { create} from "../../../service/PrintPriceService";
 import PrintCostNewModal from "../../../components/printPrice/PrintCostNewModal";
+import type { printPriceRanges } from "../../../model/model";
 
 
 const PrintCostNew = () => {
-    const [activeTab, setActiveTab] = useState("paper");
     const [openPaperModal, setOpenPaperModal] = useState(false);
-    const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    const [selectedProcessingId, setSelectedProcessingId] = useState<number | null>(null);
-    const {id} = useParams();
-    const [printData, setPrintData] = useState<any[]>([]); // State để lưu chi tiết gia công
+    // const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    // const [selectedProcessingId, setSelectedProcessingId] = useState<string>("");
+    const [printData, setPrintData] = useState<printPriceRanges[]>([]); // State để lưu chi tiết gia công
     const [name, setName] = useState("");
     const [user] = useState<UserInfo>(() => {
     const savedUser = localStorage.getItem("user");
@@ -23,13 +20,13 @@ const PrintCostNew = () => {
         try {
             return JSON.parse(savedUser);
         } catch (e) {
-            return null;
+            return e;
         }
     }
         return null;
     });
 
-     const handleAddSize = (newSize: any) => {
+     const handleAddSize = (newSize: printPriceRanges) => {
         setPrintData([...printData, newSize]);
     };
 
@@ -64,32 +61,10 @@ const PrintCostNew = () => {
         }
     };
 
-    const handleOpenDelete = (id: number) => {
-            setSelectedProcessingId(id);
-            setOpenDeleteModal(true);
-            };
-        
-    const handleDeletePaper = async () => {
-            try {
-                if (!selectedProcessingId) return;
-        
-                await deleteProcessing(Number(selectedProcessingId), Number(id));
-        
-                setPrintData((prev) => ({
-                                ...prev,
-                    processings: prev.processings.filter(
-                    (item) => item.id !== selectedProcessingId
-                    ),
-                }));
-        
-                toast.success("Xoá chiết khấu  thành công");
-        
-                setOpenDeleteModal(false);
-            } catch (error) {
-                console.error(error);
-                toast.error("Xoá thất bại");
-            }
-    };
+    // const handleOpenDelete = (id: string) => {
+    //         // setSelectedProcessingId(id);
+    //         // setOpenDeleteModal(true);
+    //         };
 
     return (
         <div className="processing-detail">
@@ -195,14 +170,14 @@ const PrintCostNew = () => {
                                         </thead>
                                         <tbody>
                                             {/* Ví dụ về một sản phẩm */}
-                                            {printData?.map((price: any) => (
+                                            {printData?.map((price: printPriceRanges) => (
                                                 <tr key={price.id}>
                                                     <td>{price.minLengthCm}</td>
                                                     <td>{price.maxLengthCm}</td>
                                                     <td>{price.pricePerMeter}</td>
                                                     <td className="action-buttons">
                                                         <button className=" icon edit-btn"><FiEdit /></button>
-                                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(price.id)}><FiTrash2 /></button>
+                                                        <button className=" icon delete-btn"><FiTrash2 /></button>
                                                     </td>
                                                 </tr>
                                             ))}

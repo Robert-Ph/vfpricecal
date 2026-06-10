@@ -1,5 +1,5 @@
 import ProcessingsCalModel from "../../components/processing/ProcessingsCalModel";
-import { getPaperById, getPapers } from "../../service/PaperService";
+import { getPapers } from "../../service/PaperService";
 import {getAllByCompany} from "../../service/PrintPriceService";
 import {calculatePrint} from "../../service/CalculateService";
 import { getAllProfitByCompany } from "../../service/ProfitService";
@@ -20,7 +20,7 @@ import {
   FiGrid,         // Kết quả báo giá
   FiTrash2
 } from "react-icons/fi";
-import type { processing } from "../../model/model";
+import type { processing, printPrice, paper, profitRequest } from "../../model/model";
 
 
 
@@ -31,15 +31,14 @@ const QuotationPage = () => {
     const navigate = useNavigate();
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [processingList, setProcessingList] = useState<any[]>([]); 
-    const [printPriceList, setPrintPriceList] = useState<any[]>([]);
+    const [printPriceList, setPrintPriceList] = useState<printPrice[]>([]);
     const [width, setWidth] = useState<number | null>(null);
     const [height, setHeight] = useState<number | null>(null);
     const [printPrice, setPrintPrice] = useState<string | null>(null);
     const [quantity, setQuantity] = useState<number | null>(null);
     const [vat, setVat] = useState<number | null>(null);
-    const [paperList, setPaperList] = useState<any[]>([]); // State để quản lý danh sách giấy/vật liệu trong báo giá
-    const [paperSizeList, setPaperSizeList] = useState<any[]>([]); // State để quản lý danh sách kích thước giấy/vật liệu trong báo giá
-    const [profitList, setProfitList] = useState<any[]>([]);
+    const [paperList, setPaperList] = useState<paper[]>([]); // State để quản lý danh sách giấy/vật liệu trong báo giá
+    const [profitList, setProfitList] = useState<profitRequest[]>([]);
     const [discountList, setDiscountList] = useState<any[]>([]);
     const [profit, setProfit] = useState<string | null>(null);
     const [selectedPaperId, setSelectedPaperId] = useState<string>("");
@@ -76,20 +75,7 @@ const QuotationPage = () => {
                 console.error("Lỗi khi lấy danh sách giấy/vật liệu:", error);
             }
         };
-        const fetchPaperSizeList = async () => {
-            try {
-                if(selectedPaperId !== null){
-                    const data = await getPaperById(selectedPaperId);
-                    setPaperSizeList(data.data.paperSizes);
-                }
-                
-            } catch (error) {
-                console.error("Lỗi khi lấy danh sách kích thước giấy/vật liệu:", error);
-            }
-        };
-        // fetchProcessingList();
         fetchPaperList();
-        fetchPaperSizeList();
     }, [selectedPaperId]);
 
     useEffect(() => {
@@ -273,7 +259,7 @@ const QuotationPage = () => {
               <select onChange={(e) => setPrintPrice(e.target.value)}>
                 <option>Chọn loại</option>
                 {printPriceList.map((item) => (
-                  <option key={item.id} value={item.id}>
+                  <option key={item.id} value={item.id ?? ""}>
                     {item.name}
                   </option>
                 ))}
@@ -295,7 +281,7 @@ const QuotationPage = () => {
                 >
                 <option>Chọn giấy</option>
                 {paperList.map((paper) => (
-                    <option key={paper.id} value={paper.id}>
+                    <option key={paper.id} value={paper.id ?? ""}>
                         {paper.name}
                     </option>
                 ))}

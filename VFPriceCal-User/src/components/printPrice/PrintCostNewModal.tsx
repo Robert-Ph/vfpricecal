@@ -1,10 +1,16 @@
 import { useState} from "react";
 import "./printCostNew.scss";
 import { v4 as uuidv4 } from 'uuid';
-import { toast } from "react-toastify";
+
+interface Props {
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    onAdd: (data: any) => void;
+
+}
 
 
-const PrintCostNewModal = ({ open, setOpen, onAdd }) => {
+const PrintCostNewModal = ({ open, setOpen, onAdd }: Props) => {
 
   const [minLengthCm, setMinLengthCm] = useState<number | null>(null);
   const [maxLengthCm, setMaxLengthCm] = useState<number | null>(null);

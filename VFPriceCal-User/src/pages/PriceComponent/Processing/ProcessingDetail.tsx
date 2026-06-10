@@ -50,7 +50,7 @@ const ProcessingDetail = () => {
             try {
                 if (!selectedProcessingId) return;
         
-                await deleteProcessing(Number(selectedProcessingId), Number(id));
+                await deleteProcessing(selectedProcessingId, id ?? "");
         
         
                 toast.success("Xoá thành công");
@@ -158,7 +158,7 @@ const ProcessingDetail = () => {
                                         </thead>
                                         <tbody>
                                             {/* Ví dụ về một sản phẩm */}
-                                            {processingData?.processings.map((material: processing) => (
+                                            {processingData?.processings?.map((material: processing) => (
                                                 <tr key={material.id}>
                                                     <td>{material.name}</td>
                                                     <td>Tờ</td>
