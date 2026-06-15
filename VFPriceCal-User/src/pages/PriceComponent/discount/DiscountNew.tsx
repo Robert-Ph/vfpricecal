@@ -1,23 +1,20 @@
 import "./styles/discountNew.scss";
 import { FiEdit, FiTrash2, FiLayers, FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
 import {  useState } from "react";
-import { useParams } from "react-router-dom";
-import { deleteProcessing } from "../../../service/ProcessingService";
 import { toast } from "react-toastify";
 import type { UserInfo } from "../../../context/AuthContext";
 import { createDiscount} from "../../../service/DiscountService";
 import DiscountNewModal from "../../../components/discount/DiscountNewModal";
 import { formatMoney } from "../../../utils/formatMoney";
+import type {discountRanges } from "../../../model/model";  
 
 
 const DiscountNew = () => {
-    const [activeTab, setActiveTab] = useState("paper");
     const [openPaperModal, setOpenPaperModal] = useState(false);
-    const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    const [selectedProcessingId, setSelectedProcessingId] = useState<number | null>(null);
+    // const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    // const [selectedProcessingId, setSelectedProcessingId] = useState<string>("");
     const [priority, setPrioity] = useState<string>("");
-    const {id} = useParams();
-    const [data, setData] = useState<any[]>([]); // State để lưu chi tiết gia công
+    const [data, setData] = useState<discountRanges[]>([]); // State để lưu chi tiết gia công
     const [name, setName] = useState("");
     const [user] = useState<UserInfo>(() => {
     const savedUser = localStorage.getItem("user");
@@ -25,13 +22,13 @@ const DiscountNew = () => {
         try {
             return JSON.parse(savedUser);
         } catch (e) {
-            return null;
+            return e;
         }
     }
         return null;
     });
 
-     const handleAddSize = (newSize: any) => {
+     const handleAddSize = (newSize: discountRanges) => {
         setData([...data, newSize]);
     };
 
@@ -73,32 +70,11 @@ const DiscountNew = () => {
         }
     };
 
-    const handleOpenDelete = (id: number) => {
-            setSelectedProcessingId(id);
-            setOpenDeleteModal(true);
-            };
+    // const handleOpenDelete = (id: string) => {
+    //         setSelectedProcessingId(id);
+    //         setOpenDeleteModal(true);
+    //         };
         
-    const handleDeletePaper = async () => {
-            try {
-                if (!selectedProcessingId) return;
-        
-                await deleteProcessing(Number(selectedProcessingId), Number(id));
-        
-                setData((prev) => ({
-                                ...prev,
-                    processings: prev.processings.filter(
-                    (item) => item.id !== selectedProcessingId
-                    ),
-                }));
-        
-                toast.success("Xoá chiết khấu  thành công");
-        
-                setOpenDeleteModal(false);
-            } catch (error) {
-                console.error(error);
-                toast.error("Xoá thất bại");
-            }
-    };
 
     return (
         <div className="processing-detail">
@@ -144,7 +120,7 @@ const DiscountNew = () => {
                                             <div className="field-content">
                                                 <span>Loại khách hàng</span>
                                                 
-                                                <strong><input type="text" placeholder="Nhập tên giá in" 
+                                                <strong><input type="text" placeholder="Nhập tên ....." 
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
                                                 /></strong>
@@ -207,13 +183,15 @@ const DiscountNew = () => {
                                         </thead>
                                         <tbody>
                                             {/* Ví dụ về một sản phẩm */}
-                                            {data?.map((price: any) => (
+                                            {data?.map((price: discountRanges) => (
                                                 <tr key={price.id}>
                                                     <td>{formatMoney(price.maxAmount)}</td>
                                                     <td>{price.discount}%</td>
                                                     <td className="action-buttons">
                                                         <button className=" icon edit-btn"><FiEdit /></button>
-                                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(price.id)}><FiTrash2 /></button>
+                                                        <button className=" icon delete-btn" 
+                                                        // nClick={() => handleOpenDelete(price?.id ?? "")}
+                                                        ><FiTrash2 /></button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -227,7 +205,7 @@ const DiscountNew = () => {
                             <div className="empty-state">
                                                         <button className="btn-primary" onClick={() => setOpenPaperModal(true)}>
                                                             <FiPlus />
-                                                            Thêm kích thước
+                                                            Thêm mới
                                                         </button>
                                                     </div>
 

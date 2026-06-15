@@ -13,13 +13,12 @@ type Profit = {
 };
 
 type Props = {
-  key: string;
   open: boolean;
   setOpen: (open: boolean) => void;
   data?: Profit | null;
 };
 
-const ProfitModal = ({key, open, setOpen, data }: Props) => {
+const ProfitModal = ({ open, setOpen, data }: Props) => {
 
   const [profitName, setProfitName] = useState(data?.name ?? "");
   const [percentage, setPercentage] = useState(data?.percentage ?? 0);

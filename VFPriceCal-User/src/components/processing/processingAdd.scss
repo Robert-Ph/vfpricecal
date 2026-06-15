@@ -1,61 +1,104 @@
 .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4); /* Làm tối nền mịn hơn chút */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Đẩy nổi lên trên cùng, chấp cả sticky header */
+
+  /* 🌟 Bọc thêm class .modal vào trong .overlay để ăn khớp với HTML của bạn */
+  .modal {
+    background: #ffffff;
+    width: 90%;
+    max-width: 500px; /* Giới hạn độ rộng của hộp thoại thoại */
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
+    flex-direction: column;
 
-    
-.main {
-  padding: 25px 30px;
-  width: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+    .modal-header {
+      padding: 25px 30px 10px 30px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+      border-bottom: 1px solid #f1f5f9;
+    }
 
-.info {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
+    /* .main lồng bên trong .modal đúng cấu trúc DOM */
+    .main {
+      padding: 25px 30px;
+      width: 100%;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      box-sizing: border-box;
 
-.info label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #444;
-  margin-bottom: 6px;
-}
+      .info {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
 
-.info input {
-  height: 42px;
-  width: 100%;
-  padding: 0 14px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  outline: none;
-  font-size: 14px;
-  transition: .2s;
-}
+        label {
+          font-size: 14px;
+          font-weight: 500;
+          color: #444;
+          margin-bottom: 6px;
+        }
 
-.info select {
-  height: 42px;
-  width: 100%;
-  padding: 0 14px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  outline: none;
-  font-size: 14px;
-  transition: .2s;
-}
+        input, select {
+          height: 42px;
+          width: 100%;
+          padding: 0 14px;
+          border: 1px solid #ddd;
+          border-radius: 10px;
+          outline: none;
+          font-size: 14px;
+          transition: .2s;
+          background: white;
+          box-sizing: border-box;
 
-.info input:focus {
-  border-color: #4c6fff;
-  box-shadow: 0 0 0 3px rgba(76,111,255,.12);
-}
+          &:focus {
+            border-color: #4c6fff;
+            box-shadow: 0 0 0 3px rgba(76, 111, 255, 0.12);
+          }
+        }
+      }
+    }
 
+    /* Thêm style cho phần chân Modal chứa các nút bấm */
+    .modal-footer {
+      padding: 15px 30px 25px 30px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      border-top: 1px solid #f1f5f9;
 
+      .btn-cancel {
+        background: #f1f5f9;
+        color: #64748b;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        
+        &:hover { background: #e2e8f0; }
+      }
+
+      .btn-add {
+        background: #4c6fff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+
+        &:hover { background: #3b5bdb; }
+      }
+    }
+  }
 }

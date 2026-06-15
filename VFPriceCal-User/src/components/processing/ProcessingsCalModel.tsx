@@ -5,7 +5,7 @@ import {
     getCategories,
     getProcessingById,
 } from "../../service/ProcessingService";
-import type { processing } from "../../model/model";
+import type { proCal } from "../../model/model";
 
 interface ProcessingItem {
     id: string;
@@ -19,9 +19,9 @@ interface ProcessingTypeResponse {
 interface Props {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    onAdd: (data: any) => void;
+    onAdd: (data: proCal) => void;
     companyId: string;
-    data: processing[];
+    data: proCal[];
 }
 
 const ProcessingsCalModel = ({
@@ -63,7 +63,7 @@ const ProcessingsCalModel = ({
             fetchProcessingNames();
         }
 
-    }, [open]);
+    }, [open,  companyId]);
 
     // Lấy loại theo processing đã chọn
     useEffect(() => {
@@ -100,32 +100,24 @@ const ProcessingsCalModel = ({
             return;
         }
 
-        const selectedProcessing = processingNameList.find(
-            (item) => item.id === processingName
-        );
-        // Tên processing
-        const processingText = selectedProcessing?.name || "";
        // Kiểm tra trùng
-    const isDuplicate = data.some(
+ const isDuplicate = data.some(
     (item) =>
-        String(item.processing).toLowerCase() ===
-            processingText.toLowerCase() &&
-        String(item.type).toLowerCase() ===
-            type.toLowerCase()
+        String(item.id) === String(processingName) &&
+        item.name.trim().toLowerCase() ===
+            type.trim().toLowerCase()
 );
 
-    if (isDuplicate) {
-        setError("Dữ liệu đã tồn tại.");
-
-        toast.error("Dữ liệu đã tồn tại.");
-
-        return;
-    }
+if (isDuplicate) {
+    setError("Gia công này đã được chọn.");
+    return;
+}
 
 
         const newData = {
             id: processingName,
             name: type,
+           
         };
 
         onAdd(newData);
@@ -142,7 +134,7 @@ const ProcessingsCalModel = ({
     if (!open) return null;
 
     return (
-        <div className="overlay">
+        <div className="overlay-modal">
 
             <div className="modal">
 
@@ -150,7 +142,8 @@ const ProcessingsCalModel = ({
                     Thông tin gia công
                 </div>
 
-                <div className="main">
+                <div className="main-modal">
+                   
 
                     <div className="info">
 
@@ -203,7 +196,7 @@ const ProcessingsCalModel = ({
 
                                 <option
                                     key={item.id}
-                                    value={item.id}
+                                    value={item.name}
                                 >
                                     {item.name}
                                 </option>

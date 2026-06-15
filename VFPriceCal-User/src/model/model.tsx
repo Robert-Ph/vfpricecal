@@ -13,20 +13,12 @@ export type paper = {
     gsm: number;
 }
 
-// kich thuoc giay
-export type paperSize = {
-    id: string| null;
-    paperId: string;
-    width: number;
-    height: number;
-    price: number;
-}
 
-export type paperPrice = {
-    id: number | null;
-    paperSizeId: number;
-    price: number;
-}
+// export type paperPrice = {
+//     id: number | null;
+//     paperSizeId: number;
+//     price: number;
+// }
 
 export type category = {
     id:  string;
@@ -55,17 +47,22 @@ export type company = {
 
 //du lieu tao loai giay moi
 export type paperResponse = {
-    id: number | null;
+    id: string | null;
     companyId: number;
     name: string;
     gsm: number;
-    paperSizes: {
-        paperId: number;
-        width: number;
-        height: number;
-        price: number;
-    }[];
+    paperSizes:paperSize[];
 }
+
+// kich thuoc giay
+export type paperSize = {
+    id: string| null;
+    paperId: string;
+    width: number;
+    height: number;
+    price: number;
+}
+
 
 //du lieu loai hinh in
 export type printPrice = {
@@ -90,12 +87,17 @@ export type calculate = {
     widthProduct: number | null;
     heightProduct: number | null;
     quantity: number | null;
-    processingIds: string[];
+    processingIds: proCal[];
     paperId: string | null;
     companyId: string | null;
     printPrice: string | null;
     profit: string | null;
     discount: string | null;
+}
+
+export type proCal = {
+    id: string;
+    name: string;
 }
 
 //bien loi nhuan
@@ -125,3 +127,30 @@ export type discountRanges = {
         maxAmount: number;
         discount: number;
 }
+
+export type mobile = {
+    companyId: string;
+    papers:{
+        id: string;
+        name: string;
+        paperSizes: {
+            id: string;
+            width: number;
+            height: number;
+        }[];
+    }[];
+    categories: {
+        id: string;
+        name: string;
+        processings:{
+            id: string;
+            name: string;
+        }[];
+    }[];
+    printPrices: {
+        id: string;
+        name: string;
+        price: number
+    }[]
+}
+

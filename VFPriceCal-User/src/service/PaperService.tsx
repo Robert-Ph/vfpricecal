@@ -35,7 +35,7 @@ export const getPaperById = async (paperId: string) => {
     }
 };
 
-export const deletePaper = async (id: number, comapanyId: string) => {
+export const deletePaper = async (id: string, comapanyId: string) => {
     try{
         const response = await apiClient.delete(`/papers/${id}?companyId=${comapanyId}`)
         return response.data;

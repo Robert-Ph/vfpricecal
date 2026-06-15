@@ -1,61 +1,113 @@
-.overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.35);
+/* ==========================================================================
+   CẤU HÌNH FIX HOÀN HẢO CHO MODAL GIA CÔNG (CHUẨN SCSS NESTING)
+   ========================================================================== */
+.overlay-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4); /* Làm tối nền mịn hơn */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999999; /* Đảm bảo nổi lên trên sticky header */
+
+  /* Khung trắng Modal (Sửa đổi trực tiếp trên class con hoặc bọc ngoài main-modal) */
+  .modal {
+    background: #ffffff;
+    width: 90%;
+    max-width: 450px; /* Giới hạn độ rộng của hộp thoại */
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
+    flex-direction: column;
 
-    
-.main {
-  padding: 25px 30px;
-  width: 100%;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
+    .modal-header {
+      padding: 25px 30px 10px 30px;
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+      border-bottom: 1px solid #f1f5f9;
+    }
 
-.info {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-}
+    /* .main-modal của bạn nằm trong .modal */
+    .main-modal {
+      padding: 25px 30px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      box-sizing: border-box;
 
-.info label {
-  font-size: 14px;
-  font-weight: 500;
-  color: #444;
-  margin-bottom: 6px;
-}
+      /* .info nằm trong .main-modal */
+      .info {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
 
-.info input {
-  height: 42px;
-  width: 100%;
-  padding: 0 14px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  outline: none;
-  font-size: 14px;
-  transition: .2s;
-}
+        label {
+          font-size: 14px;
+          font-weight: 600;
+          color: #1e293b;
+          margin-bottom: 6px;
+        }
 
-.info select {
-  height: 42px;
-  width: 100%;
-  padding: 0 14px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  outline: none;
-  font-size: 14px;
-  transition: .2s;
-}
+        input, select {
+          height: 44px;
+          width: 100%;
+          padding: 0 14px;
+          border: 1px solid #cbd5e1;
+          border-radius: 10px;
+          outline: none;
+          font-size: 14px;
+          transition: 0.2s;
+          background: white;
+          box-sizing: border-box;
 
-.info input:focus {
-  border-color: #4c6fff;
-  box-shadow: 0 0 0 3px rgba(76,111,255,.12);
-}
+          &:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+          }
+        }
+      }
 
+      .error-text {
+        color: #ef4444;
+        font-size: 13px;
+        margin: 0;
+        font-weight: 500;
+      }
+    }
 
+    .modal-footer {
+      padding: 15px 30px 25px 30px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      border-top: 1px solid #f1f5f9;
+
+      .btn-cancel {
+        background: #f1f5f9;
+        color: #64748b;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+        
+        &:hover { background: #e2e8f0; }
+      }
+
+      .btn-add {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 500;
+
+        &:hover { background: #1d4ed8; }
+      }
+    }
+  }
 }

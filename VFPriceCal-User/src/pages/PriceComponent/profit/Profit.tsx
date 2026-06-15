@@ -133,7 +133,6 @@ const Profit = () => {
             </div>
 
         <ProfitModal
-            key ={selectedProfit?.id ?? "new"}
             open={openPaperModal}
             setOpen={setOpenPaperModal}
             data ={selectedProfit}

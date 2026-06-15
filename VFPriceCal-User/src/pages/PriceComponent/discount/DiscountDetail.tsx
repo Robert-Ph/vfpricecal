@@ -5,7 +5,6 @@ import { useParams } from "react-router-dom";
 import DiscountModel from "../../../components/discount/DiscountModel";
 import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
-import type { UserInfo } from "../../../context/AuthContext";
 import { deleteDiscountRange, getDetailByDiscountId } from "../../../service/DiscountService";
 import { formatMoney } from "../../../utils/formatMoney";
 import type { discountRanges, discountRequest } from "../../../model/model";
@@ -16,20 +15,12 @@ const DiscountDetail = () => {
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedId, setSelectedId] = useState<string>("");
     const {id} = useParams();
-    const [priority, setPrioity] = useState<string>("");
+    // const [
+    //     // priority, 
+    //     setPrioity] = useState<string>("");
     const [data, setData] = useState<discountRequest>(); // State để lưu chi tiết gia công 
     const [range, setRange] = useState<discountRanges>();
-    const [user] = useState<UserInfo>(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-        try {
-            return JSON.parse(savedUser);
-        } catch (e) {
-            return null;
-        }
-    }
-        return null;
-    });
+
 
     useEffect(() => {
         const fetchProcessingDetail = async () => {
@@ -130,7 +121,7 @@ const DiscountDetail = () => {
                                             <div className="field-content">
                                                  <span>Độ ưu tiên</span>
                                                
-                                                <select name="" id="" onChange={(e) => setPrioity(e.target.value)}>
+                                                <select name="" id="" >
                                                     <option value={data?.priority}>{data?.priority === "HIGH" ? "Ưu tiên" : "Mặc định"}</option>
                                                     <option value="HIGH">Ưu tiên</option>
                                                     <option value="NORMAL">Mặc định</option>

@@ -1,7 +1,7 @@
 import { apiClient } from "../api/APIConfig";
 import {type discountRanges, type discountRequest} from "../model/model";
 
-export const createDiscount = async(data: discountRequest): Promise<discountRequest> =>{
+export const createDiscount = async(data: discountRequest) =>{
     try{
         const response = await apiClient.post('/discount', data);
         return response.data;

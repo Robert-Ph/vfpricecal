@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "./QuotationMobile.scss";
+import "./quotationMobile.scss";
 import {
   FaPrint,
   FaCalculator,
@@ -15,23 +15,24 @@ import {
 import { useParams } from "react-router-dom";
 import { getQuotations } from "../../service/QuotationService";
 import ProcessingsCalModel from "../../components/processing/ProcessingsCalModel";
-import {calculatePrint} from "../../service/CalculateService";
+import {calculateMobile} from "../../service/CalculateService";
 import { formatMoney } from "../../utils/formatMoney";
 import zalo from "../../assets/zalo.png";
-import type { paper, printPrice, processing } from "../../model/model";
+import type { mobile, proCal } from "../../model/model";
 
 
 const QuotationMobile = () => {
-    const { phone, companyId} = useParams();
+    const {  phone, companyId} = useParams();
     const [openPaperModal, setOpenPaperModal] = useState(false);
-    const [list, setList] = useState();
-    const [processingList, setProcessingList] = useState<any[]>([]); 
+    const [list, setList] = useState<mobile>();
+    const [processingList, setProcessingList] = useState<proCal[]>([]); 
     const [width, setWidth] = useState<number>(0);
     const [height, setHeight] = useState<number>(0);
     const [quantity, setQuantity] = useState<number>(0);
     const [paperId, setPaperId] = useState<string>("");
     const [printPriceId, setprintPriceId] = useState<string>("");
     const [result, setResult] = useState<any>(null);
+    // const [printList, setPrintList] = useState<printPrice>();
 
 
 
@@ -49,7 +50,7 @@ const QuotationMobile = () => {
                     discount: null
                 }
     
-                const response = await calculatePrint(data);
+                const response = await calculateMobile(data);
                 setResult(response);
     
             }catch(error){
@@ -57,7 +58,7 @@ const QuotationMobile = () => {
             }
         }
 
-       const handleAddProcessing = (newProcessing: processing) => {
+       const handleAddProcessing = (newProcessing: proCal) => {
         setProcessingList([...processingList, newProcessing]);
     };
 
@@ -66,6 +67,7 @@ const QuotationMobile = () => {
             try {
                 const response = await getQuotations(companyId ?? "");
                 setList(response.data);
+                // setPrintList(list?.printPrices)
             } catch (error) {
                 console.error("Failed to fetch quotations:", error);
             }
@@ -115,7 +117,7 @@ const QuotationMobile = () => {
         <label>Loại hình in</label>
         <select onChange={(e) => setprintPriceId(e.target.value)}>
           <option>Chọn loại</option>
-          {list?.printPrices?.map((item: printPrice) =>(
+          {list?.printPrices?.map((item ) =>(
             <option key={item.id} value={item.id ?? ""}>
                     {item.name}
                   </option>
@@ -125,7 +127,7 @@ const QuotationMobile = () => {
         <label>Loại giấy in</label>
         <select onChange={(e) => setPaperId(e.target.value)}>
           <option>Chọn giấy</option>
-          {list?.papers?.map((item: paper) =>(
+          {list?.papers?.map((item) =>(
             <option key={item.id} value={item.id ?? ""}>
                     {item.name}
                   </option>
@@ -160,7 +162,6 @@ const QuotationMobile = () => {
                             <tr key={index}>
                                 <td>{index + 1}</td>
                                 <td>{item.name}</td>
-                                <td>{item.description}</td>
                                 <td>
                                    
                                    <button
@@ -256,7 +257,7 @@ const QuotationMobile = () => {
 
         <button className="btn-primary" onClick={() => handleContactZalo()}>
           <img src={zalo} alt="Zalo" style={{width:"20px", height: "20px"}}/>
-          In báo giá
+          Liên hệ ngay
         </button>
       </div>
 

@@ -1,14 +1,9 @@
 import React, { useState, type ReactNode } from "react";
 import { login } from "../service/AuthService";
 import { AuthContext } from "./AuthContext";
+import type { UserInfo } from "./AuthContext";
 
 // Định nghĩa Interface chuẩn cho thông tin User
-interface UserInfo {
-  companyId: number;
-  username: string;
-  email: string;
-  role: string;
-}
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   // Khởi tạo state từ localStorage để tránh mất dữ liệu khi F5 (Refresh) trang
@@ -47,10 +42,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (data) {
       const userInfo: UserInfo = {
         // Kiểm tra chính xác tên trường Backend trả về (companyId hay company_id?)
-        companyId: data.companyId, 
+        companyId: String(data.companyId),
+        companyName: data.companyName,
         username: data.username,
+        fullname: data.fullname,
         email: data.email,
-        role: data.role
+        plan: data.plan,
+        role: data.role,
+        phone: data.phone,
+        startTime: data.startTime,
+        endTime: data.endTime,
       };
 
       setUser(userInfo);

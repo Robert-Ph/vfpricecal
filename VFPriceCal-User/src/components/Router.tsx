@@ -15,7 +15,6 @@ import UserManagement from "../pages/SystemPage/User/UserManagement";
 import PrintCost from "../pages/PriceComponent/PrintCost/PrintCost";
 import SystemSetting from "../pages/SystemPage/Setting/SystemSetting";
 import SystemBackup from "../pages/SystemPage/Backup/SystemBackup"
-import NewProduct from "../pages/ProductPage/NewProduct";
 import Discount from "../pages/PriceComponent/discount/Discount";
 import QuotationMobile from "../pages/QuotationPage/QuotationMobile";
 import PrintCostDetail from "../pages/PriceComponent/PrintCost/PrintCostDetail";
@@ -48,7 +47,7 @@ export const router = createBrowserRouter([
       },
       { path: "quotation", element: <QuotationPage /> }, // Chuyển Quotation sang một path cụ thể
       { path: "product", element: <ProductPage /> },
-      { path: "product/new", element: <NewProduct /> },
+      // { path: "product/new", element: <NewProduct /> },
       { path: "product/:id", element: <ProductDetail /> },
       { path: "component/papers", element: <ComponentPaper /> },
       { path: "component/paper/add", element: <PaperAdd /> },

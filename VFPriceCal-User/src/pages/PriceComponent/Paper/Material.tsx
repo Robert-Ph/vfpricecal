@@ -8,22 +8,23 @@ import { deletePaper, getPapers } from "../../../service/PaperService";
 import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
 import type { UserInfo } from "../../../context/AuthContext";
+import type { paperResponse } from "../../../model/model";
 
 
 
 const Material = () => {
     const navigate = useNavigate();
     const [searchTerm, setSearchTerm] = useState("");
-    const [paperList, setPaperList] = useState<any[]>([]);
+    const [paperList, setPaperList] = useState<paperResponse[]>([]);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    const [selectedPaperId, setSelectedPaperId] = useState<number | null>(null);
+    const [selectedPaperId, setSelectedPaperId] = useState<string>("");
     const [user] = useState<UserInfo | null>(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
         try {
             return JSON.parse(savedUser);
         } catch (e) {
-            return null;
+            return e;
         }
     }
         return null;
@@ -48,7 +49,7 @@ const Material = () => {
     }, [user?.companyId]);
 
 
-    const handleOpenDelete = (id: number) => {
+    const handleOpenDelete = (id: string) => {
     setSelectedPaperId(id);
     setOpenDeleteModal(true);
     };
@@ -57,7 +58,7 @@ const Material = () => {
     try {
         if (!selectedPaperId) return;
 
-        await deletePaper(Number(selectedPaperId), user.companyId);
+        await deletePaper(selectedPaperId, user?.companyId ?? "");
 
         setPaperList((prev) =>
             prev.filter((item) => item.id !== selectedPaperId)
@@ -115,7 +116,7 @@ const Material = () => {
                                         onClick={() => navigate(`/component/papers/${paper.id}`)}>
                                         <FiEdit />
                                     </button>
-                                    <button className=" icon delete-btn" onClick={() => handleOpenDelete(paper.id)}><FiTrash2 /></button>
+                                    <button className=" icon delete-btn" onClick={() => handleOpenDelete(paper?.id ?? "")}><FiTrash2 /></button>
                                 </td>
                                 </tr>
                             ))}

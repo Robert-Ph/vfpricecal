@@ -32,5 +32,10 @@ public class PlansService {
                 )
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public void createPlanByCompany(){
+        
+    }
 }
         

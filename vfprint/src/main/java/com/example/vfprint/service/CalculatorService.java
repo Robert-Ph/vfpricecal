@@ -72,7 +72,7 @@ public class CalculatorService {
 
         double totalProcessingCost = calculateTotalProcessingCost(infoPriceDTO.getProcessingIds());
 
-        float percentage = 1;
+        double percentage = 1;
 
         if (infoPriceDTO.getProfit() != null &&
             profitRepository.existsById(infoPriceDTO.getProfit())) {
@@ -90,7 +90,8 @@ public class CalculatorService {
 
 
         //Kết quả báo giá in ấn
-        double price = ((sheetsNeeded * (paperSizeDTO.getPrice() + prinPrice + totalProcessingCost)) * percentage);
+        double price = ((sheetsNeeded * (paperSizeDTO.getPrice() + prinPrice + totalProcessingCost)) * percentage );
+        System.out.println((sheetsNeeded * (paperSizeDTO.getPrice() + prinPrice + totalProcessingCost)));
         UUID discountId = null;
         if (infoPriceDTO.getDiscount() == null) {
             List<Discount> dList = discountRepository.findByPriority(Priority.HIGH);

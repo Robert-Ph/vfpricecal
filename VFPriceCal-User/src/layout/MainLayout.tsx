@@ -6,8 +6,8 @@ const MainLayout = () => {
     return (
         <div className="layout">
             <Sidebar />
-            <div className="main">
-                <div className="content">
+            <div className="main-layout">
+                <div className="content-layout">
                     <Outlet />
                 </div>
             </div>

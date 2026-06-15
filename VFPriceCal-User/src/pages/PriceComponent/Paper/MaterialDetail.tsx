@@ -6,7 +6,7 @@ import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
 import PaperSizeModal from "../../../components/paper/PaperSizeModal";
 import type { UserInfo } from "../../../context/AuthContext";
-import type {paper, paperSize} from "../../../model/model";
+import type { paperResponse, paperSize} from "../../../model/model";
 import {
   FiPlus,
   FiTrash2,
@@ -19,8 +19,7 @@ import {
 } from "react-icons/fi";
 
 const MaterialDetail = () => {
-    const [activeTab, setActiveTab] = useState("paper");
-    const [paperData, setPaperData] = useState<any[]>([]); // State để lưu chi tiết giấy/vật liệu
+    const [paperData, setPaperData] = useState<paperResponse | null>(null); // State để lưu chi tiết giấy/vật liệu
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [selectedPaperId, setSelectedPaperId] = useState<string>("");
     const [dataSize, setDataSize] = useState<paperSize>();
@@ -33,7 +32,7 @@ const MaterialDetail = () => {
         try {
             return JSON.parse(savedUser);
         } catch (e) {
-            return null;
+            return e;
         }
     }
         return null;
@@ -74,10 +73,16 @@ const MaterialDetail = () => {
     
             await deletePaperSize(selectedPaperId, id ?? ""); // Gọi API xoá kích thước giấy/vật liệu
     
-            setPaperData((prev) => ({
-                ...prev,
-                paperSizes: prev.paperSizes.filter((item: any) => item.id !== selectedPaperId),
-            }));
+            setPaperData((prev) => {
+                if (!prev) return prev;
+
+                 return {
+                    ...prev,
+                    paperSizes: prev.paperSizes.filter(
+                    (item) => item.id !== selectedPaperId
+                    ),
+                };
+            });
     
             toast.success("Xoá kích thước giấy/vật liệu thành công");
     
@@ -189,7 +194,7 @@ const MaterialDetail = () => {
                         </div>
                     </div>
                   
-                        {activeTab === "paper" &&
+                
                             <div className="product-paper-list">
                                 <div className="table">
                                     <table className="paper-list">
@@ -203,7 +208,7 @@ const MaterialDetail = () => {
                                         </thead>
                                         <tbody>
                                             {/* Dữ liệu chi tiết kích thước sẽ hiển thị ở đây. Mỗi kích thước sẽ có thông tin như chiều rộng, chiều cao, giá. Bạn có thể nhấp vào một kích thước để xem chi tiết hoặc chỉnh sửa thông tin của nó. */}
-                                            {paperData?.paperSizes?.length > 0 ? (
+                                            {(paperData?.paperSizes?.length ?? 0) > 0 ? (
                                                 paperData?.paperSizes?.map((size: paperSize) => (
                                                 <tr key={size.id}>
                                                     <td>{size.width}mm</td>
@@ -248,7 +253,7 @@ const MaterialDetail = () => {
                                 </div>
                             </div>
 
-                        }
+                 
                         <div className="empty-state">
                             <button className="btn-primary" onClick={() => setOpenPaperModal(true)}>
                                 <FiPlus />

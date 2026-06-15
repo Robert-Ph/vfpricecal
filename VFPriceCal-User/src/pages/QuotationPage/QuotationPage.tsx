@@ -20,7 +20,7 @@ import {
   FiGrid,         // Kết quả báo giá
   FiTrash2
 } from "react-icons/fi";
-import type { processing, printPrice, paper, profitRequest } from "../../model/model";
+import type {  printPrice, paper, profitRequest, discountRequest, proCal } from "../../model/model";
 
 
 
@@ -30,7 +30,7 @@ const QuotationPage = () => {
 
     const navigate = useNavigate();
     const [openPaperModal, setOpenPaperModal] = useState(false);
-    const [processingList, setProcessingList] = useState<any[]>([]); 
+    const [processingList, setProcessingList] = useState<proCal[]>([]); 
     const [printPriceList, setPrintPriceList] = useState<printPrice[]>([]);
     const [width, setWidth] = useState<number | null>(null);
     const [height, setHeight] = useState<number | null>(null);
@@ -39,7 +39,7 @@ const QuotationPage = () => {
     const [vat, setVat] = useState<number | null>(null);
     const [paperList, setPaperList] = useState<paper[]>([]); // State để quản lý danh sách giấy/vật liệu trong báo giá
     const [profitList, setProfitList] = useState<profitRequest[]>([]);
-    const [discountList, setDiscountList] = useState<any[]>([]);
+    const [discountList, setDiscountList] = useState<discountRequest[]>([]);
     const [profit, setProfit] = useState<string | null>(null);
     const [selectedPaperId, setSelectedPaperId] = useState<string>("");
     const [result, setResult] = useState<any>(null);
@@ -62,7 +62,7 @@ const QuotationPage = () => {
             return null;
     });
 
-       const handleAddProcessing = (newProcessing: processing) => {
+       const handleAddProcessing = (newProcessing: proCal) => {
         setProcessingList([...processingList, newProcessing]);
     };
     
@@ -122,7 +122,7 @@ const QuotationPage = () => {
                 widthProduct: width,
                 heightProduct: height,
                 quantity: quantity,
-                processingIds: processingList,
+                processingIds:  processingList,
                 paperId: selectedPaperId,
                 companyId: user?.companyId ?? "",
                 printPrice: printPrice,
@@ -200,7 +200,7 @@ const QuotationPage = () => {
             <select onChange={(e) => setDiscountId(e.target.value)}>
               <option>Chọn loại khách hàng</option>
                 {discountList.map((item) => (
-                    <option key={item.id} value={item.id}>
+                    <option key={item.id} value={item.id ?? ""}>
                         {item.name}
                     </option>
                 ))}

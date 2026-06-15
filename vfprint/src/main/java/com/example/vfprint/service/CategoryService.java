@@ -104,7 +104,7 @@ public class CategoryService {
 
         return CategoryResponse.builder()
                 .id(categories.getId())
-                .companyId(categories.getCompany().getId())
+                // .companyId(categories.getCompany().getId())
                 .name(categories.getName())
                 .processings(processings.stream()
                         .map(processing -> ProcessingResponse.builder()

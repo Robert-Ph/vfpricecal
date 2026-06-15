@@ -19,7 +19,7 @@ type Props = {
 const ProcessingAddModel = ({ open, setOpen, data, id }: Props) => {
 
   const [processingName
-    // , setProcessingName
+    , setProcessingName
   ] = useState(data?.name ?? "");
   const [priceProcessing, setPriceProcessing] = useState(data?.price ?? 0);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
@@ -78,7 +78,7 @@ const ProcessingAddModel = ({ open, setOpen, data, id }: Props) => {
               type="text"
               placeholder="Nhập tên danh mục..."
               value={processingName}
-              onChange={(e) => {setPriceProcessing(Number(e.target.value))
+              onChange={(e) => {setProcessingName(e.target.value)
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />

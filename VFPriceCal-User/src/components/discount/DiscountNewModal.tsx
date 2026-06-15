@@ -12,14 +12,14 @@ interface Props {
 const DiscountNewModal = ({ open, setOpen, onAdd }: Props) => {
 
   const [maxAmount, setMaxAmount] = useState<number | null>(null);
-  const [discount, setDiscount] = useState<number | null>(null);
+  const [discount, setDiscount] = useState<number | null>(0);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
 
   if (!open) return null;
 
   const handleSubmit = () => {
         // Validate inputs
-    if ( !maxAmount || !discount) {
+    if ( !maxAmount) {
       setError("Vui lòng điền đầy đủ thông tin.");
       return;
     }
@@ -73,8 +73,9 @@ const DiscountNewModal = ({ open, setOpen, onAdd }: Props) => {
             <input
               className={!discount && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
               type="number"
+               min={0}
               placeholder="Nhập chiếc khấu..."
-              value={discount || ""}
+              value={discount ?? 0}
               onChange={(e) => {setDiscount(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}

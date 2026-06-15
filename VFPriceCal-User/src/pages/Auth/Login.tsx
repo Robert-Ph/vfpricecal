@@ -12,7 +12,7 @@ const Login = () => {
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false); // Nên thêm state này để quản lý UI
+    // const [loading, setLoading] = useState(false); // Nên thêm state này để quản lý UI
     const [showPass, setShowPass] = useState(false);
     const navigate = useNavigate();
     const [showExpiredModal, setShowExpiredModal] = useState(false);
@@ -20,7 +20,7 @@ const Login = () => {
 
     const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+    // setLoading(true);
 
     try {
         const response = await login(email, password);
@@ -62,7 +62,7 @@ const Login = () => {
 
         toast.error(errorMessage);
     } finally {
-        setLoading(false);
+        // setLoading(false);
     }
 };
 

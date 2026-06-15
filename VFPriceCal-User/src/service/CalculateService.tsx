@@ -11,3 +11,14 @@ export const calculatePrint = async (data: calculate): Promise<calculate> => {
         throw error;
     }
 }
+
+export const calculateMobile = async (data: calculate): Promise<calculate> => {
+    try{
+        const response = await apiClient.post('/bao-gia',data);
+        return response.data;
+
+    }catch(error){
+        console.error('Failed to create print price:', error);
+        throw error;
+    }
+}
