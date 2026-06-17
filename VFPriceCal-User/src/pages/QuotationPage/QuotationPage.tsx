@@ -6,6 +6,7 @@ import { getAllProfitByCompany } from "../../service/ProfitService";
 import "./quotationPage.scss";
 import { useEffect ,useState } from "react";
 import { formatMoney } from "../../utils/formatMoney";
+import { formatNumber } from "../../utils/formNumber";
 // import { numberToVietnameseText } from "../../utils/MoneyModel";
 import { getAllDiscountByCompany } from "../../service/DiscountService";
 import type { UserInfo } from "../../context/AuthContext";
@@ -13,13 +14,15 @@ import { useNavigate } from "react-router-dom";
 import {
   FiFileText,     // Báo giá
   FiRefreshCw,    // Làm mới
-  FiPrinter,      // In báo giá
+  // FiPrinter,      // In báo giá
   FiLayers,       // Thông tin chung
   FiPackage,      // Thông tin sản phẩm
   FiSettings,     // Gia công sau in
   FiGrid,         // Kết quả báo giá
-  FiTrash2
+  FiTrash2,
+  FiExternalLink
 } from "react-icons/fi";
+import { FaCalculator } from "react-icons/fa";
 import type {  printPrice, paper, profitRequest, discountRequest, proCal } from "../../model/model";
 
 
@@ -164,12 +167,12 @@ const QuotationPage = () => {
         Làm mới
       </button>
 
-      <button className="btn-primary" onClick={() => handShare()}>
-        <FiPrinter />
+      <button className="btn-primary btn-share" onClick={() => handShare()}>
+        <FiExternalLink />
         Chia sẻ
       </button>
        <button className="btn-primary" onClick={handleSumitCalculate}>
-          <FiGrid />
+          <FaCalculator />
           Tính báo giá
         </button>
     </div>
@@ -379,12 +382,12 @@ const QuotationPage = () => {
 
         <div className="result-row">
           <span>Số sản phẩm/tờ</span>
-          <strong>{result?.data?.productSheet ?? 0}</strong>
+          <strong>{formatNumber(result?.data?.productSheet ?? 0)}</strong>
         </div>
 
         <div className="result-row">
           <span>Số tờ in</span>
-          <strong> {result?.data?.quantityPaper ?? 0} tờ</strong>
+          <strong> {formatNumber(result?.data?.quantityPaper ?? 0)} tờ</strong>
         </div>
 
         <div className="result-row">

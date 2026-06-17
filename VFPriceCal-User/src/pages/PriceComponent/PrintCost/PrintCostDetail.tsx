@@ -7,6 +7,7 @@ import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
 import { deleteOnrRange, getById } from "../../../service/PrintPriceService";
 import type { printPrice, printPriceRanges } from "../../../model/model";
+import { formatMoney } from "../../../utils/formatMoney";
 
 
 const PrintCostDetail = () => {
@@ -158,7 +159,7 @@ const PrintCostDetail = () => {
                                                 <tr key={price.id}>
                                                     <td>{price.minLengthCm}</td>
                                                     <td>{price.maxLengthCm}</td>
-                                                    <td>{price.pricePerMeter}</td>
+                                                    <td>{formatMoney(price.pricePerMeter)}</td>
                                                     <td className="action-buttons">
                                                         <button className=" icon edit-btn" onClick={() => handleOpenUpdate(price)}><FiEdit /></button>
                                                         <button className=" icon delete-btn" onClick={() => handleOpenDelete(price.id ?? "")}><FiTrash2 /></button>
@@ -184,6 +185,7 @@ const PrintCostDetail = () => {
             </div>
 
             <PrintPriceAddModel
+                key={rangeData?.id ?? "create"}
                 open={openPaperModal}
                 setOpen={setOpenPaperModal}
                 data = {rangeData}

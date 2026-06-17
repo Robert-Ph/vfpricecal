@@ -16,7 +16,7 @@ const Profit = () => {
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [profit, setProfit] = useState<profitRequest[]>([]); // State để quản lý danh mục lọc
      // item đang edit
-  const [selectedProfit, setSelectedProfit] = useState<profitRequest>();
+  const [selectedProfit, setSelectedProfit] = useState<profitRequest | null>(null);
 
     const [user] = useState<UserInfo>(() => {
         const savedUser = localStorage.getItem("user");
@@ -30,9 +30,16 @@ const Profit = () => {
         return null;
     });
 
+        // mở modal update
+    const handleCreate = () => {
+        setSelectedProfit(null);
+        setOpenPaperModal(true);
+    };
+
       // mở modal update
     const handleEdit = (item: profitRequest) => {
         setSelectedProfit(item);
+        console.log(item);
         setOpenPaperModal(true);
     };
 
@@ -84,7 +91,7 @@ const Profit = () => {
             <div className="papers-header">
                 <h3>Biên lợi nhuận</h3>
 
-                <button className="add-papers-btn" onClick={() => setOpenPaperModal(true)}>
+                <button className="add-papers-btn" onClick={() => handleCreate()}>
                     <FaPlus /> Thêm mới
                 </button>
             </div>
@@ -133,6 +140,7 @@ const Profit = () => {
             </div>
 
         <ProfitModal
+            key={selectedProfit?.id ?? "create"}
             open={openPaperModal}
             setOpen={setOpenPaperModal}
             data ={selectedProfit}

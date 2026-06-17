@@ -7,6 +7,7 @@ import ProcessingAddModel from "../../../components/processing/ProcessingAdd";
 import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
 import type { category, processing } from "../../../model/model";
+import { formatMoney } from "../../../utils/formatMoney";
 
 const ProcessingDetail = () => {
 
@@ -162,7 +163,7 @@ const ProcessingDetail = () => {
                                                 <tr key={material.id}>
                                                     <td>{material.name}</td>
                                                     <td>Tờ</td>
-                                                    <td>{material.price}</td>
+                                                    <td>{formatMoney(material.price)}</td>
                                                     <td className="action-buttons">
                                                         <button className=" icon edit-btn" onClick={()=> handleOpenUpdate(material)}><FiEdit /></button>
                                                         <button className=" icon delete-btn" onClick={() => handleOpenDelete(material.id ?? "")}><FiTrash2 /></button>
@@ -188,6 +189,7 @@ const ProcessingDetail = () => {
             </div>
 
             <ProcessingAddModel
+                key={dataProcessing?.id ?? "create"}
                 open={openPaperModal}
                 setOpen={setOpenPaperModal}
                 data = {dataProcessing}

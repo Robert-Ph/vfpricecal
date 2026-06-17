@@ -2,6 +2,7 @@ import { useState} from "react";
 import "./discountModel.scss";
 import { toast } from "react-toastify";
 import {  createDiscountRange, updateDiscountRange } from "../../service/DiscountService";
+import { formatNumber } from "../../utils/formNumber";
 // import type { UserInfo } from "../../context/AuthContext";
 
 
@@ -87,8 +88,8 @@ const DiscountModel = ({ open, setOpen, data, id }: Props) => {
             <input
             className={!maxMount && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
               type="text"
-              placeholder="Nhập tên..."
-              value={maxMount}
+              placeholder="Nhập..."
+              value={formatNumber(maxMount)}
               onChange={(e) => {setmaxMount(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
@@ -101,7 +102,7 @@ const DiscountModel = ({ open, setOpen, data, id }: Props) => {
             className={!discount && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
               type="text"
               placeholder="Nhập chiết khấu..."
-              value={discount}
+              value={formatNumber(discount)}
               onChange={(e) => {setDiscount(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}

@@ -70,7 +70,7 @@ const Sidebar = () => {
                         VF<span className="text-cyan">print</span> ECOSYSTEM
                     </h3>
                     <p className="brand__subtitle--horizontal">Hệ thống báo giá in ấn</p>
-                     <p className="brand__subtitle--horizontal">Version: 1.0.0</p>
+                     <p className="brand__subtitle--horizontal">Version: 0.1.0-beta.1</p>
                 </div>
             </div>
 

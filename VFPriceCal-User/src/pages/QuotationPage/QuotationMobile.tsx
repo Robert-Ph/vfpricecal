@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./quotationMobile.scss";
 import {
-  FaPrint,
+  // FaPrint,
   FaCalculator,
   FaPlus,
   FaBox,
@@ -19,10 +19,11 @@ import {calculateMobile} from "../../service/CalculateService";
 import { formatMoney } from "../../utils/formatMoney";
 import zalo from "../../assets/zalo.png";
 import type { mobile, proCal } from "../../model/model";
+import { toast } from "react-toastify";
 
 
 const QuotationMobile = () => {
-    const {  phone, companyId} = useParams();
+    const { companyName ,phone, companyId} = useParams();
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [list, setList] = useState<mobile>();
     const [processingList, setProcessingList] = useState<proCal[]>([]); 
@@ -37,6 +38,21 @@ const QuotationMobile = () => {
 
 
     const handleSumitCalculate = async () =>{
+
+            if(!paperId){
+              toast.error("Vui lòng chọn loại giấy!");
+            }
+
+            if(!width && !height){
+              toast.error("Vui lòng nhập kích thước sản phẩm!");
+            }
+            if(!printPriceId){
+              toast.error("Vui lòng chọn loại hình in!");
+            }
+            if(!quantity){
+              toast.error("Vui lòng nhập số lượng hoặc số lượng > 0");
+            }
+
             try{
                 const data ={
                     widthProduct: width,
@@ -86,10 +102,11 @@ const QuotationMobile = () => {
           {/* <FaArrowLeft /> */}
         </button>
 
-        <h1>BÁO GIÁ</h1>
+        <h1>BÁO GIÁ {companyName}</h1>
+
 
         <button className="icon-btn-mobile">
-          <FaPrint />
+          {/* <FaPrint /> */}
         </button>
       </header>
 
@@ -104,19 +121,19 @@ const QuotationMobile = () => {
 
         <div className="size-row">
           <div>
-            <label>Rộng (mm)</label>
+            <label>Rộng (mm) <span className="spanred">*</span></label>
             <input placeholder="Nhập chiều rộng" onChange={(e) => setWidth(Number(e.target.value))}/>
           </div>
 
           <div>
-            <label>Cao (mm)</label >
+            <label>Cao (mm)<span className="spanred">*</span></label >
             <input placeholder="Nhập chiều cao" onChange={(e) => setHeight(Number(e.target.value))}/>
           </div>
         </div>
 
-        <label>Loại hình in</label>
+        <label>Loại hình in<span className="spanred">*</span></label>
         <select onChange={(e) => setprintPriceId(e.target.value)}>
-          <option>Chọn loại</option>
+          <option value={""}>Chọn loại</option>
           {list?.printPrices?.map((item ) =>(
             <option key={item.id} value={item.id ?? ""}>
                     {item.name}
@@ -124,9 +141,9 @@ const QuotationMobile = () => {
           ))}
         </select>
 
-        <label>Loại giấy in</label>
+        <label>Loại giấy in<span className="spanred">*</span></label>
         <select onChange={(e) => setPaperId(e.target.value)}>
-          <option>Chọn giấy</option>
+          <option value={""}>Chọn giấy</option>
           {list?.papers?.map((item) =>(
             <option key={item.id} value={item.id ?? ""}>
                     {item.name}
@@ -135,7 +152,7 @@ const QuotationMobile = () => {
         </select>
 
 
-        <label>Số lượng</label>
+        <label>Số lượng<span className="spanred">*</span></label>
         <input placeholder="Nhập số lượng" onChange={(e) => setQuantity(Number(e.target.value))}/>
       </section>
 
@@ -203,47 +220,19 @@ const QuotationMobile = () => {
         </div>
 
         <div className="result-row">
-          <span>Giá 1 sản phẩm</span>
-          <strong>{formatMoney(
-                            result?.data?.price /
-                            Number(quantity) || 0
-                        )}</strong>
-        </div>
-
-        <div className="result-row">
-          <span>Số sản phẩm/tờ</span>
-          <strong>{result?.data?.productSheet ?? 0}</strong>
-        </div>
-
-        <div className="result-row">
-          <span>Số tờ in</span>
-          <strong>{result?.data?.quantityPaper ?? 0} tờ</strong>
-        </div>
-
-        <div className="result-row">
-          <span>Tạm tính</span>
-          <strong>{formatMoney(
-                            (result?.data?.price || 0)
-                            
-                        )}</strong>
-        </div>
-
-        <div className="divider" />
-
-        <div className="result-row">
-          <span>VAT (10%)</span>
+          <span>VAT (8%)</span>
           <strong>{formatMoney(
                                       (result?.data?.price || 0) *
-                                      (10 / 100)
+                                      (8 / 100)
                                   )}</strong>
         </div>
 
         <div className="total-box">
-          <span>TỔNG TIỀN</span>
+          <span>TỔNG TIỀN </span>
           <strong>{formatMoney(
                                       (result?.data?.price || 0) +
                                       (result?.data?.price || 0) *
-                                      (10 / 100)
+                                      (8 / 100)
                                   )}</strong>
         </div>
       </section>

@@ -1,9 +1,11 @@
 import "./about.scss";
 import type { UserInfo } from "../../context/AuthContext";
 import { useState } from "react";
+import FeedbackModal from "../../components/feedbackForm/FeedbackForm";
 
 
 const About = () => {
+        const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
         const [now] = useState(() => Date.now());
         const [user] = useState<UserInfo | null>(() => {
                 const savedUser = localStorage.getItem("user");
@@ -35,7 +37,7 @@ const About = () => {
         <div className="about-container">
             <div className="about-header">
                 <h2>Hệ sinh thái VFprint - Ứng dụng báo giá in ấn</h2>
-                <button className="button-vesion">Phiên bản 1.0.0</button>
+                <button className="button-vesion">Phiên bản 0.1.0-beta.1</button>
             </div>
 
             <div className="about-main">
@@ -172,8 +174,13 @@ const About = () => {
             </div>
 
             <div className="about-footer">
-
+                <button className="btn-send" onClick={() => setIsFeedbackOpen(true)}>Gửi góp ý</button>
             </div>
+
+            <FeedbackModal 
+                isOpen={isFeedbackOpen} 
+                onClose={() => setIsFeedbackOpen(false)} 
+            />
         </div>
     )
 }

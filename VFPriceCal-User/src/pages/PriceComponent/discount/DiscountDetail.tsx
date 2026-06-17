@@ -186,6 +186,7 @@ const DiscountDetail = () => {
             </div>
 
             <DiscountModel
+                key={range?.id ?? "create"}
                 open={openPaperModal} 
                 setOpen={setOpenPaperModal}
                 data={range} 

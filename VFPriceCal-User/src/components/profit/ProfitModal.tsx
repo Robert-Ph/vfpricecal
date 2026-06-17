@@ -3,24 +3,18 @@ import "./profitModal.scss";
 import { toast } from "react-toastify";
 import { create, updateProfitById } from "../../service/ProfitService";
 import type { UserInfo } from "../../context/AuthContext";
+import type { profitRequest } from "../../model/model";
 
-type Profit = {
-  id: string | null;
-  companyId: string;
-  name: string;
-  percentage: number;
-  priority: string
-};
 
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  data?: Profit | null;
+  data?: profitRequest | null;
 };
 
 const ProfitModal = ({ open, setOpen, data }: Props) => {
 
-  const [profitName, setProfitName] = useState(data?.name ?? "");
+  const [profitName, setProfitName] = useState( data?.name ?? "");
   const [percentage, setPercentage] = useState(data?.percentage ?? 0);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
 
@@ -29,8 +23,8 @@ const ProfitModal = ({ open, setOpen, data }: Props) => {
         if (savedUser) {
             try {
                 return JSON.parse(savedUser);
-            } catch (e) {
-                return e;
+            } catch {
+                return null;
             }
         }
         return null;

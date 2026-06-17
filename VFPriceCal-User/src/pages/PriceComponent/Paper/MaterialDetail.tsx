@@ -17,6 +17,7 @@ import {
   FiImage,
   FiGrid 
 } from "react-icons/fi";
+import { formatMoney } from "../../../utils/formatMoney";
 
 const MaterialDetail = () => {
     const [paperData, setPaperData] = useState<paperResponse | null>(null); // State để lưu chi tiết giấy/vật liệu
@@ -213,39 +214,28 @@ const MaterialDetail = () => {
                                                 <tr key={size.id}>
                                                     <td>{size.width}mm</td>
                                                     <td>{size.height}mm</td>
-
-                                                    <td>
-                                                        <div className="price-wrapper">
-                                                            <span className="price">{size.price.toLocaleString()}đ</span>
-
-                                                            <div className="action-buttons">
-                                                                <button className="action-btn edit-btn" onClick={() => handleOpenUpdate(size)}>
-                                                                    <FiEdit />
-                                                                </button>
-
-                                                                <button
-                                                                    className="action-btn delete-btn"
-                                                                    onClick={() => handleOpenDelete(size.id ?? "")}
-                                                                >
-                                                                    <FiTrash2 />
-                                                                </button>
-                                                            </div>
-                                                        </div>
+                                                    <td>{formatMoney(size.price)}</td>
+                                                    <td className="action-buttons">
+                                                        <button className=" icon edit-btn" onClick={() => handleOpenUpdate(size)}><FiEdit /></button>
+                                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(size.id ?? "")}><FiTrash2 /></button>
                                                     </td>
+
                                                 </tr>
                                             ))
                                             ) : (
-                                                <div>
-                                                    <div className="empty-icon">
-                                                        <FiFileText />
-                                                    </div>
-
-                                                    <h3>Chưa có kích thước nào</h3>
-
-                                                    <p>
-                                                        Thêm kích thước giấy/vật liệu để bắt đầu quản lý và tính giá.
-                                                    </p>
-                                                </div>
+                                               <tr>
+                                                    <td colSpan={4}>
+                                                        <div style={{ textAlign: 'center', padding: '20px 0' }}> 
+                                                            <div className="empty-icon">
+                                                                <FiFileText />
+                                                            </div>
+                                                            <h3>Chưa có kích thước nào</h3>
+                                                            <p>
+                                                                Thêm kích thước giấy/vật liệu để bắt đầu quản lý và tính giá.
+                                                            </p>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                             )}
                                         </tbody>
 
@@ -264,6 +254,7 @@ const MaterialDetail = () => {
             </div>
             
             <PaperSizeModal 
+                key={dataSize?.id ?? "create"}
                 open={openPaperModal} 
                 setOpen={setOpenPaperModal} 
                 data = {dataSize}

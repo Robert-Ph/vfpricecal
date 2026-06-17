@@ -79,7 +79,7 @@ export type printPriceRanges = {
         printPriceId: string;
         minLengthCm: number | null;
         maxLengthCm: number | null;
-        pricePerMeter: number | null;
+        pricePerMeter: number;
 }
 
 //du lieu tinh toan

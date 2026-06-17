@@ -37,7 +37,6 @@ const Material = () => {
             if (user?.companyId) {
                 try {
                     const papers = await getPapers(user.companyId);
-                    console.log("Danh sách giấy/vật liệu:", papers);
                     setPaperList(papers.data); // Cập nhật danh sách vào state để hiển thị
                 } catch (error) {
                     console.error("Lỗi khi lấy giấy/vật liệu:", error);
