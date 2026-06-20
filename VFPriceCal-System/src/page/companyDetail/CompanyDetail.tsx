@@ -1,6 +1,28 @@
+import { useParams } from "react-router-dom";
 import "./CompanyDetail.scss";
+import { useEffect, useState } from "react";
+import type { Companies } from "../../config/ModelConfig";
+import { getCompaniesById } from "../../service/CompaniesService";
+import { format, differenceInDays } from 'date-fns';
 
 export default function CompanyDetail() {
+  const {id} = useParams(); 
+  const [companies, setCompanies] = useState<Companies | null>(null);
+  const daysLeft = companies?.endTime
+  ? Math.max(
+      0,
+      differenceInDays(new Date(companies.endTime), new Date())
+    )
+  : null;
+
+  useEffect (() => {
+    const  fetchData = async () => {
+        const response = await getCompaniesById(id ?? "");
+        setCompanies(response.data);
+    }
+    void fetchData();
+  },[id])
+
   return (
     <div className="company-detail-page">
         <div className="breadcrumb">
@@ -13,23 +35,23 @@ export default function CompanyDetail() {
         <div className="company-header">
             <div className="company-info-detail">
                 <div className="company-logo-detail">
-                    ABC
+                    {companies?.code.substring(0,2)}
                 </div>
 
                 <div className="company-meta">
                     <div className="title-row">
-                    <h2>Công ty TNHH ABC</h2>
+                    <h2>{companies?.name}</h2>
                     <span className="status active">
-                        ACTIVE
+                        {companies?.statusId}
                     </span>
                 </div>
 
                 <div className="meta-list">
-                    <span>MST:{"\u00a0\u00a0"} 0123456789</span>
-                    <span>Email:{"\u00a0\u00a0"} contact@abc.vn</span>
-                    <span>Điện thoại:{"\u00a0\u00a0"} 0901234567</span>
-                    <span>Địa chỉ:{"\u00a0\u00a0"} Hà Nội</span>
-                    <span>Ngày tạo:{"\u00a0\u00a0"} xx/xx/xxxx</span>
+                    <span>MST:{"\u00a0\u00a0"} {companies?.taxCode}</span>
+                    <span>Email:{"\u00a0\u00a0"} {companies?.email}</span>
+                    <span>Điện thoại:{"\u00a0\u00a0"} {companies?.phone}</span>
+                    <span>Địa chỉ:{"\u00a0\u00a0"} {companies?.address}</span>
+                    <span>Ngày tạo:{"\u00a0\u00a0"} {companies?.createAt ? format(new Date(companies?.createAt), 'dd/MM/yyyy') : '---'}</span>
                 </div>
             </div>
         </div>
@@ -40,8 +62,8 @@ export default function CompanyDetail() {
                 <div className="package-detail">
                     <div className="text-group">
                         <h2>Gói hiện tại</h2>
-                        <h3>Tiêu chuẩn</h3>
-                        <p>399.000đ / tháng</p>
+                        <h3>{companies?.plan}</h3>
+                        <p>{companies?.priceMonth}đ / tháng</p>
                     </div>
                 </div>
 
@@ -51,16 +73,16 @@ export default function CompanyDetail() {
                         <span>Ngày hết hạn</span>
                     </div>
                     <div className="date-values">
-                        <span className="date">15/05/2025</span>
-                        <span className="date highlight">15/12/2025</span>
-                        <span className="days-left">Còn 128 ngày</span>
+                        <span className="date start-time">{companies?.startTime ? format(new Date(companies?.startTime), 'dd/MM/yyyy') : '---'}</span>
+                        <span className="date highlight">{companies?.endTime ? format(new Date(companies?.endTime), 'dd/MM/yyyy') : '---'}</span>
+                        <span className="days-left">Còn {daysLeft} ngày</span>
                     </div>
                 </div>
             </div>
 
             {/* Khối phía dưới: Nút bấm hành động */}
             <div className="header-actions">
-                <button className="btn-primary">
+                <button className="btn-primary" onClick={() => {window.location.href = "/company-management/renew"}}>
                     <span className="icon">📅</span> Gia hạn gói
                 </button>
                 <button className="btn-outline">

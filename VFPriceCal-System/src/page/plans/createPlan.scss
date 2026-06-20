@@ -1,0 +1,383 @@
+.create-plan-page {
+    padding: 24px 32px;
+    background: #f6f8fc;
+    min-height: 100vh;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+/* =========================
+   HEADER
+========================= */
+
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+}
+
+.back-btn {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+
+    border: 1px solid #e4e8f3;
+    border-radius: 12px;
+    background: #fff;
+
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+        border-color: #6c63ff;
+        background: #f5f7ff;
+    }
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 13px;
+    color: #98a2c3;
+
+    margin-bottom: 8px;
+
+    span {
+        color: #cbd3e4;
+    }
+}
+
+.header-content h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 700;
+    color: #1f2a52;
+    text-align: left;
+}
+
+.header-content p {
+    margin: 6px 0 0;
+    color: #8d96b5;
+    font-size: 14px;
+    text-align: left;
+}
+
+
+
+/* =========================
+   FORM LAYOUT
+========================= */
+
+.plan-form-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+/* =========================
+   CARD
+========================= */
+
+.form-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    border: 1px solid #edf0f7;
+}
+
+.card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    font-size: 15px;
+    font-weight: 700;
+    color: #1f2a52;
+
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #eef1f7;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.form-group {
+    margin-bottom: 18px;
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #4b5675;
+    }
+
+    small {
+        display: block;
+        margin-top: 6px;
+        font-size: 12px;
+        color: #9aa5c2;
+    }
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 12px 14px;
+
+    border: 1px solid #dde3f1;
+    border-radius: 12px;
+
+    background: #fbfcff;
+    color: #1f2a52;
+
+    font-size: 14px;
+    outline: none;
+
+    transition: all 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #6c63ff;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(108, 99, 255, 0.08);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 180px;
+}
+
+/* =========================
+   ICONS
+========================= */
+
+.icon-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.icon-item {
+    width: 42px;
+    height: 42px;
+
+    border: none;
+    border-radius: 12px;
+
+    cursor: pointer;
+
+    font-size: 12px;
+    font-weight: 700;
+    color: white;
+
+    transition: all 0.2s ease;
+}
+
+.icon-item:hover {
+    transform: translateY(-2px);
+}
+
+.icon-item.active {
+    transform: scale(1.08);
+    box-shadow: 0 8px 20px rgba(108, 99, 255, 0.25);
+}
+
+.icon-item:nth-child(1) {
+    background: #6c63ff;
+}
+
+.icon-item:nth-child(2) {
+    background: #c15fff;
+}
+
+.icon-item:nth-child(3) {
+    background: #6c63ff;
+}
+
+.icon-item:nth-child(4) {
+    background: #ff9f1c;
+}
+
+.icon-item:nth-child(5) {
+    background: #ff4d6d;
+}
+
+.icon-item:nth-child(6) {
+    background: #00b4d8;
+}
+
+.icon-item:nth-child(7) {
+    background: #00a896;
+}
+
+.btn-other {
+    border: 1px solid #6c63ff;
+    background: white;
+
+    color: #6c63ff;
+    font-weight: 600;
+
+    padding: 10px 16px;
+    border-radius: 10px;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-other:hover {
+    background: #f4f3ff;
+}
+
+/* =========================
+   PREVIEW CARD
+========================= */
+
+.plan-preview {
+    margin-top: 20px;
+
+    padding: 20px;
+    border-radius: 18px;
+
+    background: linear-gradient(
+        135deg,
+        #5b7fff,
+        #7b61ff
+    );
+
+    color: white;
+}
+
+.plan-preview-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.plan-preview-price {
+    font-size: 32px;
+    font-weight: 800;
+}
+
+.plan-preview-duration {
+    opacity: 0.85;
+    margin-top: 4px;
+}
+
+/* =========================
+   ACTIONS
+========================= */
+
+.action-bar {
+    margin-top: 28px;
+
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn-cancel {
+    padding: 12px 24px;
+
+    border-radius: 12px;
+    border: 1px solid #dce1f0;
+
+    background: white;
+    color: #4b5675;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-cancel:hover {
+    background: #f8f9fd;
+}
+
+.btn-save {
+    padding: 12px 24px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: linear-gradient(
+        135deg,
+        #5b7fff,
+        #6c63ff
+    );
+
+    color: white;
+    font-weight: 600;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-save:hover {
+    transform: translateY(-1px);
+
+    box-shadow: 0 10px 24px rgba(108, 99, 255, 0.25);
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1024px) {
+    .plan-form-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .create-plan-page {
+        padding: 16px;
+    }
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .header-content h1 {
+        font-size: 24px;
+    }
+
+    .action-bar {
+        flex-direction: column-reverse;
+    }
+
+    .btn-save,
+    .btn-cancel {
+        width: 100%;
+    }
+}
+
+.li-red{
+    color: red;
+}

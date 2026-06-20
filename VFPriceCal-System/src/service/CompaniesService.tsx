@@ -21,3 +21,13 @@ export const getCompanies = async () => {
         throw error;
     }
 };
+
+export const getCompaniesById = async (id: string) => {
+    try {
+        const response = await apiClient.get(`/companies/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching companies:', error);
+        throw error;
+    }
+};

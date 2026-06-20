@@ -3,9 +3,10 @@ import "./userManagement.scss";
 import type { Companies } from "../../config/ModelConfig";
 import { getCompanies } from "../../service/CompaniesService";
 import { format } from 'date-fns';
+import { useNavigate } from "react-router-dom";
 
 const UserManagement = () => {
-
+    const navigate = useNavigate();
     const [companiesList, setCompaniesList] = useState<Companies[]>([]);
 
     useEffect(() => {
@@ -126,7 +127,7 @@ const UserManagement = () => {
                     </div>
 
                     <div className="actions">
-                        <button onClick={() => window.location.href="/company-management/detail"}>✏️</button>
+                        <button onClick={() => navigate(`/company-management/${item.id}`)}>✏️</button>
                         <button>🗑️</button>
                     </div>
 

@@ -7,6 +7,9 @@ import Login from "../page/login/Login";
 import { Navigate } from "react-router-dom";
 import SubscriptionPage from "../page/Subscription/SubscriptionPage";
 import CompanyDetail from "../page/companyDetail/CompanyDetail";
+import Plans from "../page/plans/Plans";
+import CreatePlan from "../page/plans/CreatePlan";
+import SubscriptionRenewPage from "../page/renew/SubscriptionRenewPage";
 
 export const router = createBrowserRouter([
 
@@ -40,8 +43,20 @@ export const router = createBrowserRouter([
           element: <SubscriptionPage/>
         },
         {
-          path: "/company-management/detail",
+          path: "/company-management/:id",
           element: <CompanyDetail/>
+        },
+        {
+          path: "/plans",
+          element: <Plans/>
+        },
+        {
+          path: "/plans/create",
+          element: <CreatePlan/>
+        },
+        {
+          path: "/company-management/renew",
+          element: <SubscriptionRenewPage/>
         }
 
     ],

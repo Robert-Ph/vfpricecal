@@ -1,6 +1,6 @@
 .menu-bar {
     // width: 280px;
-    height: 100%;
+    height: 100vh;
     background: #f5f7ff;
     padding: 14px;
     box-sizing: border-box;
@@ -8,6 +8,7 @@
     flex-direction: column;
     border-right: 1px solid #e4e7f2;
     font-family: sans-serif;
+    overflow: auto; 
 }
 
 /* HEADER */
@@ -73,6 +74,33 @@
     display: flex;
     flex-direction: column;
     gap: 2px;
+
+    scrollbar-width: thin;
+    scrollbar-color: rgba(108, 99, 255, 0.4) transparent;
+    overflow-y: auto;
+    min-height: 0; 
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(108, 99, 255, 0.35);
+        border-radius: 999px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgba(108, 99, 255, 0.6);
+    }
+}
+
+.menu-group-title {
+    font-size: 11px;
+    font-weight: 700;
+    color: #8b96a8;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    padding: 0 10px;
 }
 
 .menu-item {
@@ -130,7 +158,9 @@
 /* PROFILE */
 
 .profile-box {
-    margin-top: auto;
+    flex-shrink: 0;
+    margin-top: 12px;
+
     background: white;
     border-radius: 14px;
     padding: 10px;

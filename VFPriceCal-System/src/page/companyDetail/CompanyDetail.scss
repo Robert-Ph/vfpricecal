@@ -69,7 +69,12 @@
   flex-direction: column; /* Xếp các thẻ span thành hàng dọc */
   align-items: flex-start;  /* Căn toàn bộ các phần tử về phía bên trái */
   text-align: left;         /* Đảm bảo chữ bên trong luôn canh lề trái */
-  gap: 5px;              /* Khoảng cách giữa các dòng (tùy chỉnh theo ý bạn) */
+  // gap: 5px;   
+  
+  span{
+    font-size: 12px;
+    gap: 2px;
+  }/* Khoảng cách giữa các dòng (tùy chỉnh theo ý bạn) */
 }
 
 
@@ -148,9 +153,15 @@
           font-size: 14px;
           color: #4b5563;
           margin-bottom: 12px;
+          &.start-time{
+            color: #0e0591; /* Ngày hết hạn chuyển màu tím đậm giống mẫu */
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 4px;
+          }
           
           &.highlight {
-            color: #4f46e5; /* Ngày hết hạn chuyển màu tím đậm giống mẫu */
+            color: #f72d12; /* Ngày hết hạn chuyển màu tím đậm giống mẫu */
             font-weight: 700;
             font-size: 16px;
             margin-bottom: 4px;

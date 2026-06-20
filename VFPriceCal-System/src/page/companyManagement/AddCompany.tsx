@@ -28,7 +28,10 @@ const AddCompany = () => {
         logoUrl: '',
         createAt: '',
         endTime:'',
-        updateAt: ''
+        updateAt: '',
+        priceMonth: 0,
+        startTime: '',
+        id: ''
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -42,18 +45,25 @@ const AddCompany = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+       const submitData = {
+        ...formData,
+        duration: time
+        };
         // Xử lý logic lưu công ty mới ở đây
-        console.log("Form Data:", formData);
+        console.log("Form Data:", submitData);
+
         
         try {
             // Gọi API bằng fetch hoặc axios
-            const response = await createCompany( formData);
-            if (response.status === 200) {
+            const response = await createCompany( submitData);
+            if (response.code === 200 || response.code === 201) {
                 alert('Company created successfully!');
                 // Reset form hoặc điều hướng nếu cần
                 toast.success('Company created successfully!');
                 // Tải lại trang hiện tại
-                window.location.reload();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
                 
             }
         } catch (error) {
@@ -124,7 +134,7 @@ const AddCompany = () => {
                 <button className="back-btn" onClick={() => {
                     window.location.href = "/user-management";
                 }}>
-                    ← Back
+                    ← 
                 </button>
             </div>
 
@@ -237,7 +247,7 @@ const AddCompany = () => {
 
                              <div className="form-group">
                                 <label>Thời hạn</label>
-                                <select name="duration" value={formData.duration} onChange={(e) => setTime(e.target.value)}>
+                                <select name="duration" value={time} onChange={(e) => setTime(e.target.value)}>
                                     <option value="">Chọn thời hạn</option>
                                     <option value="one-month">1 tháng</option>
                                     <option value="one-year">1 năm</option>

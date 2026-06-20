@@ -5,6 +5,7 @@ export type companiesStatus = {
 }
 
 export type Companies = {
+    id: string;
     code: string;
     name: string;
     phone: string;
@@ -17,15 +18,19 @@ export type Companies = {
     duration: string;
     isPay: string;
     createAt: string;
+    startTime: string
     endTime: string;
     updateAt: string;
+    priceMonth: number;
 }
 
 export type plans = {
     id: string;
     code: string;
     name: string;
-    price: number
+    price: number;
+    createAt: string;
+    durationInDays: number;
 }
 
    
