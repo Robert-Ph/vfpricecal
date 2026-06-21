@@ -40,9 +40,14 @@ public class CompaniesController {
         );
     }
 
-    @GetMapping("{id}")
-    public CompaniesDto getCompanyById(@PathVariable UUID id) {
-        return companiesService.getCompanyById(id);
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse> getCompanyById(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse.builder()
+            .code(200)
+            .data(companiesService.getCompanyById(id))
+            .build()
+        );
     }
     
 

@@ -10,6 +10,7 @@ import CompanyDetail from "../page/companyDetail/CompanyDetail";
 import Plans from "../page/plans/Plans";
 import CreatePlan from "../page/plans/CreatePlan";
 import SubscriptionRenewPage from "../page/renew/SubscriptionRenewPage";
+import Orders from "../page/orders/Orders";
 
 export const router = createBrowserRouter([
 
@@ -55,8 +56,12 @@ export const router = createBrowserRouter([
           element: <CreatePlan/>
         },
         {
-          path: "/company-management/renew",
+          path: "/company-management/renew/:id",
           element: <SubscriptionRenewPage/>
+        },
+        {
+          path: "/orders",
+          element: <Orders/>
         }
 
     ],

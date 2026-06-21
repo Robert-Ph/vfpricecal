@@ -50,4 +50,7 @@ public class Plans {
 
     @Column(name = "updated_at")
     private Timestamp updatedAt;
+
+    @Column(name = "description")
+    private String description;
 }

@@ -89,7 +89,8 @@ $white: #fff;
   }
 
   div {
-    line-height: 1.9;
+    // line-height: 1.9;
+    font-size: 14px;
     color: $text-light;
   }
 
@@ -197,14 +198,17 @@ $white: #fff;
 
     &.blue {
       color: #2563eb;
+       background: transparent;
     }
 
     &.purple {
       color: $primary;
+        background: transparent;
     }
 
     &.green {
       color: $success;
+       background: transparent;
     }
   }
 
@@ -328,28 +332,35 @@ textarea {
     display: flex;
     justify-content: space-between;
     margin-bottom: 14px;
+    background: transparent;
 
     span {
       color: $text-light;
+      font-size: 14px;
+      
     }
 
     strong {
       color: $text;
+      font-size: 14px;
     }
 
     &.green {
       strong {
         color: $success;
+        font-size: 14px;
+       
+        
       }
     }
 
     &.total {
       margin-top: 20px;
-      font-size: 20px;
+      font-size: 16px;
 
       strong {
         color: $primary;
-        font-size: 24px;
+        font-size: 20px;
       }
     }
   }

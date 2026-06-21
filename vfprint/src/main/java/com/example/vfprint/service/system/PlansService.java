@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.Collator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +27,9 @@ public class PlansService {
                     .name(plan.getName())
                     .code(plan.getCode())
                     .price(plan.getPrice())
+                    .createAt(plan.getCreatedAt())
+                    .durationInDays(plan.getDurationInDays())
+                    .description(plan.getDescription())
                     .build()
                 )
                 .collect(Collectors.toList());

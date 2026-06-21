@@ -41,16 +41,20 @@ const QuotationMobile = () => {
 
             if(!paperId){
               toast.error("Vui lòng chọn loại giấy!");
+              return;
             }
 
             if(!width && !height){
               toast.error("Vui lòng nhập kích thước sản phẩm!");
+              return;
             }
             if(!printPriceId){
               toast.error("Vui lòng chọn loại hình in!");
+              return;
             }
             if(!quantity){
               toast.error("Vui lòng nhập số lượng hoặc số lượng > 0");
+              return;
             }
 
             try{

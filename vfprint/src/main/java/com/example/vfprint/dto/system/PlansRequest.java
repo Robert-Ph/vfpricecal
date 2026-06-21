@@ -1,5 +1,6 @@
 package com.example.vfprint.dto.system;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
@@ -16,5 +17,8 @@ public class PlansRequest {
     private String code;
     private String name;
     private float price;
+    private Timestamp createAt;
+    private int durationInDays;
+    private String description;
 
 }

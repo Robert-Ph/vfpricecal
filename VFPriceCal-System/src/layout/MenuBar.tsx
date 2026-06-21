@@ -100,7 +100,7 @@ const MenuBar = () => {
                         }
                     >
                         <span>🛒</span>
-                        Đơn hàng
+                        Đơn đăng ký
                     </NavLink>
 
                     <NavLink

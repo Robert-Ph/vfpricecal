@@ -24,6 +24,7 @@ import {
 } from "react-icons/fi";
 import { FaCalculator } from "react-icons/fa";
 import type {  printPrice, paper, profitRequest, discountRequest, proCal } from "../../model/model";
+import { toast } from "react-toastify";
 
 
 
@@ -120,6 +121,31 @@ const QuotationPage = () => {
     
 
     const handleSumitCalculate = async () =>{
+      if(!width && !height && !selectedPaperId ){
+        toast.error("Vui lòng nhập đầy đủ thông tin!")
+        return;
+      }
+      
+      else if(!quantity){
+        toast.error("Vui lòng nhập số lượng!")
+        return;
+      }
+
+      else if(!printPrice){
+        toast.error("Vui lòng chọn hình thức in!")
+        return;
+      }
+
+      else if(!profit){
+        toast.error("Vui lòng chọn biên lợi nhuận!")
+        return;
+      }
+
+      else if(!discountId){
+        toast.error("Vui lòng chọn loại khách hàng!")
+        return;
+      }
+
         try{
             const data ={
                 widthProduct: width,
@@ -162,7 +188,7 @@ const QuotationPage = () => {
     </div>
 
     <div className="header-actions">
-      <button className="btn-outline">
+      <button className="btn-outline" onClick={() => window.location.reload()}>
         <FiRefreshCw />
         Làm mới
       </button>

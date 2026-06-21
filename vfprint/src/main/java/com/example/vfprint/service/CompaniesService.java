@@ -102,7 +102,7 @@ public class CompaniesService {
         AccountDTO accountDto = new AccountDTO();
         accountDto.setEmail(company.getEmail());
         accountDto.setUsername(company.getName());
-        accountDto.setPassword(passwordEncoder.encode(newPassword)); // Sử dụng mật khẩu ngẫu nhiên đã tạo
+        accountDto.setPassword(newPassword); // Sử dụng mật khẩu ngẫu nhiên đã tạo
         accountDto.setCompanyId(entity.getId());
         accountDto.setRoleId(role.getId()); // ID của role "Owner"
         
@@ -139,20 +139,33 @@ public class CompaniesService {
 
     //get company by ID
     @Transactional(readOnly = true)
-    public CompaniesDto getCompanyById(UUID id){
+    public CompaniesRequest getCompanyById(UUID id){
         Companies company = companiesRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
-        CompaniesDto dto = new CompaniesDto();
+        CompaniesRequest dto = new CompaniesRequest();
+        dto.setId(id);
         dto.setCode(company.getCode());
         dto.setName(company.getName());
         dto.setPhone(company.getPhone());
         dto.setAddress(company.getAddress());
         dto.setTaxCode(company.getTaxCode());
         dto.setEmail(company.getEmail());
-        dto.setStatusId(company.getStatus().getId());
+        dto.setStatusId(company.getStatus().getCode());
         dto.setLogoUrl(company.getLogoUrl());
         dto.setCreateAt(company.getCreateAt());
         dto.setUpdateAt(company.getUpdateAt());
+        dto.setStartTime(compansySubscriptionsRepository.findByCompany(company)
+                            .map(subscription -> subscription.getStartDate())
+                            .orElse(null));
+        dto.setPlan(compansySubscriptionsRepository.findByCompany(company)
+                            .map(subscription -> subscription.getPlan().getCode())
+                            .orElse(null));
+        dto.setEndTime(compansySubscriptionsRepository.findByCompany(company)
+                            .map(subscription -> subscription.getEndDate())
+                            .orElse(null));
+        dto.setPriceMonth(compansySubscriptionsRepository.findByCompany(company)
+                            .map(subscription -> subscription.getPlan().getPrice())
+                            .orElse(null));
         return dto;
     }
 

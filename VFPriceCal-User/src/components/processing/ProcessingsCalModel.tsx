@@ -103,7 +103,7 @@ const ProcessingsCalModel = ({
        // Kiểm tra trùng
  const isDuplicate = data.some(
     (item) =>
-        String(item.id) === String(processingName) &&
+        String(item.id) === String(processingName) ||
         item.name.trim().toLowerCase() ===
             type.trim().toLowerCase()
 );
@@ -113,6 +113,7 @@ if (isDuplicate) {
     return;
 }
 
+console.log("category:", processingName)
 
         const newData = {
             id: processingName,

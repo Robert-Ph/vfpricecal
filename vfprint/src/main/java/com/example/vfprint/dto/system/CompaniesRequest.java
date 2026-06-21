@@ -23,7 +23,9 @@ public class CompaniesRequest {
     private String plan;
     private String logoUrl;
     private Timestamp createAt;
+    private Timestamp startTime;
     private Timestamp endTime;
     private Timestamp updateAt;
+    private double priceMonth;
 
 }

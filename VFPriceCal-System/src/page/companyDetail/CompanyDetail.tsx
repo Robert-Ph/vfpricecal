@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import "./CompanyDetail.scss";
 import { useEffect, useState } from "react";
 import type { Companies } from "../../config/ModelConfig";
@@ -7,6 +7,7 @@ import { format, differenceInDays } from 'date-fns';
 
 export default function CompanyDetail() {
   const {id} = useParams(); 
+  const navigate = useNavigate();
   const [companies, setCompanies] = useState<Companies | null>(null);
   const daysLeft = companies?.endTime
   ? Math.max(
@@ -82,7 +83,7 @@ export default function CompanyDetail() {
 
             {/* Khối phía dưới: Nút bấm hành động */}
             <div className="header-actions">
-                <button className="btn-primary" onClick={() => {window.location.href = "/company-management/renew"}}>
+                <button className="btn-primary" onClick={() => navigate(`/company-management/renew/${companies?.id}`)}>
                     <span className="icon">📅</span> Gia hạn gói
                 </button>
                 <button className="btn-outline">

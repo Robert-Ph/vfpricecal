@@ -1,54 +1,67 @@
 import "./subscriptionRenewPage.scss";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import type { Companies, plans } from "../../config/ModelConfig";
+import { getCompaniesById } from "../../service/CompaniesService";
+import { format } from 'date-fns';
+import { useParams } from "react-router-dom";
+import { getAllPlans } from "../../service/PlansService";
+import { formatCurrency } from "../../ultils/formatters";
 
-const plans = [
-  {
-    id: 1,
-    name: "Cơ bản",
-    price: 199000,
-    color: "blue",
-    features: [
-      "Quản lý đơn hàng",
-      "Kho mẫu có sẵn",
-      "Báo giá nhanh",
-      "Hỗ trợ email",
-      "1 tài khoản",
-    ],
-  },
-  {
-    id: 2,
-    name: "Tiêu chuẩn",
-    price: 399000,
-    color: "purple",
-    current: true,
-    features: [
-      "Quản lý đơn hàng",
-      "Kho mẫu có sẵn",
-      "Báo giá nhanh",
-      "Hỗ trợ email",
-      "1 tài khoản",
-    ],
-  },
-  {
-    id: 3,
-    name: "Nâng cao",
-    price: 699000,
-    color: "green",
-    features: [
-      "Quản lý đơn hàng",
-      "Kho mẫu có sẵn",
-      "Báo giá nhanh",
-      "Hỗ trợ email",
-      "5 tài khoản",
-    ],
-  },
-];
 
 export default function SubscriptionRenewPage() {
-  const [selectedPlan, setSelectedPlan] = useState(2);
+  const [selectedPlan, setSelectedPlan] = useState<string>("");
   const [duration, setDuration] = useState(12);
   const [paymentMethod, setPaymentMethod] = useState("bank");
+  const [plansList, setPlansList] = useState<plans[]>([]);
+  const {id} = useParams(); 
+  const [companies, setCompanies] = useState<Companies | null>(null);
+  const [transactionType, setTransactionType] = useState<string>('new');
+  const typeLabels: Record<string, string> = {
+      new: 'Đăng ký mới',
+      renew: 'Gia hạn',
+      upgrade: 'Nâng cấp gói',
+      downgrade: 'Hạ cấp gói'
+    };
 
+    // 1. Tìm gói hiện tại
+const currentPlan = plansList.find(plan => plan.id === selectedPlan);
+
+// 2. Lấy giá tiền của gói (Nếu undefined thì lấy bằng 0)
+const planPrice = currentPlan?.price ?? 0;
+
+// 3. Tính toán số tiền gốc dựa trên thời hạn (duration)
+const baseAmount = planPrice * duration;
+
+// 4. Tính thuế VAT (10% của số tiền gốc)
+const vat = baseAmount * 0.1;
+
+// 5. Tính tổng tiền (Tiền gốc + VAT)
+const totalAmount = baseAmount + vat;
+
+  const handleTypeChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    setTransactionType(e.target.value);
+  };
+
+  useEffect (() => {
+    const  fetchData = async () => {
+        const response = await getCompaniesById(id ?? "");
+        setCompanies(response.data);
+    }
+    void fetchData();
+  },[id])
+
+      
+  
+      useEffect(() => {
+          const fetchData = async () => {
+              const list = await getAllPlans();
+              setPlansList(list.data);
+          }
+  
+          void fetchData();
+      },[])
+
+  
   return (
     <div className="renew-page">
       {/* Header */}
@@ -74,19 +87,19 @@ export default function SubscriptionRenewPage() {
 
             <div className="customer-box">
               <div>
-                <h3>Công ty TNHH ABC</h3>
+                <h3>{companies?.name}</h3>
 
-                <div>Mã KH: KH000123</div>
-                <div>MST: 0101234567</div>
-                <div>Email: abc@company.com</div>
-                <div>Điện thoại: 0901234567</div>
+                <div>Mã KH: {companies?.code}</div>
+                <div>MST: {companies?.taxCode}</div>
+                <div>Email: {companies?.email}</div>
+                <div>Điện thoại: {companies?.phone}</div>
               </div>
 
               <div className="current-plan">
                 <span>Gói hiện tại</span>
-                <h4>Tiêu chuẩn</h4>
+                <h4>{companies?.plan}</h4>
 
-                <p>Hết hạn: 15/12/2025</p>
+                <p>Hết hạn: {companies?.endTime ? format(new Date(companies?.endTime), 'dd/MM/yyyy') : '---'}</p>
               </div>
             </div>
           </div>
@@ -100,22 +113,38 @@ export default function SubscriptionRenewPage() {
 
             <div className="transaction-list">
               <label>
-                <input type="radio" name="type" />
+                <input type="radio" name="type"
+                        value="new"
+                        checked={transactionType === 'new'}
+                        onChange={handleTypeChange}
+                        />
                 Đăng ký mới
               </label>
 
               <label >
-                <input type="radio" name="type" />
+                <input type="radio" name="type" 
+                      value="renew" 
+                      checked={transactionType === 'renew'} 
+                      onChange={handleTypeChange}
+                    />
                 Gia hạn
               </label>
 
               <label>
-                <input type="radio" name="type" />
+                <input type="radio" name="type" 
+                      value="upgrade" 
+                      checked={transactionType === 'upgrade'} 
+                      onChange={handleTypeChange}
+                      />
                 Nâng cấp gói
               </label>
 
               <label>
-                <input type="radio" name="type" />
+                <input type="radio" name="type" 
+                      value="downgrade" 
+                      checked={transactionType === 'downgrade'} 
+                      onChange={handleTypeChange}
+                      />
                 Hạ cấp gói
               </label>
             </div>
@@ -132,7 +161,8 @@ export default function SubscriptionRenewPage() {
             </div>
 
             <div className="plans-grid">
-              {plans.map((plan) => (
+              {plansList?.slice()
+                    .sort((a, b) => a.price - b.price).map((plan) => (
                 <div
                   key={plan.id}
                   className={`plan-card ${
@@ -142,15 +172,16 @@ export default function SubscriptionRenewPage() {
                   <div className="plan-name">
                     {plan.name}
                   </div>
+                  <div className="plan-name">
+                    {plan.code}
+                  </div>
 
-                  <div className={`price ${plan.color}`}>
-                    {plan.price.toLocaleString()}đ
+                  <div className={`price blue`}>
+                    {formatCurrency(plan.price, {locale: "vi-VN", currency: "VND"})}
                   </div>
 
                   <ul>
-                    {plan.features.map((f) => (
-                      <li key={f}>{f}</li>
-                    ))}
+                      <li key="{}">{plan.description}</li>
                   </ul>
 
                   <button
@@ -173,7 +204,7 @@ export default function SubscriptionRenewPage() {
             </div>
 
             <div className="duration-grid">
-              {[1, 3, 6, 12].map((item) => (
+              {[1, 12, 24, 36].map((item) => (
                 <div
                   key={item}
                   className={`duration-card ${
@@ -261,35 +292,41 @@ export default function SubscriptionRenewPage() {
           <div className="row">
             <span>Khách hàng</span>
             <strong>
-              Công ty TNHH ABC
+              {companies?.code}
             </strong>
           </div>
 
           <div className="row">
             <span>Loại giao dịch</span>
-            <strong>Gia hạn</strong>
+            <strong>{typeLabels[transactionType]}</strong>
           </div>
 
           <div className="row">
             <span>Gói dịch vụ</span>
-            <strong>Tiêu chuẩn</strong>
+            <strong>{currentPlan ? currentPlan.name : "Chưa chọn gói"}</strong>
           </div>
 
           <hr />
 
           <div className="row">
             <span>Giá gói</span>
-            <strong>4.308.000đ</strong>
+            <strong>{formatCurrency(currentPlan?.price ?? 0, {locale: "vi-VN", currency: "VND"})}</strong>
+          </div>
+          
+
+          <div className="row green">
+            <span>Thời hạn</span>
+            <strong>{duration} tháng</strong>
           </div>
 
           <div className="row green">
-            <span>Giảm giá</span>
-            <strong>-430.800đ</strong>
+            <span>VAT(10%)</span>
+            <strong>{formatCurrency(vat, {locale: "vi-VN", currency: "VND"})}</strong>
           </div>
 
           <div className="row total">
             <span>Tổng thanh toán</span>
-            <strong>4.264.920đ</strong>
+            <strong>{formatCurrency(totalAmount, {locale: "vi-VN", currency: "VND"})}</strong>
           </div>
 
           <button className="btn-submit">

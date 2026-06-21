@@ -31,6 +31,16 @@ export type plans = {
     price: number;
     createAt: string;
     durationInDays: number;
+    description: string;
 }
 
+
+export type orders = {
+    companyName: string;
+    companyCode: string;
+    plansName: string;
+    createAt: string;
+    totalAmount: number;
+    pay: boolean;
+}
    
