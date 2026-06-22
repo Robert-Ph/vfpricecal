@@ -24,6 +24,45 @@ export type Companies = {
     priceMonth: number;
 }
 
+export type createCompany = {
+    id: string;
+    code: string;
+    name: string;
+    phone: string;
+    address: string;
+    taxCode: string;
+    email: string;
+    statusId: string;
+    logoUrl: string;
+    createAt: string;
+    updateAt: string;
+}
+
+export type createSub = {
+    companyId: string;
+    planId: string;
+    time: number;
+}
+
+export type paymentRequest = {
+    paymentStatus: string;
+    type: string;
+    companyRes: createCompany;
+    sub: createSub;
+}
+
+
+export type CompaniesRegistration = {
+    id: string;
+    fullName: string;
+    name: string;
+    phone: string;
+    address: string;
+    taxCode: string;
+    email: string;
+    status: string;
+}
+
 export type plans = {
     id: string;
     code: string;
@@ -32,6 +71,15 @@ export type plans = {
     createAt: string;
     durationInDays: number;
     description: string;
+}
+
+export type plansRegistration = {
+    id: string;
+    companyResId: string;
+    planID: string;
+    month: number;
+    createAt: string;
+    status: string;
 }
 
 
@@ -44,3 +92,16 @@ export type orders = {
     pay: boolean;
 }
    
+export type paymentStatus = {
+    id: string;
+    name: string;
+    code: string;
+}
+
+export type paymentMethod = {
+    id: string;
+    name: string;
+    code: string;
+    descprition: string;
+    createAt: string;
+}

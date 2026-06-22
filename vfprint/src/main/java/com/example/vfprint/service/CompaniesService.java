@@ -1,16 +1,16 @@
 package com.example.vfprint.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.nio.file.OpenOption;
 import java.util.List;
 import java.util.UUID;
 import com.example.vfprint.repository.CompanyStatusRepository;
 import com.example.vfprint.repository.CompaniesRepository;
-import com.example.vfprint.dto.CompaniesDto;
-import com.example.vfprint.dto.system.CompaniesRequest;
-import com.example.vfprint.dto.system.CompansySubscriptionsDTO;
+import com.example.vfprint.dto.request.CompanyRequest;
+import com.example.vfprint.dto.system.CompaniesReponse;
 import com.example.vfprint.entity.Companies;
 import com.example.vfprint.entity.CompaniesStatus;
 import com.example.vfprint.repository.RolesRepository;
@@ -20,8 +20,13 @@ import com.example.vfprint.config.UltiService;
 import com.example.vfprint.config.EmailService;
 import com.example.vfprint.repository.UserStatusREpository;
 import com.example.vfprint.repository.systemRepository.CompansySubscriptionsRepository;
-import com.example.vfprint.service.system.CompansySubscriptionsService;
+import com.example.vfprint.repository.systemRepository.SubscriptionStatusesRepository;
 import com.example.vfprint.entity.UserStatus;
+import com.example.vfprint.entity.system.CompansySubscriptions;
+import com.example.vfprint.entity.system.Plans;
+import com.example.vfprint.entity.system.SubscriptionStatuses;
+
+import java.util.Optional;
 
 
 @Service
@@ -46,21 +51,18 @@ public class CompaniesService {
     private EmailService emailService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private UserStatusREpository userStatusRepository;
-
-    @Autowired
-    private CompansySubscriptionsService compansySubscriptionsService;
 
     @Autowired
     private CompansySubscriptionsRepository compansySubscriptionsRepository;
 
+    @Autowired
+    private SubscriptionStatusesRepository subscriptionStatusesRepository;
+
 
     // Create a new company
     @Transactional
-    public void createCompany(CompaniesDto company){
+    public Companies createCompany(CompanyRequest company){
 
         if(companiesRepository.existsByName(company.getName())){
             throw new RuntimeException("Company with the same name already exists");
@@ -83,16 +85,6 @@ public class CompaniesService {
 
         companiesRepository.save(entity);
 
-
-        CompansySubscriptionsDTO compansySubscriptionsDTO = CompansySubscriptionsDTO.builder()
-                                                            .companyId(entity.getId())
-                                                            .planId(company.getPlan())
-                                                            .time(company.getDuration())
-                                                            .build();
-
-        compansySubscriptionsService.createCompansySubscriptions(compansySubscriptionsDTO);
-
-
         Roles role = roleRepository.findByName("OWNER")
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
@@ -112,6 +104,8 @@ public class CompaniesService {
 
         accountService.createAccount(accountDto);
         emailService.sendPasswordNewAccount(company.getEmail(), newPassword);
+
+        return entity;
     }
 
     // Update company details
@@ -139,10 +133,11 @@ public class CompaniesService {
 
     //get company by ID
     @Transactional(readOnly = true)
-    public CompaniesRequest getCompanyById(UUID id){
+    public CompaniesReponse getCompanyById(UUID id){
         Companies company = companiesRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Company not found"));
-        CompaniesRequest dto = new CompaniesRequest();
+        CompaniesReponse dto = new CompaniesReponse();
+        CompansySubscriptions sub = getSubscriptionsByActive(company);
         dto.setId(id);
         dto.setCode(company.getCode());
         dto.setName(company.getName());
@@ -154,28 +149,20 @@ public class CompaniesService {
         dto.setLogoUrl(company.getLogoUrl());
         dto.setCreateAt(company.getCreateAt());
         dto.setUpdateAt(company.getUpdateAt());
-        dto.setStartTime(compansySubscriptionsRepository.findByCompany(company)
-                            .map(subscription -> subscription.getStartDate())
-                            .orElse(null));
-        dto.setPlan(compansySubscriptionsRepository.findByCompany(company)
-                            .map(subscription -> subscription.getPlan().getCode())
-                            .orElse(null));
-        dto.setEndTime(compansySubscriptionsRepository.findByCompany(company)
-                            .map(subscription -> subscription.getEndDate())
-                            .orElse(null));
-        dto.setPriceMonth(compansySubscriptionsRepository.findByCompany(company)
-                            .map(subscription -> subscription.getPlan().getPrice())
-                            .orElse(null));
+        dto.setStartTime(sub.getStartDate());
+        dto.setPlan(sub.getPlan().getCode());
+        dto.setEndTime(sub.getEndDate());
+        dto.setPriceMonth(sub.getPlan().getPrice());
         return dto;
     }
 
     @Transactional(readOnly = true)
-public List<CompaniesRequest> getAllCompanies() {
+public List<CompaniesReponse> getAllCompanies() {
     
     return companiesRepository.findAll()
             .stream()
             .map(company -> 
-                CompaniesRequest.builder()
+                CompaniesReponse.builder()
                     .id(company.getId())
                     .address(company.getAddress())
                     .code(company.getCode())
@@ -183,32 +170,25 @@ public List<CompaniesRequest> getAllCompanies() {
                     .phone(company.getPhone())
                     .statusId(company.getStatus().getCode())
                     .createAt(company.getCreateAt())
-                    .plan(compansySubscriptionsRepository.findByCompany(company)
-                            .map(subscription -> subscription.getPlan().getCode())
-                            .orElse(null))
+                    .plan(getSubscriptionsByActive(company).getPlan().getCode())
                     
                     // SỬA Ở ĐÂY: Gọi trực tiếp .map() vì findByCompany đã là một Optional rồi
-                    .endTime(compansySubscriptionsRepository.findByCompany(company)
-                            .map(subscription -> subscription.getEndDate())
-                            .orElse(null)) // Nếu không có gói đăng ký, tự động trả về null
+                    .endTime(getSubscriptionsByActive(company).getEndDate()) // Nếu không có gói đăng ký, tự động trả về null
                     
                     .build()
             )
             .toList();
 }
 
-    // @Transactional
-    // public List<CompaniesDto> searchCompanies(String param){
-    //     return companiesRepository.search(param)
-    //             .stream()
-    //             .map(company -> {
-    //                 CompaniesDto dto = new CompaniesDto();
-    //                 dto.setName(company.getName());
-    //                 dto.setPhone(company.getPhone());
-    //                 dto.setAddress(company.getAddress());
-    //                 return dto;
-    //             })
-    //             .toList();
-    // }
+public CompansySubscriptions getSubscriptionsByActive(Companies company){
+        CompansySubscriptions result = new CompansySubscriptions();
+        List<CompansySubscriptions> subscriptions = compansySubscriptionsRepository.findByCompany(company);
+        for(CompansySubscriptions sub: subscriptions){
+                if (sub.getSubscriptionStatus().getCode().equals("ACTIVE")) {
+                        result = sub;
+                }
+        }
+        return result;
+}
 
 }

@@ -1,27 +1,41 @@
 import "./subscriptionRenewPage.scss";
 import { useState, useEffect } from "react";
-import type { Companies, plans } from "../../config/ModelConfig";
+import type { Companies, CompaniesRegistration, paymentMethod, paymentStatus, plans} from "../../config/ModelConfig";
 import { getCompaniesById } from "../../service/CompaniesService";
 import { format } from 'date-fns';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getAllPlans } from "../../service/PlansService";
 import { formatCurrency } from "../../ultils/formatters";
+import { getCompanyRegistrationById } from "../../service/CompanyRegistrationsService";
+import { getAllPaymentStatus } from "../../service/PaymentStatusService";
+import { createPayment } from "../../service/PaymentService";
+import { getAllPaymentMethod } from "../../service/PaymentMethodService";
+import { toast } from "react-toastify";
 
 
 export default function SubscriptionRenewPage() {
+  const navigate = useNavigate();
   const [selectedPlan, setSelectedPlan] = useState<string>("");
-  const [duration, setDuration] = useState(12);
-  const [paymentMethod, setPaymentMethod] = useState("bank");
+  const [duration, setDuration] = useState(1);
   const [plansList, setPlansList] = useState<plans[]>([]);
-  const {id} = useParams(); 
+
+  const [paymentMethodList, setPaymentMethodList] = useState<paymentMethod[] | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState("bank");
+
+  const {type ,id} = useParams(); 
   const [companies, setCompanies] = useState<Companies | null>(null);
+  const [companiesNew, setCompaniesNew] = useState<CompaniesRegistration | null>(null);
   const [transactionType, setTransactionType] = useState<string>('new');
+
+  const [paymentStatusList, setPaymentStatusList] = useState<paymentStatus[] | null>(null);
+  const [paymentStatus, setPaymentStatus] = useState<string>("");
   const typeLabels: Record<string, string> = {
       new: 'Đăng ký mới',
       renew: 'Gia hạn',
       upgrade: 'Nâng cấp gói',
       downgrade: 'Hạ cấp gói'
     };
+
 
     // 1. Tìm gói hiện tại
 const currentPlan = plansList.find(plan => plan.id === selectedPlan);
@@ -42,24 +56,91 @@ const totalAmount = baseAmount + vat;
     setTransactionType(e.target.value);
   };
 
+      const handleSubmit = async (e: React.FormEvent) => {
+          e.preventDefault();
+
+          if(!paymentMethod || !paymentStatus || !selectedPlan){
+            toast.success('Vui lòng chọn đầy đủ thông tin!');
+            return;
+          }
+
+          const createcom = {
+              id: companies?.id || companiesNew?.id || "",
+              code: companies?.code || companiesNew?.name || "",
+              name: companies?.name || companiesNew?.fullName || "",
+              phone: companies?.phone || companiesNew?.phone || "",
+              address: companies?.address || companiesNew?.address || "",
+              taxCode: companies?.taxCode || companiesNew?.taxCode || "",
+              email: companies?.email || companiesNew?.email || "",
+              statusId: "5c7a3b1e-92fd-4a6c-bc84-1d2e3f4a5b6c",
+              logoUrl: '',
+              createAt: '',
+              updateAt: ''
+          }
+
+          const createSub = {
+                companyId: companies?.id ?? "",
+                planId: selectedPlan ,
+                time: duration,
+          }
+
+          const form = {
+                  paymentStatus: paymentStatus,
+                  type: type || "",
+                  companyRes: createcom,
+                  sub: createSub,
+          }
+
+          try{
+            const response = await createPayment(form);
+            if (response.code === 200 || response.code === 201) {
+              navigate('/company-management');
+                
+            }
+          }catch (error) {
+            console.error("Lỗi khi thêm công ty:", error);
+        }
+          
+          
+      };
+
   useEffect (() => {
+     const fetchDataPlanList = async () => {
+            const list = await getAllPlans();
+
+      if (list.code === 200 ||  list.code === 201) {
+        setPlansList(
+            type !== "new"
+                ? list.data.filter((plan: plans )=> plan.code !== "TRIAL")
+                : list.data
+        );
+    }
+          }
+
     const  fetchData = async () => {
+      if(type === "renew"){
         const response = await getCompaniesById(id ?? "");
         setCompanies(response.data);
-    }
-    void fetchData();
-  },[id])
+      }
 
-      
-  
-      useEffect(() => {
-          const fetchData = async () => {
-              const list = await getAllPlans();
-              setPlansList(list.data);
-          }
-  
-          void fetchData();
-      },[])
+      if(type === "new"){
+        const response = await getCompanyRegistrationById(id ?? "");
+        setCompaniesNew(response.data);
+
+      }
+
+      const statusReponse = await getAllPaymentStatus();
+      setPaymentStatusList(statusReponse.data);
+
+      const methodReponse = await getAllPaymentMethod();
+      setPaymentMethodList(methodReponse.data);
+        
+    }
+    void fetchDataPlanList();
+    void fetchData();
+  },[id, type])
+
+
 
   
   return (
@@ -86,7 +167,8 @@ const totalAmount = baseAmount + vat;
             </div>
 
             <div className="customer-box">
-              <div>
+              {type === "renew" ? (
+                  <div>
                 <h3>{companies?.name}</h3>
 
                 <div>Mã KH: {companies?.code}</div>
@@ -94,13 +176,28 @@ const totalAmount = baseAmount + vat;
                 <div>Email: {companies?.email}</div>
                 <div>Điện thoại: {companies?.phone}</div>
               </div>
+              ):(
+                <div>
+                <h3>{companiesNew?.fullName}</h3>
 
+                <div>Mã KH: {companiesNew?.name}</div>
+                <div>MST: {companiesNew?.taxCode}</div>
+                <div>Email: {companiesNew?.email}</div>
+                <div>Điện thoại: {companiesNew?.phone}</div>
+              </div>
+              )}
+              
+
+              {type === "renew" ? (
+              
               <div className="current-plan">
                 <span>Gói hiện tại</span>
                 <h4>{companies?.plan}</h4>
 
                 <p>Hết hạn: {companies?.endTime ? format(new Date(companies?.endTime), 'dd/MM/yyyy') : '---'}</p>
               </div>
+              ): null}
+              
             </div>
           </div>
 
@@ -157,7 +254,7 @@ const totalAmount = baseAmount + vat;
 
           <div className="card">
             <div className="card-title">
-              3. Chọn gói dịch vụ
+              3. Chọn gói dịch vụ <span className="lik-red">*</span>
             </div>
 
             <div className="plans-grid">
@@ -200,7 +297,7 @@ const totalAmount = baseAmount + vat;
 
           <div className="card">
             <div className="card-title">
-              4. Thời gian gia hạn
+              4. Thời gian gia hạn <span className="lik-red">*</span>
             </div>
 
             <div className="duration-grid">
@@ -226,11 +323,52 @@ const totalAmount = baseAmount + vat;
 
           <div className="card">
             <div className="card-title">
-              5. Hình thức thanh toán
+              5. Hình thức thanh toán <span className="lik-red">*</span>
             </div>
 
             <div className="payment-methods">
-              <label>
+
+              {paymentMethodList?.map(item => (
+                 <label>
+                <input
+                  type="radio"
+                  checked={
+                    paymentMethod === item.id
+                  }
+                  onChange={() =>
+                    setPaymentMethod(item.id)
+                  }
+                />
+                {item.name}
+              </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Status */}
+          
+          <div className="card">
+            <div className="card-title">
+              5. Trạng thái thanh toán <span className="lik-red">*</span>
+            </div>
+
+            <div className="payment-methods">
+              {paymentStatusList?.map(item => (
+                              <label>
+                <input
+                  type="radio"
+                  checked={
+                    paymentStatus === item.id
+                  }
+                  onChange={() =>
+                    setPaymentStatus(item.id)
+                  }
+                />
+                {item.name}
+              </label>
+              ))}
+
+              {/* <label>
                 <input
                   type="radio"
                   checked={
@@ -241,9 +379,9 @@ const totalAmount = baseAmount + vat;
                   }
                 />
                 Chuyển khoản
-              </label>
+              </label> */}
 
-              <label>
+              {/* <label>
                 <input
                   type="radio"
                   checked={
@@ -254,9 +392,9 @@ const totalAmount = baseAmount + vat;
                   }
                 />
                 Tiền mặt
-              </label>
+              </label> */}
 
-              <label>
+              {/* <label>
                 <input
                   type="radio"
                   checked={
@@ -267,7 +405,7 @@ const totalAmount = baseAmount + vat;
                   }
                 />
                 MoMo
-              </label>
+              </label> */}
             </div>
           </div>
 
@@ -292,7 +430,7 @@ const totalAmount = baseAmount + vat;
           <div className="row">
             <span>Khách hàng</span>
             <strong>
-              {companies?.code}
+              {companies?.name}
             </strong>
           </div>
 
@@ -329,8 +467,10 @@ const totalAmount = baseAmount + vat;
             <strong>{formatCurrency(totalAmount, {locale: "vi-VN", currency: "VND"})}</strong>
           </div>
 
-          <button className="btn-submit">
-            Gia hạn gói dịch vụ
+          <button className="btn-submit"
+              onClick={handleSubmit}
+            > 
+            Thanh toán
           </button>
 
           <button className="btn-cancel">

@@ -5,7 +5,6 @@ package com.example.vfprint.service.system;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.sql.Timestamp;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,7 @@ public class CompansySubscriptionsService {
     private SubscriptionStatusesRepository subscriptionStatusesRepository;
 
     @Transactional
-    public void createCompansySubscriptions(CompansySubscriptionsDTO dto){
+    public CompansySubscriptions createCompansySubscriptions(CompansySubscriptionsDTO dto){
 
         Companies companies = companiesRepository.findById(dto.getCompanyId()).orElseThrow();
         Plans plan = plansRepository.findById(dto.getPlanId()).orElseThrow();
@@ -51,23 +50,10 @@ public class CompansySubscriptionsService {
         if(plan.getCode().equals("TRIAL")){
             nameType = "TRIAL";
         }else{
-            nameType ="PAID";
-            switch (dto.getTime()) {
-            case "one-month":
-                end = 30;
-                break;
-            case "one-year":
-                end = 365;
-                break;
-            case "tow-year":
-                end = 730;
-                break;
-            case "three-year":
-                end = 1095;
-                break;
-            default:
-                end = 30;
-        }
+            nameType = "PAID";
+
+            // dto.getTime() là số tháng
+            end = dto.getTime() * 30;
         }
 
         SubscriptionTypes subscriptionTypes = subscriptionTypesRepository.findByCode(nameType);
@@ -87,7 +73,7 @@ public class CompansySubscriptionsService {
                                         .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                                         .build();                                            
         
-        compansySubscriptionsRepository.save(result);
+        return compansySubscriptionsRepository.save(result);
 
     }
 
@@ -115,5 +101,11 @@ public class CompansySubscriptionsService {
         long months = ChronoUnit.MONTHS.between(startDate, endDate);
 
         return (months * price) * 1.1;
+    }
+
+
+    @Transactional
+    public void update(CompansySubscriptions subscriptions){
+        compansySubscriptionsRepository.save(subscriptions);
     }
 }

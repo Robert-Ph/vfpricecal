@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.example.vfprint.dto.system.PlansRequest;
@@ -35,9 +36,19 @@ public class PlansService {
                 .collect(Collectors.toList());
     }
 
+
     @Transactional
-    public void createPlanByCompany(){
-        
-    }
+    public PlansRequest getPlanById(UUID id){
+        Plans plans =plansRepository.findById(id).orElseThrow();
+        return PlansRequest.builder()
+                .id(plans.getId())
+                .code(plans.getCode())
+                .name(plans.getName())
+                .durationInDays(plans.getDurationInDays())
+                .price(plans.getPrice())
+                .description(plans.getDescription())
+                .createAt(plans.getCreatedAt())
+                .build();
+    } 
 }
         

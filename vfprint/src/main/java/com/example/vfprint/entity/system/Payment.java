@@ -2,6 +2,7 @@ package com.example.vfprint.entity.system;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -14,6 +15,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.UUID;
+import jakarta.persistence.EnumType;
+import com.example.vfprint.enums.ActionType;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.ForeignKey;
 import java.sql.Timestamp;
@@ -52,6 +55,10 @@ public class Payment {
 
     @Column(name = "paid_at")
     private Timestamp paidAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "action_type")
+    private ActionType actionType;
 
     @Column(name = "created_at")
     private Timestamp createdAt;

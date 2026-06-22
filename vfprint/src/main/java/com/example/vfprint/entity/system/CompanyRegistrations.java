@@ -3,35 +3,47 @@ package com.example.vfprint.entity.system;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import com.example.vfprint.enums.Status;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-
 
 @Getter
 @Setter
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "payment_methods")
-public class PaymentMethod {
-    
+@Entity
+@Table(name = "company_registrations")
+public class CompanyRegistrations {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-    private String code;
-    private String name;
-    private String descprition;
 
-    @Column(name ="create_at")
+    @Column(name = "full_name")
+    private String fullName;
+
+    private String name;
+    private String email;
+    private String phone;
+    private String address;
+
+    @Column(name = "tax_code")
+    private String taxCode;
+
+    private Status status;
+
+    @Column(name = "create_at")
     private Timestamp createAt;
+
 }

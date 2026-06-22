@@ -8,21 +8,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.vfprint.dto.response.ApiResponse;
-import com.example.vfprint.service.system.CompansySubscriptionsService;
+import com.example.vfprint.service.system.PaymentStatusService;
 
 @RestController
-@RequestMapping("/api/system/orders")
-public class CompansySubscriptionsController {
+@RequestMapping("/api/system/payment-status")
+public class PaymentStatusController {
+    
     @Autowired
-    private CompansySubscriptionsService compansySubscriptionsService;
+    private PaymentStatusService paymentStatusService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse> getAllOrder(){
+    public ResponseEntity<ApiResponse> getAllPaymentStatus(){
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse.builder()
-                .code(200)
-                .data(compansySubscriptionsService.getOrders())
-                .build()
+            .code(200)
+            .data(paymentStatusService.getAllPaymentStatusAllowCreate())
+            .build()
         );
     }
 }

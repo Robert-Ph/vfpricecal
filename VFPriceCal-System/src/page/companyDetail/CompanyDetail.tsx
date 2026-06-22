@@ -83,7 +83,7 @@ export default function CompanyDetail() {
 
             {/* Khối phía dưới: Nút bấm hành động */}
             <div className="header-actions">
-                <button className="btn-primary" onClick={() => navigate(`/company-management/renew/${companies?.id}`)}>
+                <button className="btn-primary" onClick={() => navigate(`/company-management/select-plan/${"renew"}/${companies?.id}`)}>
                     <span className="icon">📅</span> Gia hạn gói
                 </button>
                 <button className="btn-outline">

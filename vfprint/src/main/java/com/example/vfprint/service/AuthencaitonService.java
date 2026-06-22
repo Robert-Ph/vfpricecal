@@ -4,14 +4,13 @@ import java.util.Date;
 import com.example.vfprint.entity.Account;
 import com.example.vfprint.entity.Token;
 import com.example.vfprint.entity.system.CompansySubscriptions;
-import com.example.vfprint.entity.system.Plans;
 import com.example.vfprint.repository.AccountRepository;
 import com.example.vfprint.repository.TokenRepository;
 import com.example.vfprint.repository.systemRepository.CompansySubscriptionsRepository;
 import com.example.vfprint.repository.systemRepository.PlansRepository;
 import com.nimbusds.jose.JOSEException;
 import com.example.vfprint.repository.CompaniesRepository;
-
+import java.util.List;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import com.example.vfprint.dto.request.LoginRequest;
@@ -24,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.vfprint.config.EmailService;
 import com.example.vfprint.config.UltiService;
 import com.example.vfprint.entity.Companies;
-import java.util.Optional;
+
 @Service
 public class AuthencaitonService {
 
@@ -113,12 +112,12 @@ public class AuthencaitonService {
         Timestamp start = null;
         Timestamp end = null;
 
-        Optional<CompansySubscriptions> subscriptionOpt = compansySubscriptionsRepository.findByCompany(company);
+        CompansySubscriptions subscriptionOpt = getSubscriptionsByActive(company);
 
-        if (subscriptionOpt.isPresent()) {
-            plan = subscriptionOpt.get().getPlan().getCode();
-            start = subscriptionOpt.get().getStartDate();
-            end = subscriptionOpt.get().getEndDate();
+        if (subscriptionOpt == null) {
+            plan = subscriptionOpt.getPlan().getCode();
+            start = subscriptionOpt.getStartDate();
+            end = subscriptionOpt.getEndDate();
         } else {
          // Logic dự phòng (fallback): Nếu không có gói thì gán mặc định là gói FREE chẳng hạn
             plan = "FREE"; 
@@ -209,4 +208,17 @@ public class AuthencaitonService {
         accountRepository.save(account);
         return "Password changed successfully";
     }
+
+
+
+    public CompansySubscriptions getSubscriptionsByActive(Companies company){
+        CompansySubscriptions result = new CompansySubscriptions();
+        List<CompansySubscriptions> subscriptions = compansySubscriptionsRepository.findByCompany(company);
+        for(CompansySubscriptions sub: subscriptions){
+                if (sub.getSubscriptionStatus().getCode().equals("ACTIVE")) {
+                        result = sub;
+                }
+        }
+        return result;
+}
 }

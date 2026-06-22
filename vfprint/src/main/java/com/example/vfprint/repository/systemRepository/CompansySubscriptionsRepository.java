@@ -7,10 +7,10 @@ import org.springframework.stereotype.Repository;
 
 import com.example.vfprint.entity.system.CompansySubscriptions;
 import com.example.vfprint.entity.Companies;
-import java.util.Optional;
+import java.util.List;
 
 
 @Repository
 public interface CompansySubscriptionsRepository extends JpaRepository<CompansySubscriptions, UUID>{
-    Optional<CompansySubscriptions> findByCompany(Companies company);
+    List<CompansySubscriptions> findByCompany(Companies company);
 }

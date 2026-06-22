@@ -1,37 +1,22 @@
 import "./addCompany.scss";
-import {type Companies, type companiesStatus, type plans} from "../../config/ModelConfig";
-import { useEffect, useState , useMemo } from "react";
-import { getCompaniesStatus } from "../../service/CompaniesStatusService";
-import { createCompany } from "../../service/CompaniesService";
-import { toast } from "react-toastify";
-import { getAllPlans } from "../../service/PlansService";
+import { type CompaniesRegistration} from "../../config/ModelConfig";
+import { useState  } from "react";
+import { createCompanyRegistration } from "../../service/CompanyRegistrationsService";
+import { useNavigate } from "react-router-dom";
 
 
 
 const AddCompany = () => {
-
-    const [statusList, setStatusList] = useState<companiesStatus[]>([]);
-    const [plans, setPlans] = useState<plans[]>([]);
-    const [startTime] = useState(() => new Date());
-    const [time, setTime] = useState("");
-    const [formData, setFormData] = useState<Companies>({
-        code: '',
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState<CompaniesRegistration>({
+        id: '',
+        fullName: '',
         name: '',
         phone: '',
         address: '',
         taxCode: '',
         email: '',
-        statusId: '',
-        plan: '',
-        duration: '',
-        isPay: '',
-        logoUrl: '',
-        createAt: '',
-        endTime:'',
-        updateAt: '',
-        priceMonth: 0,
-        startTime: '',
-        id: ''
+        status: ''
     });
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -45,81 +30,54 @@ const AddCompany = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-       const submitData = {
-        ...formData,
-        duration: time
-        };
-        // Xử lý logic lưu công ty mới ở đây
-        console.log("Form Data:", submitData);
-
-        
         try {
             // Gọi API bằng fetch hoặc axios
-            const response = await createCompany( submitData);
+            const response = await createCompanyRegistration( formData);
             if (response.code === 200 || response.code === 201) {
-                alert('Company created successfully!');
-                // Reset form hoặc điều hướng nếu cần
-                toast.success('Company created successfully!');
-                // Tải lại trang hiện tại
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
+                const registerId = response.data.id;
+                navigate(`/company-management/select-plan/${"new"}/${registerId}`)
                 
             }
+
+           
         } catch (error) {
             console.error("Lỗi khi thêm công ty:", error);
         }
     };
 
-        const endTime = useMemo(() => {
-        if (!time) return null;
+    //     const endTime = useMemo(() => {
+    //     if (!time) return null;
 
-        const end = new Date(startTime);
+    //     const end = new Date(startTime);
 
-        switch (time) {
-            case "one-month":
-                end.setMonth(end.getMonth() + 1);
-                break;
-            case "one-year":
-                end.setFullYear(end.getFullYear() + 1);
-                break;
-            case "two-year":
-                end.setFullYear(end.getFullYear() + 2);
-                break;
-            case "three-year":
-                end.setFullYear(end.getFullYear() + 3);
-                break;
-            default:
-                return null;
-        }
+    //     switch (time) {
+    //         case "one-month":
+    //             end.setMonth(end.getMonth() + 1);
+    //             break;
+    //         case "one-year":
+    //             end.setFullYear(end.getFullYear() + 1);
+    //             break;
+    //         case "two-year":
+    //             end.setFullYear(end.getFullYear() + 2);
+    //             break;
+    //         case "three-year":
+    //             end.setFullYear(end.getFullYear() + 3);
+    //             break;
+    //         default:
+    //             return null;
+    //     }
 
-        return end;
-    }, [time, startTime]);
+    //     return end;
+    // }, [time, startTime]);
 
-        const formatDate = (date: Date) => {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
+    //     const formatDate = (date: Date) => {
+    //     const year = date.getFullYear();
+    //     const month = String(date.getMonth() + 1).padStart(2, "0");
+    //     const day = String(date.getDate()).padStart(2, "0");
 
-        return `${year}-${month}-${day}`;
-    };
+    //     return `${year}-${month}-${day}`;
+    // };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getCompaniesStatus();
-                setStatusList(data);
-
-                const plans = await getAllPlans();
-                setPlans(plans.data);
-            } catch (error) {
-                console.error('Error fetching companies status:', error);
-            }
-
-        };
-
-        void fetchData();
-    }, []);
 
     return (
         <div className="add-company">
@@ -127,7 +85,7 @@ const AddCompany = () => {
             {/* HEADER */}
             <div className="page-header">
                 <div>
-                    <h1>Add Company</h1>
+                    <h1>Đăng ký mới</h1>
                     <p>Create new company subscription</p>
                 </div>
 
@@ -151,8 +109,8 @@ const AddCompany = () => {
                             <label>Company Name</label>
                             <input
                                 type="text"
-                                name="name"
-                                value={formData.name}
+                                name="fullName"
+                                value={formData.fullName}
                                 onChange={handleChange}
                                 placeholder="VFprint Company"
                             />
@@ -162,8 +120,8 @@ const AddCompany = () => {
                             <label>Name</label>
                             <input
                                 type="text"
-                                name="code"
-                                value={formData.code}
+                                name="name"
+                                value={formData.name}
                                 onChange={handleChange}
                                 placeholder="VFprint"
                             />
@@ -215,7 +173,7 @@ const AddCompany = () => {
 
                     </div>
 
-                    <div className="card">
+                    {/* <div className="card">
                         <h3>Gói đăng ký</h3>
 
                         <div className="grid-2">
@@ -276,7 +234,7 @@ const AddCompany = () => {
                             </div>
 
                         </div>
-                    </div>
+                    </div> */}
 
                 </div>
 
@@ -305,7 +263,7 @@ const AddCompany = () => {
 
                     </div>
 
-                    <div className="card">
+                    {/* <div className="card">
 
                         <h3>Account Summary</h3>
 
@@ -329,7 +287,7 @@ const AddCompany = () => {
                             <strong>24/7</strong>
                         </div>
 
-                    </div>
+                    </div> */}
 
                 </div>
 
@@ -338,11 +296,11 @@ const AddCompany = () => {
             {/* ACTION */}
             <div className="action-bar">
                 <button className="cancel-btn">
-                    Cancel
+                    Huỷ
                 </button>
 
                 <button className="save-btn" onClick={handleSubmit}>
-                    Save Company
+                    Tiếp tục
                 </button>
             </div>
 

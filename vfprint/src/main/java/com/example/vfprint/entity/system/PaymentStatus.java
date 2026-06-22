@@ -1,6 +1,8 @@
 package com.example.vfprint.entity.system;
 
 import java.util.UUID;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -27,4 +29,10 @@ public class PaymentStatus {
     private UUID id;
     private String code;
     private String name;
+
+    @Column(name = " allow_create")
+    private Boolean allowCreate;
+
+    @Column(name = " allow_update")
+    private Boolean allowUpdate;
 }

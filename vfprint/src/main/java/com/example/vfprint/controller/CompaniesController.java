@@ -15,8 +15,6 @@ import com.example.vfprint.service.CompaniesService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -51,17 +49,17 @@ public class CompaniesController {
     }
     
 
-    @PostMapping
-    public ResponseEntity<ApiResponse> createCompany(@RequestBody CompaniesDto company) {
-        companiesService.createCompany(company);
+    // @PostMapping
+    // public ResponseEntity<ApiResponse> createCompany(@RequestBody CompaniesDto company) {
+    //     companiesService.createCompany(company);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(
-            ApiResponse.builder()
-                .code(HttpStatus.CREATED.value())
-                .message("Company created successfully")
-                .build()
-        );
-    }
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(
+    //         ApiResponse.builder()
+    //             .code(HttpStatus.CREATED.value())
+    //             .message("Company created successfully")
+    //             .build()
+    //     );
+    // }
 
     @DeleteMapping("{id}")
     public ResponseEntity<ApiResponse> deleteCompany(@PathVariable UUID id) {

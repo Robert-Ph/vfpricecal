@@ -1,4 +1,4 @@
-package com.example.vfprint.dto.system;
+package com.example.vfprint.dto.response;
 
 import java.util.UUID;
 
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 @Builder
-public class CompansySubscriptionsDTO {
-    private UUID companyId;
-    private UUID planId;
-    private int time;
+@Data
+public class PaymentStatusReponse {
+    private UUID id;
+    private String name;
+    private String code;
 }
