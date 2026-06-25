@@ -278,7 +278,9 @@ const totalAmount = baseAmount + vat;
                   </div>
 
                   <ul>
-                      <li key="{}">{plan.description}</li>
+                      {plan.description?.split(",").map((item, index) => (
+                            <li key={index}>{item.trim()}</li>
+                            ))}
                   </ul>
 
                   <button

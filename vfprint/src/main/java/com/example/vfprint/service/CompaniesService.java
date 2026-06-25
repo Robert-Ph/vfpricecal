@@ -1,12 +1,11 @@
 package com.example.vfprint.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.nio.file.OpenOption;
 import java.util.List;
 import java.util.UUID;
+import com.example.vfprint.entity.Category;
 import com.example.vfprint.repository.CompanyStatusRepository;
 import com.example.vfprint.repository.CompaniesRepository;
 import com.example.vfprint.dto.request.CompanyRequest;
@@ -15,49 +14,32 @@ import com.example.vfprint.entity.Companies;
 import com.example.vfprint.entity.CompaniesStatus;
 import com.example.vfprint.repository.RolesRepository;
 import com.example.vfprint.dto.AccountDTO;
+import com.example.vfprint.dto.CategoryDTO;
+import com.example.vfprint.dto.ProcessingDTO;
 import com.example.vfprint.entity.Roles;
 import com.example.vfprint.config.UltiService;
 import com.example.vfprint.config.EmailService;
 import com.example.vfprint.repository.UserStatusREpository;
 import com.example.vfprint.repository.systemRepository.CompansySubscriptionsRepository;
-import com.example.vfprint.repository.systemRepository.SubscriptionStatusesRepository;
 import com.example.vfprint.entity.UserStatus;
 import com.example.vfprint.entity.system.CompansySubscriptions;
-import com.example.vfprint.entity.system.Plans;
-import com.example.vfprint.entity.system.SubscriptionStatuses;
-
-import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 
 
 @Service
+@RequiredArgsConstructor
 public class CompaniesService {
-    
-    @Autowired  
-    private CompaniesRepository companiesRepository;
 
-    @Autowired
-    private CompanyStatusRepository companyStatusRepository;
+    private final CompaniesRepository companiesRepository;
+    private final CompanyStatusRepository companyStatusRepository;
+    private final RolesRepository roleRepository;
+    private final UltiService ultiService;
+    private final AccountService accountService;
+    private final EmailService emailService;
+    private final UserStatusREpository userStatusRepository;
+    private final CompansySubscriptionsRepository compansySubscriptionsRepository;
+    private final CategoryService categoryService;
 
-    @Autowired
-    private RolesRepository roleRepository;
-
-    @Autowired
-    private UltiService ultiService;
-
-    @Autowired
-    private AccountService accountService;
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private UserStatusREpository userStatusRepository;
-
-    @Autowired
-    private CompansySubscriptionsRepository compansySubscriptionsRepository;
-
-    @Autowired
-    private SubscriptionStatusesRepository subscriptionStatusesRepository;
 
 
     // Create a new company
@@ -83,7 +65,27 @@ public class CompaniesService {
                 .updateAt(new java.sql.Timestamp(System.currentTimeMillis()))
                 .build();
 
-        companiesRepository.save(entity);
+        Companies companies = companiesRepository.save(entity);
+
+        CategoryDTO cate1 = CategoryDTO.builder()
+                                .companyId(companies.getId())
+                                .name("Cán màng")
+                                .build();
+        CategoryDTO cate2 = CategoryDTO.builder()
+                                .companyId(companies.getId())
+                                .name("Bế tem")
+                                .build();
+        CategoryDTO cate3 = CategoryDTO.builder()
+                                .companyId(companies.getId())
+                                .name("Gia công khác")
+                                .build();
+        Category category1 = categoryService.createCategory(cate1, true);
+        Category category2 = categoryService.createCategory(cate2, true);
+        Category category3 = categoryService.createCategory(cate3, true);
+
+        ProcessingDTO pro1 = ProcessingDTO.builder()
+                                .name("Cán màng")
+                                .build();
 
         Roles role = roleRepository.findByName("OWNER")
                 .orElseThrow(() -> new RuntimeException("Role not found"));

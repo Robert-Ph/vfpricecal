@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.vfprint.dto.CategoryDTO;
-import com.example.vfprint.dto.ProcessingDTO;
 import com.example.vfprint.dto.response.CategoryResponse;
 import com.example.vfprint.dto.response.ProcessingResponse;
 import com.example.vfprint.entity.Category;
@@ -36,13 +35,15 @@ public class CategoryService {
     }
 
     @Transactional
-    public void createCategory(CategoryDTO categoryDTO){
+    public Category createCategory(CategoryDTO categoryDTO, Boolean canDelete){
         if (categoryRepository.existsByName(categoryDTO.getName())) {
             throw new RuntimeException("Category with the given name already exists");
         }
-        categoryRepository.save(Category.builder()
+        return categoryRepository.save(Category.builder()
                 .company(Companies.builder().id(categoryDTO.getCompanyId()).build())
                 .name(categoryDTO.getName())
+                .canDelete(canDelete)
+                .isSystem(true)
                 .is_active(true)
                 .build());
        

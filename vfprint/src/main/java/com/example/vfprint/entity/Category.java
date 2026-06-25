@@ -1,8 +1,6 @@
 package com.example.vfprint.entity;
 
 import java.util.UUID;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,6 +15,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.persistence.Column;
 
 @Getter
 @Setter
@@ -36,6 +35,13 @@ public class Category {
     private Companies company;
 
     private String name;
+
+    @Column(name ="can_delete")
+    private Boolean canDelete;
+
+    @Column(name = "is_system")
+    private Boolean isSystem;
+
     private Boolean is_active;
 
 }

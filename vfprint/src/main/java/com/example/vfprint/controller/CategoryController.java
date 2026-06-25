@@ -28,7 +28,7 @@ public class CategoryController {
      @PostMapping
      public ResponseEntity<ApiResponse> createCategory(@RequestBody CategoryDTO categoryDTO) {
         try {
-            categoryService.createCategory(categoryDTO);
+            categoryService.createCategory(categoryDTO, false);
             return ResponseEntity.ok(
                 ApiResponse
                 .builder()
