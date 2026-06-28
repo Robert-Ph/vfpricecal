@@ -1,8 +1,7 @@
 package com.example.vfprint.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
-import com.example.vfprint.dto.PaperDTO;
 import com.example.vfprint.dto.InfoPriceDTO;
 import com.example.vfprint.dto.PaperSizeDTO;
 import com.example.vfprint.dto.request.CalculateRequest;
@@ -12,40 +11,46 @@ import com.example.vfprint.entity.DiscountRange;
 import com.example.vfprint.entity.PrintPriceRange;
 import com.example.vfprint.entity.Processing;
 import com.example.vfprint.entity.Profit;
+import com.example.vfprint.entity.ProfitItem;
 import com.example.vfprint.enums.Priority;
+import com.example.vfprint.repository.CategoryRepository;
 import com.example.vfprint.repository.DiscountRangeRepository;
 import com.example.vfprint.repository.DiscountRepository;
 import com.example.vfprint.repository.PrintPriceRangeRepository;
 import com.example.vfprint.repository.ProcessingRepository;
+import com.example.vfprint.repository.ProfitItemRepository;
 import com.example.vfprint.repository.ProfitRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import java.util.Comparator;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+import com.example.vfprint.entity.Category;
 @Service
+@RequiredArgsConstructor
 public class CalculatorService {
     
     
-    @Autowired
-    private PaperService paperService;
+    private final PaperService paperService;
 
-    @Autowired
-    private PaperSizeService paperSizeService;
+    private final PaperSizeService paperSizeService;
 
-    @Autowired
-    private ProcessingRepository processingRepository;
+    private final ProcessingRepository processingRepository;
 
-    @Autowired
-    private ProfitRepository profitRepository;
+    private final ProfitRepository profitRepository;
 
-    @Autowired
-    private DiscountRangeRepository discountRangeRepository;
+    private final DiscountRangeRepository discountRangeRepository;
 
-    @Autowired
-    private PrintPriceRangeRepository printPriceRangeRepository;
+    private final PrintPriceRangeRepository printPriceRangeRepository;
 
-    @Autowired
-    private DiscountRepository discountRepository;
+    private final DiscountRepository discountRepository;
+
+    private final CategoryRepository categoryRepository;
+
+    private final ProfitItemRepository profitItemRepository;
+
 
 
     // Ham tinh gia in an theo kich thuoc san pham va loai giay
@@ -57,41 +62,50 @@ public class CalculatorService {
             throw new RuntimeException("Paper size không tồn tại với ID: " + infoPriceDTO.getPaperId());
         }
 
-        // Kiem tra xem paper co ton tai hay khong
-        PaperDTO paper = paperService.getPaperById(infoPriceDTO.getPaperId());
-        if (paper == null) {
-            throw new RuntimeException("Paper không tồn tại với ID: " + infoPriceDTO.getPaperId());
+        Profit profit = profitRepository.findById(infoPriceDTO.getProfit()).orElseThrow();
+        
+
+        
+        if (infoPriceDTO.getProfit() == null ){
+            profit = profitRepository.findByPriority(Priority.HIGH);
         }
 
-    
-        // Tinh so luong to giay can thiet de in an san pham
+        List<ProfitItem> profitItems = profitItemRepository.findByProfit(profit);
+        double profitMaterial = 0;
+        double profitPrint = 0;
+        double profitProcessing = 0;
+
+        for(ProfitItem item: profitItems){
+            if (item.getName().equals("Giấy in")) {
+                profitMaterial = item.getPercent();
+            }
+            if (item.getName().equals("Gia công")) {
+                profitProcessing = item.getPercent();
+            }
+            if (item.getName().equals("In ấn")) {
+                profitPrint = item.getPercent();
+            }
+
+        }
+                // Tinh so luong to giay can thiet de in an san pham
         int sheetsNeeded = calculatePaperSheets(infoPriceDTO.getWidthProduct() + 3, infoPriceDTO.getHeightProduct() + 3,
                 paperSizeDTO.getWidth() - 10, paperSizeDTO.getHeight() - 10, infoPriceDTO.getQuantity());
+
+        //Giá giấy
+        double materialPrice = (sheetsNeeded * paperSizeDTO.getPrice()) ;
         
-        double prinPrice = getPrintPrice(infoPriceDTO.getPrintPrice(), paperSizeDTO.getHeight());
+    
 
-        double totalProcessingCost = calculateTotalProcessingCost(infoPriceDTO.getProcessingIds());
+        
+        // Giá in ấn
+        double prinPrice = sheetsNeeded * getPrintPrice(infoPriceDTO.getPrintPrice(), paperSizeDTO.getHeight());
+        System.out.println("Giá in: " + prinPrice);
 
-        double percentage = 1;
-
-        if (infoPriceDTO.getProfit() != null &&
-            profitRepository.existsById(infoPriceDTO.getProfit())) {
-
-            percentage = profitRepository.findById(infoPriceDTO.getProfit())
-                .get()
-                .getPercentage() / 100;
-        }else{
-            List<Profit> profits = profitRepository.findByPriority(Priority.HIGH);
-            System.out.println(profits.size());
-            percentage=profits.get(0).getPercentage()/100;
-        }
-
-        System.out.println(percentage);
-
+        // Giá gia công
+        double totalProcessingCost = (sheetsNeeded * calculateTotalProcessingCost(infoPriceDTO.getProcessingIds()));
 
         //Kết quả báo giá in ấn
-        double price = ((sheetsNeeded * (paperSizeDTO.getPrice() + prinPrice + totalProcessingCost)) * percentage );
-        System.out.println((sheetsNeeded * (paperSizeDTO.getPrice() + prinPrice + totalProcessingCost)));
+        double price = (materialPrice  * (100 + profitMaterial)/100 ) + (prinPrice * (100 + profitPrint)/100) + (totalProcessingCost * (100 + profitProcessing)/100);
         UUID discountId = null;
         if (infoPriceDTO.getDiscount() == null) {
             List<Discount> dList = discountRepository.findByPriority(Priority.HIGH);
@@ -109,53 +123,99 @@ public class CalculatorService {
         return CalculateResponse.builder()
                 .price(Math.round(price))
                 .quantityPaper(sheetsNeeded)
-                .productSheet(calculateProductsPerSheet(infoPriceDTO.getWidthProduct() + 3, infoPriceDTO.getHeightProduct() + 3, paperSizeDTO.getWidth() - 10, paperSizeDTO.getHeight() - 10, true))
+                .productSheet(infoPriceDTO.getQuantity()/sheetsNeeded)
                 .paperSize(paperSizeDTO.getWidth() + " x " + paperSizeDTO.getHeight())
                 .processingCost(totalProcessingCost * sheetsNeeded)
                 .discount(price - (price*(1-discount/100)))
                 .paperCost(price / sheetsNeeded)
+                .cost(materialPrice + prinPrice + totalProcessingCost)
                 .build();
     }
 
 
     // Ham tinh so luong to giay can thiet de in an san pham
-    public int calculatePaperSheets(int widthProduct, int heightProduct, int widthPaper, int heightPaper, int quantity ) {
-        // Kiem tra kich thuoc san pham va to giay
-        if (widthProduct <= 0 || heightProduct <= 0 || widthPaper <= 0 || heightPaper <= 0) {
-            throw new IllegalArgumentException("Kich thuoc san pham va to giay phai lon hon 0");
+    // Hàm tính số lượng tờ giấy cần thiết để in
+    public int calculatePaperSheets(
+        int widthProduct,
+        int heightProduct,
+        int widthPaper,
+        int heightPaper,
+        int quantity) {
+
+        // Kiểm tra dữ liệu đầu vào
+        if (widthProduct <= 0 || heightProduct <= 0
+            || widthPaper <= 0 || heightPaper <= 0) {
+
+        throw new IllegalArgumentException(
+                "Kích thước sản phẩm và tờ giấy phải lớn hơn 0");
         }
+
         if (quantity <= 0) {
-            throw new IllegalArgumentException("So luong san pham phai lon hon 0");
-            
+            throw new IllegalArgumentException(
+                "Số lượng sản phẩm phải lớn hơn 0");
         }
 
-        // Kiem tra xem san pham co the in tren to giay hay khong
-        if (widthProduct > widthPaper || heightProduct > heightPaper) {
-            throw new IllegalArgumentException("Kich thuoc san pham vuot qua kich thuoc to giay");
+        // Kiểm tra xem sản phẩm có đặt vừa giấy theo bất kỳ chiều nào không
+        boolean fitNormal =
+            widthProduct <= widthPaper
+            && heightProduct <= heightPaper;
+
+        boolean fitRotated =
+            heightProduct <= widthPaper
+            && widthProduct <= heightPaper;
+
+        if (!fitNormal && !fitRotated) {
+        throw new IllegalArgumentException(
+                "Kích thước sản phẩm vượt quá kích thước tờ giấy");
         }
 
-        // Tinh so luong san pham / to giay can thiet
-        int sheetsNeeded = calculateProductsPerSheet(widthProduct, heightProduct, widthPaper, heightPaper, true);
-        return (int) Math.ceil((double) quantity / sheetsNeeded);
+        // Tính số sản phẩm tối đa trên 1 tờ
+        int productsPerSheet = calculateProductsPerSheet(
+            widthProduct,
+            heightProduct,
+            widthPaper,
+            heightPaper);
+
+        if (productsPerSheet == 0) {
+            throw new IllegalArgumentException(
+                "Không thể sắp xếp sản phẩm trên tờ giấy");
+        }
+
+        // Tính số tờ cần dùng
+        return (int) Math.ceil(
+            (double) quantity / productsPerSheet);
     }
 
 
     //ham lua chon khổ giấy tối ưu nhất trong danh sách khổ giấy có sẵn dựa trên kích thước sản phẩm và số lượng sản phẩm cần in
-    public PaperSizeDTO selectOptimalPaperSize(int widthProduct, int heightProduct, int quantity, UUID paperId) {
-        List<PaperSizeDTO> paperSizes = paperSizeService.getPaperSizesByPaperId(paperId);
+    public PaperSizeDTO selectOptimalPaperSize(
+        int widthProduct,
+        int heightProduct,
+        int quantity,
+        UUID paperId) {
+
+        List<PaperSizeDTO> paperSizes =
+            paperSizeService.getPaperSizesByPaperId(paperId);
+
         PaperSizeDTO optimalPaperSize = null;
         int minSheetsNeeded = Integer.MAX_VALUE;
 
         for (PaperSizeDTO paperSize : paperSizes) {
-            try {
-                int sheetsNeeded = calculatePaperSheets(widthProduct, heightProduct, paperSize.getWidth(), paperSize.getHeight(), quantity);
-                if (sheetsNeeded < minSheetsNeeded) {
-                    minSheetsNeeded = sheetsNeeded;
-                    optimalPaperSize = paperSize;
-                }
-            } catch (IllegalArgumentException e) {
-                // Bỏ qua các khổ giấy không phù hợp
+        try {
+            int sheetsNeeded = calculatePaperSheets(
+                    widthProduct,
+                    heightProduct,
+                    paperSize.getWidth(),
+                    paperSize.getHeight(),
+                    quantity);
+
+            if (sheetsNeeded < minSheetsNeeded) {
+                minSheetsNeeded = sheetsNeeded;
+                optimalPaperSize = paperSize;
             }
+        } catch (IllegalArgumentException e) {
+            // Bỏ qua các khổ giấy không phù hợp
+        }
         }
 
         return optimalPaperSize;
@@ -225,20 +285,50 @@ public class CalculatorService {
     }
 
     public double getPrintPrice(UUID id, int height ){
-        double result = 0;
 
         List<PrintPriceRange> pRanges = printPriceRangeRepository.findByPrintPriceId(id);
         if(pRanges.size() == 1){
-           result = pRanges.get(0).getPricePerMeter();
+           return pRanges.get(0).getPricePerMeter();
         }else{
             for(PrintPriceRange print: pRanges){
                 if (height <= print.getMaxLengthCm()) {
-                    result = print.getPricePerMeter();
+                    return print.getPricePerMeter();
                 }
             }
         }
     
-        return result;
+        return 0;
     }
+
+    // Tính số sản phẩm tối đa trên 1 tờ giấy
+    public int calculateProductsPerSheet(
+        int widthProduct,
+        int heightProduct,
+        int widthPaper,
+        int heightPaper) {
+
+        // Không xoay sản phẩm
+        int normal =
+            (widthPaper / widthProduct)
+            * (heightPaper / heightProduct);
+
+        // Xoay sản phẩm 90 độ
+        int rotated =
+            (widthPaper / heightProduct)
+            * (heightPaper / widthProduct);
+
+        return Math.max(normal, rotated);
+    }
+
+    // // hàm kiểm tra xem có sử dụng gia công bế không. nếu có trả về true. mục đích tràn viền tem nếu có gia công bế
+    // public boolean isProcessingCutting(List<CalculateRequest> processingIds){
+    //     for(CalculateRequest request: processingIds){
+    //         Category category = categoryRepository.findById(request.getId()).orElseThrow();
+    //         if ("Bế tem".equals(category.getName())) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
 
 }

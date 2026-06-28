@@ -83,10 +83,6 @@ public class CompaniesService {
         Category category2 = categoryService.createCategory(cate2, true);
         Category category3 = categoryService.createCategory(cate3, true);
 
-        ProcessingDTO pro1 = ProcessingDTO.builder()
-                                .name("Cán màng")
-                                .build();
-
         Roles role = roleRepository.findByName("OWNER")
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 

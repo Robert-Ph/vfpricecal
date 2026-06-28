@@ -94,6 +94,7 @@ public class CategoryService {
                 .id(category.getId())
                 .companyId(category.getCompany().getId())
                 .name(category.getName())
+                .canDelete(category.getCanDelete())
                 .build()).toList();
     }
 

@@ -22,6 +22,8 @@ import PrintCostNew from "../pages/PriceComponent/PrintCost/PrintCostNew";
 import DiscountDetail from "../pages/PriceComponent/discount/DiscountDetail";
 import DiscountNew from "../pages/PriceComponent/discount/DiscountNew";
 import About from "../pages/about/About";
+import ProfitNew from "../pages/PriceComponent/profit/ProfitNew";
+import ProfitDetail from "../pages/PriceComponent/profit/ProfitDetail";
 
 export const router = createBrowserRouter([
   {
@@ -64,6 +66,8 @@ export const router = createBrowserRouter([
       { path: "system/settings", element: <SystemSetting /> },
       { path: "system/backup", element: <SystemBackup /> },
       { path: "component/profit", element: <Profit />},
+      { path: "component/profit/new", element: <ProfitNew/>},
+      { path: "component/profit/:id", element: <ProfitDetail/>},
       { path: "about", element: <About/>}
 
     ],

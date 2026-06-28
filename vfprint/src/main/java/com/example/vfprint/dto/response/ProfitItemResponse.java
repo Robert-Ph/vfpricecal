@@ -1,4 +1,4 @@
-package com.example.vfprint.dto;
+package com.example.vfprint.dto.response;
 
 import java.util.UUID;
 
@@ -7,13 +7,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoryDTO {
+@Data
+public class ProfitItemResponse {
     private UUID id;
-    private UUID companyId;
-    private Boolean canDelete;
+    private UUID profitId;
     private String name;
+    private Double percent;
 }

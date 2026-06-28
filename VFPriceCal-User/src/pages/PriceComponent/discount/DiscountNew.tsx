@@ -152,7 +152,7 @@ const DiscountNew = () => {
                                     
                                     <div className="save-state">
                                                         <button className="btn-save" onClick={handleSave}>
-                                                            Lưu giá in
+                                                            Lưu
                                                         </button>
                                                     </div>
                 

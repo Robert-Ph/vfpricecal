@@ -108,7 +108,10 @@ const Processing = () => {
                                         onClick={() => navigate(`/component/processing/${item.id}`)}>
                                         <FiEdit />
                                     </button>
-                                    <button className=" icon delete-btn" onClick={() => handleOpenDelete(item?.id ?? "")}><FiTrash2 /></button>
+                                    {!item.canDelete ? (
+                                        <button className=" icon delete-btn" onClick={() => handleOpenDelete(item?.id ?? "")}><FiTrash2 /></button>
+                                    ):null}
+                                    
                                 </td>
                                 </tr>
                             ))}

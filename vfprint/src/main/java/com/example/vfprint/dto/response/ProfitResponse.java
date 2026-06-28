@@ -1,4 +1,5 @@
-package com.example.vfprint.dto.request;
+package com.example.vfprint.dto.response;
+
 
 import java.util.UUID;
 import java.util.List;
@@ -12,10 +13,10 @@ import com.example.vfprint.enums.Priority;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProfitRequest {
+public class ProfitResponse {
     private UUID id;
     private UUID companyId;
     private String name;
     private Priority priority;
-    private List<ProfitItemRequest> itemList;
+    private List<ProfitItemResponse> itemList;
 }

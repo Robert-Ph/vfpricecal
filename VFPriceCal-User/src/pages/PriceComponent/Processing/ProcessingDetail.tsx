@@ -140,8 +140,8 @@ const ProcessingDetail = () => {
                                                 <FiGrid />
                                             </div>
                                             <div className="section-title__content">
-                                                <h3>Danh sách kích thước</h3>
-                                                <p>Quản lý các kích thước và giá tương ứng</p>
+                                                <h3>Danh sách danh sách</h3>
+                                                <p>Quản lý danh sách và giá tương ứng</p>
                                             </div>
                     </div>
              
@@ -180,7 +180,7 @@ const ProcessingDetail = () => {
                             <div className="empty-state">
                                                         <button className="btn-primary" onClick={() => setOpenPaperModal(true)}>
                                                             <FiPlus />
-                                                            Thêm kích thước
+                                                        Thêm mới
                                                         </button>
                                                     </div>
 

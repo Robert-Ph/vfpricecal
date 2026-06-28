@@ -3,77 +3,42 @@ import "./profitModal.scss";
 import { toast } from "react-toastify";
 import { create, updateProfitById } from "../../service/ProfitService";
 import type { UserInfo } from "../../context/AuthContext";
-import type { profitRequest } from "../../model/model";
+import type { profitItem } from "../../model/model";
 
 
 type Props = {
   open: boolean;
   setOpen: (open: boolean) => void;
-  data?: profitRequest | null;
+  data?: profitItem;
+  onSubmit: (item: profitItem) => void;
 };
 
-const ProfitModal = ({ open, setOpen, data }: Props) => {
+const ProfitModal = ({ open, setOpen, data, onSubmit }: Props) => {
 
   const [profitName, setProfitName] = useState( data?.name ?? "");
-  const [percentage, setPercentage] = useState(data?.percentage ?? 0);
+  const [percentage, setPercentage] = useState(data?.percent ?? 0);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
 
-   const [user] = useState<UserInfo | null>(() => {
-        const savedUser = localStorage.getItem("user");
-        if (savedUser) {
-            try {
-                return JSON.parse(savedUser);
-            } catch {
-                return null;
-            }
-        }
-        return null;
-    });
-
-
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
         // Validate inputs
-    if (!profitName) {
+    if ( !profitName || !percentage) {
       setError("Vui lòng điền đầy đủ thông tin.");
-      toast.error("Vui lòng điền đầy đủ thông tin.");
       return;
     }
 
-    setError(""); // Reset error message
-    const payload = {
-        id: data?.id ?? "", // ID sẽ được backend tạo tự động
-        companyId: user?.companyId ?? "", // ID ẩn từ context
-        name: profitName,
-        percentage: percentage,
-        priority: "NORMAL"
-
+    const newData = {
+      profitId: "", // Giá trị này sẽ được backend gán khi lưu vào database
+      name: profitName,
+      percent: percentage
     };
-    let response;
-
-if (data?.id) {
-    response = await updateProfitById(payload);
-} else {
-    response = await create(payload);
-}
-
-if (response.code === 200 || response.code === 201) {
-    toast.success(
-        data?.id
-            ? `Cập nhật ${profitName} thành công!`
-            : `Tạo ${profitName} thành công!`
-    );
-
-    setTimeout(() => {
-        window.location.reload();
-    }, 500);
-} else {
-    toast.error(
-        data?.id
-            ? `Có lỗi xảy ra khi cập nhật ${profitName}.`
-            : `Có lỗi xảy ra khi tạo ${profitName}.`
-    );
-}
+    
+    onSubmit(newData);
+    setOpen(false);
+    // Reset fields
+    setProfitName(""); setPercentage(0);
+    setError(""); // Reset error message
   };
+
 
     if (!open) return null;
 
@@ -101,7 +66,7 @@ if (response.code === 200 || response.code === 201) {
           </div>
 
           <div className="info">
-            <label>Tỷ lệ % (lợi nhuận = tỷ lệ - 100)</label>
+            <label>Tỷ lệ lợi nhuận(%)</label>
             <input
             className={!percentage && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
               type="text"

@@ -2,21 +2,19 @@ import "../component.scss";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import ProfitModal from "../../../components/profit/ProfitModal";
 import { deleteProfitByCompany, getAllProfitByCompany } from "../../../service/ProfitService";
 import ConfirmModal from "../../../components/ConfirmModal";
 import { toast } from "react-toastify";
-import type { profitRequest } from "../../../model/model";
+import type { profitRespone } from "../../../model/model";
 import type { UserInfo } from "../../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Profit = () => {
+    const navigate = useNavigate();
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedProfitId, setSelectedProfitId] = useState<string>("");
-    const [openPaperModal, setOpenPaperModal] = useState(false);
-    const [profit, setProfit] = useState<profitRequest[]>([]); // State để quản lý danh mục lọc
-     // item đang edit
-  const [selectedProfit, setSelectedProfit] = useState<profitRequest | null>(null);
+    const [profit, setProfit] = useState<profitRespone[]>([]); // State để quản lý danh mục lọc
 
     const [user] = useState<UserInfo>(() => {
         const savedUser = localStorage.getItem("user");
@@ -29,19 +27,6 @@ const Profit = () => {
         }
         return null;
     });
-
-        // mở modal update
-    const handleCreate = () => {
-        setSelectedProfit(null);
-        setOpenPaperModal(true);
-    };
-
-      // mở modal update
-    const handleEdit = (item: profitRequest) => {
-        setSelectedProfit(item);
-        console.log(item);
-        setOpenPaperModal(true);
-    };
 
 
     useEffect(() => {
@@ -91,7 +76,7 @@ const Profit = () => {
             <div className="papers-header">
                 <h3>Biên lợi nhuận</h3>
 
-                <button className="add-papers-btn" onClick={() => handleCreate()}>
+                <button className="add-papers-btn" onClick={() => navigate("/component/profit/new")}>
                     <FaPlus /> Thêm mới
                 </button>
             </div>
@@ -112,7 +97,6 @@ const Profit = () => {
                         <thead>
                             <tr>
                                 <th>Tên biên lợi nhuận </th>
-                                <th>Tỷ lệ(%)</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -122,10 +106,9 @@ const Profit = () => {
                             {profit.map((item) => (
                                 <tr key={item.id}>
                                     <td>{item.name}</td>
-                                    <td>{item.percentage}</td>
                                     <td className="action-buttons">
                                         <button className=" icon edit-btn"
-                                            onClick={() => handleEdit(item)}>
+                                            onClick={() =>  navigate(`/component/profit/${item.id}`)}>
                                             <FiEdit />
                                         </button>
                                         <button className=" icon delete-btn" onClick={()=>handleOpenDelete(item.id)}><FiTrash2 /></button>
@@ -139,13 +122,13 @@ const Profit = () => {
                 </div>
             </div>
 
-        <ProfitModal
+        {/* <ProfitModal
             key={selectedProfit?.id ?? "create"}
             open={openPaperModal}
             setOpen={setOpenPaperModal}
-            data ={selectedProfit}
+            onSubmit ={selectedProfit}
         
-        />
+        /> */}
 
         <ConfirmModal
             isOpen={openDeleteModal}

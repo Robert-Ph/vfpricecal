@@ -176,7 +176,7 @@ const PrintCostDetail = () => {
                             <div className="empty-state">
                                                         <button className="btn-primary" onClick={() => setOpenPaperModal(true)}>
                                                             <FiPlus />
-                                                            Thêm kích thước
+                                                            Thêm mới
                                                         </button>
                                                     </div>
 

@@ -17,4 +17,5 @@ public class CalculateResponse {
     private double processingCost;
     private double discount;
     private double paperCost;
+    private double cost;
 }

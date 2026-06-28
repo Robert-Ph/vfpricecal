@@ -1,5 +1,5 @@
 import ProcessingsCalModel from "../../components/processing/ProcessingsCalModel";
-import { getPapers } from "../../service/PaperService";
+import { getPaperById, getPapers } from "../../service/PaperService";
 import {getAllByCompany} from "../../service/PrintPriceService";
 import {calculatePrint} from "../../service/CalculateService";
 import { getAllProfitByCompany } from "../../service/ProfitService";
@@ -23,7 +23,7 @@ import {
   FiExternalLink
 } from "react-icons/fi";
 import { FaCalculator } from "react-icons/fa";
-import type {  printPrice, paper, profitRequest, discountRequest, proCal } from "../../model/model";
+import type {  printPrice, paper, profitRequest, discountRequest, proCal, paperSize } from "../../model/model";
 import { toast } from "react-toastify";
 
 
@@ -49,7 +49,7 @@ const QuotationPage = () => {
     const [result, setResult] = useState<any>(null);
     const [discountId, setDiscountId] = useState<string | null>(null);
     const [name, setName] = useState<string>("");
-
+    const [paperSize, setPaperSize] = useState<paperSize[]>([]);
     
 
 
@@ -113,14 +113,56 @@ const QuotationPage = () => {
                     console.error("Lỗi khi lấy chiết khấu:", error);
                 }
             }
+
+            const fetchPaperSizeList = async () => {
+                try {
+                    const res = await getPaperById(selectedPaperId);
+                    setPaperSize(res.data.paperSizes);
+                } catch (error) {
+                    console.error("Lỗi khi lấy chiết khấu:", error);
+                }
+            }
             
             fetchPrintPrice();
             fetchProfitList();
             fetchDiscountList();
-    }, [user?.companyId]);
+            fetchPaperSizeList();
+    }, [user?.companyId, selectedPaperId]);
+
+  const validateProductSize = () => {
+    if (!width || !height || paperSize.length === 0) {
+        return true;
+    }
+
+    const hasSuitablePaper = paperSize.some((paper) => {
+        // Không xoay
+        const fitNormal =
+            width <= paper.width &&
+            height <= paper.height;
+
+        // Xoay 90 độ
+        const fitRotate =
+            height <= paper.width &&
+            width <= paper.height;
+
+        return fitNormal || fitRotate;
+    });
+
+    if (!hasSuitablePaper) {
+        toast.error("Kích thước sản phẩm sau khi tràn viền vượt quá tất cả khổ giấy");
+        return false;
+    }
+
+    return true;
+};
     
 
     const handleSumitCalculate = async () =>{
+
+      if (!validateProductSize()) {
+        return;
+      }
+
       if(!width && !height && !selectedPaperId ){
         toast.error("Vui lòng nhập đầy đủ thông tin!")
         return;
@@ -426,6 +468,14 @@ const QuotationPage = () => {
           <strong> {formatMoney(result?.data?.processingCost || 0)}</strong>
         </div>
         <hr />
+
+        <div className="result-row">
+          <span>Giá vốn</span>
+          <strong> {formatMoney(
+                            (result?.data?.cost || 0)
+                            
+                        )}</strong>
+        </div>
 
         <div className="result-row">
           <span>Tạm tính</span>

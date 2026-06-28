@@ -1,6 +1,6 @@
 package com.example.vfprint.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -13,17 +13,17 @@ import com.example.vfprint.entity.PrintPriceRange;
 import com.example.vfprint.repository.PrintPriceRangeRepository;
 import com.example.vfprint.repository.PrintPriceRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class PrintPriceService {
-    
-    @Autowired
-    private PrintPriceRepository priceRepository;
 
-    @Autowired
-    private PrintPriceRangeService printPriceRangeService;
+    private final PrintPriceRepository priceRepository;
 
-    @Autowired
-    private PrintPriceRangeRepository printPriceRangeRepository;
+    private final PrintPriceRangeService printPriceRangeService;
+
+    private final PrintPriceRangeRepository printPriceRangeRepository;
 
 
     @Transactional

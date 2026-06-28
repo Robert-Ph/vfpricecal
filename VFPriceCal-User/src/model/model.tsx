@@ -24,6 +24,7 @@ export type category = {
     id:  string;
     companyId: string;
     name: string;
+    canDelete: boolean;
     processings: processing[] | null
 }
 
@@ -93,6 +94,7 @@ export type calculate = {
     printPrice: string | null;
     profit: string | null;
     discount: string | null;
+    
 }
 
 export type proCal = {
@@ -105,8 +107,29 @@ export type profitRequest = {
     id: string;
     companyId: string ;
     name: string;
-    percentage: number;
     priority: string;
+    itemList: profitItem[];
+}
+
+export type profitItem = {
+    profitId: string;
+    name: string;
+    percent: number;
+}
+
+export type profitRespone = {
+    id: string;
+    companyId: string ;
+    name: string;
+    priority: string;
+    itemList: profitItemReponse[];
+}
+
+export type profitItemReponse = {
+    id: string
+    profitId: string;
+    name: string;
+    percent: number;
 }
 
 // chiec khau khach hang

@@ -1,24 +1,28 @@
 package com.example.vfprint.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
-import java.util.ArrayList;
+
+import com.example.vfprint.dto.request.ProfitItemRequest;
 import com.example.vfprint.dto.request.ProfitRequest;
+import com.example.vfprint.dto.response.ProfitItemResponse;
+import com.example.vfprint.dto.response.ProfitResponse;
 import com.example.vfprint.entity.Profit;
 import com.example.vfprint.repository.ProfitRepository;
+import lombok.RequiredArgsConstructor;
 import com.example.vfprint.entity.Companies;
 import com.example.vfprint.repository.CompaniesRepository;
 @Service
+@RequiredArgsConstructor
 public class ProfitService {
     
-    @Autowired
-    private ProfitRepository profitRepository;
 
-    @Autowired
-    private CompaniesRepository companyRepository;
+    private final ProfitRepository profitRepository;
+    private final ProfitItemService itemService;
+    private final CompaniesRepository companyRepository;
 
 
     @Transactional
@@ -31,29 +35,54 @@ public class ProfitService {
                         .orElseThrow(() -> 
                         new RuntimeException("Company with the given ID does not exist")    
                     );
-        profitRepository.save(
+        Profit profit = profitRepository.save(
             Profit.builder()
             .company(company)
             .name(profitRequest.getName())
-            .percentage(profitRequest.getPercentage())
             .priority(profitRequest.getPriority())
             .build()
         );
+
+        itemService.createProfitItem(profitRequest.getItemList(), profit.getId());
+        
+
     }
 
 
     @Transactional
-    public List<ProfitRequest> getAllListByCompanyId(UUID companyId){
-        List<Profit> profit = profitRepository.findByCompanyId(companyId);
-        return profit.stream()
-            .map(item -> ProfitRequest.builder()
-                    .id(item.getId())
-                    .companyId(companyId)
-                    .name(item.getName())
-                    .percentage(item.getPercentage())
-                    .build())
+    public List<ProfitResponse> getAllListByCompanyId(UUID companyId) {
+        List<Profit> profits = profitRepository.findByCompanyId(companyId);
+
+        return profits.stream()
+            .map(profit -> {
+
+                List<ProfitItemResponse> items = itemService.getProfitItem(profit);
+
+                return ProfitResponse.builder()
+                        .id(profit.getId())
+                        .companyId(companyId)
+                        .name(profit.getName())
+                        .itemList(items)
+                        .build();
+            })
             .toList();
     }
+
+        @Transactional
+    public ProfitResponse getById(UUID id) {
+        Profit profits = profitRepository.findById(id).orElseThrow();
+        List<ProfitItemResponse> items = itemService.getProfitItem(profits); 
+
+        return ProfitResponse.builder()
+                 .id(profits.getId())
+                 .companyId(profits.getCompany().getId())
+                 .name(profits.getName())
+                 .itemList(items)
+                 .priority(profits.getPriority())
+                 .build();
+    }
+
+
 
     @Transactional
     public void deleteProfitByCompany(UUID id, UUID companyId){
@@ -75,7 +104,7 @@ public class ProfitService {
             .orElseThrow(() -> new RuntimeException("Profit not found"));
 
         profit.setName(request.getName());
-        profit.setPercentage(request.getPercentage());
+        // profit.setPercentage(request.getPercentage());
 
         if (request.getCompanyId() != null) {
             profit.setCompany(
