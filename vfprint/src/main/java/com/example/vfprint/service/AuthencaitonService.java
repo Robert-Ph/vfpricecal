@@ -9,6 +9,9 @@ import com.example.vfprint.repository.TokenRepository;
 import com.example.vfprint.repository.systemRepository.CompansySubscriptionsRepository;
 import com.example.vfprint.repository.systemRepository.PlansRepository;
 import com.nimbusds.jose.JOSEException;
+
+import lombok.RequiredArgsConstructor;
+
 import com.example.vfprint.repository.CompaniesRepository;
 import java.util.List;
 import java.sql.Timestamp;
@@ -16,7 +19,6 @@ import java.text.ParseException;
 import com.example.vfprint.dto.request.LoginRequest;
 import com.example.vfprint.dto.response.AuthenticationResponse;
 import java.util.NoSuchElementException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,34 +27,26 @@ import com.example.vfprint.config.UltiService;
 import com.example.vfprint.entity.Companies;
 
 @Service
+@RequiredArgsConstructor
 public class AuthencaitonService {
 
-    @Autowired
-    private TokenRepository tokenRepository;
+    private final TokenRepository tokenRepository;
 
-    @Autowired
-    private CompaniesRepository companyRepository;
+    private final CompaniesRepository companyRepository;
     
-    @Autowired
-    private AccountRepository accountRepository;
+    private final AccountRepository accountRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
-    @Autowired
-    private EmailService emailService;
+    private final EmailService emailService;
 
-    @Autowired
-    private UltiService ultiService;
+    private final UltiService ultiService;
 
-    @Autowired
-    private CompansySubscriptionsRepository compansySubscriptionsRepository;
+    private final CompansySubscriptionsRepository compansySubscriptionsRepository;
 
-    @Autowired
-    private PlansRepository plansRepository;
+    private final PlansRepository plansRepository;
 
 
       /**
@@ -114,7 +108,7 @@ public class AuthencaitonService {
 
         CompansySubscriptions subscriptionOpt = getSubscriptionsByActive(company);
 
-        if (subscriptionOpt == null) {
+        if (subscriptionOpt != null) {
             plan = subscriptionOpt.getPlan().getCode();
             start = subscriptionOpt.getStartDate();
             end = subscriptionOpt.getEndDate();

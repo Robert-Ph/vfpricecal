@@ -15,7 +15,6 @@ import com.example.vfprint.entity.CompaniesStatus;
 import com.example.vfprint.repository.RolesRepository;
 import com.example.vfprint.dto.AccountDTO;
 import com.example.vfprint.dto.CategoryDTO;
-import com.example.vfprint.dto.ProcessingDTO;
 import com.example.vfprint.entity.Roles;
 import com.example.vfprint.config.UltiService;
 import com.example.vfprint.config.EmailService;

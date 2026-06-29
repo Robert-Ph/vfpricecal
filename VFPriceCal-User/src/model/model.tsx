@@ -177,3 +177,14 @@ export type mobile = {
     }[]
 }
 
+export type result = {
+    price: number;
+    quantityPaper: number;
+    productSheet: number;
+    paperSize: string;
+    processingCost: number;
+    discount: number;
+    paperCost: number;
+    cost: number;
+}
+

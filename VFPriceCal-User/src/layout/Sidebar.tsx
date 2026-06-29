@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { useState } from "react";
 import { FaFileAlt} from "react-icons/fa";
 import { IoLayers } from "react-icons/io5";
-import { FiChevronDown, FiInfo } from "react-icons/fi";
+import { FiChevronDown, FiInfo, FiExternalLink } from "react-icons/fi";
 import "./sidebar.scss";
 import logo from "../assets/logo.png";
 import avata from "../assets/avata.png";
@@ -121,6 +121,11 @@ const Sidebar = () => {
                     </div>
                 )
                 }
+                
+                <NavLink className="menu-item" to="/mobile">
+                    <FiExternalLink className="menu-icon" />
+                    <span>Link di động</span>
+                </NavLink>
                 <NavLink className="menu-item" to="/about">
                     <FiInfo className="menu-icon" />
                     <span>About</span>

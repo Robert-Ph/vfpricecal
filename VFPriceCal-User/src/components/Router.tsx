@@ -24,12 +24,20 @@ import DiscountNew from "../pages/PriceComponent/discount/DiscountNew";
 import About from "../pages/about/About";
 import ProfitNew from "../pages/PriceComponent/profit/ProfitNew";
 import ProfitDetail from "../pages/PriceComponent/profit/ProfitDetail";
+import LoginPage from "../pages/Auth/LoginMobile";
+import QuotationAdmin from "../pages/QuotationPage/QuotationAdmin";
 
 export const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
   },
+  {
+    path: "/mobile",
+    element: <LoginPage/>
+  },
+  { path: "quotation-mobile", 
+    element: <QuotationAdmin/>},
   {
     path: "/forgot-password",
     element: <ForgotPassword />,
@@ -69,6 +77,7 @@ export const router = createBrowserRouter([
       { path: "component/profit/new", element: <ProfitNew/>},
       { path: "component/profit/:id", element: <ProfitDetail/>},
       { path: "about", element: <About/>}
+
 
     ],
   },

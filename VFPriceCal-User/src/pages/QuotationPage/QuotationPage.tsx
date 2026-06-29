@@ -23,7 +23,7 @@ import {
   FiExternalLink
 } from "react-icons/fi";
 import { FaCalculator } from "react-icons/fa";
-import type {  printPrice, paper, profitRequest, discountRequest, proCal, paperSize } from "../../model/model";
+import type {  printPrice, paper, profitRequest, discountRequest, proCal, paperSize, result } from "../../model/model";
 import { toast } from "react-toastify";
 
 
@@ -46,7 +46,7 @@ const QuotationPage = () => {
     const [discountList, setDiscountList] = useState<discountRequest[]>([]);
     const [profit, setProfit] = useState<string | null>(null);
     const [selectedPaperId, setSelectedPaperId] = useState<string>("");
-    const [result, setResult] = useState<any>(null);
+    const [result, setResult] = useState<result>();
     const [discountId, setDiscountId] = useState<string | null>(null);
     const [name, setName] = useState<string>("");
     const [paperSize, setPaperSize] = useState<paperSize[]>([]);
@@ -202,7 +202,7 @@ const QuotationPage = () => {
             }
 
             const response = await calculatePrint(data);
-            setResult(response);
+            setResult(response.data);
 
         }catch(error){
             console.error("Lỗi báo giá vui lòng kiểm tra lại thông tin:", error);
@@ -437,42 +437,42 @@ const QuotationPage = () => {
 
          <div className="result-row">
           <span>Khổ in</span>
-          <strong>{result?.data?.paperSize || 0} mm</strong>
+          <strong>{result?.paperSize || "0 x 0"} mm</strong>
         </div>
 
         <div className="result-row">
           <span>Giá 1 sản phẩm</span>
           <strong>{formatMoney(
-                            result?.data?.price /
+                             (result?.price || 0) /
                             Number(quantity) || 0
                         )}</strong>
         </div>
 
         <div className="result-row">
           <span>Số sản phẩm/tờ</span>
-          <strong>{formatNumber(result?.data?.productSheet ?? 0)}</strong>
+          <strong>{formatNumber(result?.productSheet ?? 0)}</strong>
         </div>
 
         <div className="result-row">
           <span>Số tờ in</span>
-          <strong> {formatNumber(result?.data?.quantityPaper ?? 0)} tờ</strong>
+          <strong> {formatNumber(result?.quantityPaper ?? 0)} tờ</strong>
         </div>
 
         <div className="result-row">
-          <span>Giá giấy in</span>
-          <strong> {formatMoney(result?.data?.paperCost|| 0)}/tờ</strong>
+          <span>Giá in 1 tờ</span>
+          <strong> {formatMoney(result?.paperCost|| 0)}/tờ</strong>
         </div>
 
         <div className="result-row">
           <span>Giá gia công</span>
-          <strong> {formatMoney(result?.data?.processingCost || 0)}</strong>
+          <strong> {formatMoney(result?.processingCost || 0)}</strong>
         </div>
         <hr />
 
         <div className="result-row">
           <span>Giá vốn</span>
           <strong> {formatMoney(
-                            (result?.data?.cost || 0)
+                            (result?.cost || 0)
                             
                         )}</strong>
         </div>
@@ -480,7 +480,7 @@ const QuotationPage = () => {
         <div className="result-row">
           <span>Tạm tính</span>
           <strong> {formatMoney(
-                            (result?.data?.price || 0)
+                            (result?.price || 0)
                             
                         )}</strong>
         </div>
@@ -488,7 +488,7 @@ const QuotationPage = () => {
         <div className="result-row">
           <span>Giảm giá</span>
           <strong> {formatMoney(
-                            (result?.data?.discount || 0)
+                            (result?.discount || 0)
                             
                         )}</strong>
         </div>
@@ -496,7 +496,7 @@ const QuotationPage = () => {
         <div className="result-row">
           <span>VAT (%)</span>
           <strong>{formatMoney(
-                            result?.data?.price *
+                            (result?.price || 0) *
                             ((vat || 0) / 100) || 0
                         )}</strong>
         </div>
@@ -508,9 +508,9 @@ const QuotationPage = () => {
           </div>
 
           <span>{formatMoney(
-                            ((result?.data?.price || 0) - 
-                            (result?.data?.discount || 0)) +
-                            (result?.data?.price || 0) *
+                            ((result?.price || 0) - 
+                            (result?.discount || 0)) +
+                            (result?.price || 0) *
                             ((vat || 0) / 100)
                         )}</span>
         </div>

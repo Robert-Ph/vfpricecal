@@ -1,7 +1,7 @@
 import { apiClient } from "../api/APIConfig";
-import { type calculate } from "../model/model";
+import { type calculate} from "../model/model";
 
-export const calculatePrint = async (data: calculate): Promise<calculate> => {
+export const calculatePrint = async (data: calculate) => {
     try{
         const response = await apiClient.post('/calculator',data);
         return response.data;
@@ -12,7 +12,7 @@ export const calculatePrint = async (data: calculate): Promise<calculate> => {
     }
 }
 
-export const calculateMobile = async (data: calculate): Promise<calculate> => {
+export const calculateMobile = async (data: calculate) => {
     try{
         const response = await apiClient.post('/bao-gia',data);
         return response.data;
