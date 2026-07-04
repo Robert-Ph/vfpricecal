@@ -5,7 +5,7 @@ import {
     getCategories,
     getProcessingById,
 } from "../../service/ProcessingService";
-import type { proCal } from "../../model/model";
+import type { category, proCal } from "../../model/model";
 
 interface ProcessingItem {
     id: string;
@@ -38,6 +38,8 @@ const ProcessingsCalModel = ({
 
     const [processingName, setProcessingName] =useState<string>("");
 
+    const [category, setCategory] = useState<category | null>(null);
+
     const [type, setType] =useState("");
 
     const [error, setError] = useState("");
@@ -59,11 +61,14 @@ const ProcessingsCalModel = ({
             }
         };
 
+       
+
         if (open) {
             fetchProcessingNames();
         }
 
-    }, [open,  companyId]);
+
+    }, [open,  companyId, processingName]);
 
     // Lấy loại theo processing đã chọn
     useEffect(() => {
@@ -76,6 +81,10 @@ const ProcessingsCalModel = ({
                 const data = await getProcessingById(processingName);
 
                 setTypeList(data.data);
+
+                const cate = await getProcessingById(processingName);
+
+                setCategory(cate.data);
 
             } catch (error) {
                 console.error(
@@ -103,17 +112,17 @@ const ProcessingsCalModel = ({
        // Kiểm tra trùng
  const isDuplicate = data.some(
     (item) =>
-        String(item.id) === String(processingName) ||
+        (String(item.id) === String(processingName) ||
         item.name.trim().toLowerCase() ===
-            type.trim().toLowerCase()
+            type.trim().toLowerCase())
 );
 
-if (isDuplicate) {
+if (isDuplicate  && category?.canDelete === true) {
     setError("Gia công này đã được chọn.");
     return;
 }
 
-console.log("category:", processingName)
+console.log("category:", category?.canDelete)
 
         const newData = {
             id: processingName,

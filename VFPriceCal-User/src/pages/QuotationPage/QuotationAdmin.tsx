@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import "./quotationMobile.scss";
 import {
   // FaPrint,
-  FaCalculator,
+  // FaCalculator,
   FaPlus,
   FaBox,
   FaTools,
@@ -12,18 +12,20 @@ import {
   FiFileText,     // Báo giá
   FiTrash2
 } from "react-icons/fi";
-import { useParams } from "react-router-dom";
 import { getQuotations } from "../../service/QuotationService";
 import ProcessingsCalModel from "../../components/processing/ProcessingsCalModel";
-import {calculateMobile} from "../../service/CalculateService";
+import { getPaperById} from "../../service/PaperService";
 import { formatMoney } from "../../utils/formatMoney";
-import zalo from "../../assets/zalo.png";
-import type { mobile, proCal, result } from "../../model/model";
+import { formatNumber } from "../../utils/formNumber";
+import {calculatePrint} from "../../service/CalculateService";
+import type { mobile, proCal, result, profitRequest, discountRequest, paperSize } from "../../model/model";
 import { toast } from "react-toastify";
+import { getAllProfitByCompany } from "../../service/ProfitService";
+import { getAllDiscountByCompany } from "../../service/DiscountService";
+import type { UserInfo } from "../../context/AuthContext";
 
 
 const QuotationAdmin = () => {
-    const { companyName ,phone, companyId} = useParams();
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [list, setList] = useState<mobile>();
     const [processingList, setProcessingList] = useState<proCal[]>([]); 
@@ -33,50 +35,107 @@ const QuotationAdmin = () => {
     const [paperId, setPaperId] = useState<string>("");
     const [printPriceId, setprintPriceId] = useState<string>("");
     const [result, setResult] = useState<result>();
-    // const [printList, setPrintList] = useState<printPrice>();
+    const [profitList, setProfitList] = useState<profitRequest[]>([]);
+    const [discountList, setDiscountList] = useState<discountRequest[]>([]);
+    const [vat, setVat] = useState<number | null>(null);
+    const [paperSize, setPaperSize] = useState<paperSize[]>([]);
+
+    const [profit, setProfit] = useState<string | null>(null);
+    const [discountId, setDiscountId] = useState<string | null>(null);
+
+    const [user] = useState<UserInfo | null>(() => {
+                const savedUser = localStorage.getItem("user");
+                if (savedUser) {
+                    try {
+                        return JSON.parse(savedUser);
+                    } catch (e) {
+                        return e;
+                    }
+                }
+                return null;
+    });
+    
 
 
+  const validateProductSize = () => {
+    if (!width || !height || paperSize.length === 0) {
+        return true;
+    }
+
+    const hasSuitablePaper = paperSize.some((paper) => {
+        // Không xoay
+        const fitNormal =
+            width <= paper.width &&
+            height <= paper.height;
+
+        // Xoay 90 độ
+        const fitRotate =
+            height <= paper.width &&
+            width <= paper.height;
+
+        return fitNormal || fitRotate;
+    });
+
+    if (!hasSuitablePaper) {
+        toast.error("Kích thước sản phẩm sau khi tràn viền vượt quá tất cả khổ giấy");
+        return false;
+    }
+
+    return true;
+};
+    
 
     const handleSumitCalculate = async () =>{
 
-            if(!paperId){
-              toast.error("Vui lòng chọn loại giấy!");
-              return;
+      if (!validateProductSize()) {
+        return;
+      }
+
+      if(!width && !height && !paperId ){
+        toast.error("Vui lòng nhập đầy đủ thông tin!")
+        return;
+      }
+      
+      else if(!quantity){
+        toast.error("Vui lòng nhập số lượng!")
+        return;
+      }
+
+      else if(!printPriceId){
+        toast.error("Vui lòng chọn hình thức in!")
+        return;
+      }
+
+      else if(!profit){
+        toast.error("Vui lòng chọn biên lợi nhuận!")
+        return;
+      }
+
+      else if(!discountId){
+        toast.error("Vui lòng chọn loại khách hàng!")
+        return;
+      }
+
+        try{
+            const data ={
+                widthProduct: width,
+                heightProduct: height,
+                quantity: quantity,
+                processingIds:  processingList,
+                paperId: paperId,
+                companyId: user?.companyId ?? "",
+                printPrice: printPriceId,
+                profit: profit,
+                discount: discountId
             }
 
-            if(!width && !height){
-              toast.error("Vui lòng nhập kích thước sản phẩm!");
-              return;
-            }
-            if(!printPriceId){
-              toast.error("Vui lòng chọn loại hình in!");
-              return;
-            }
-            if(!quantity){
-              toast.error("Vui lòng nhập số lượng hoặc số lượng > 0");
-              return;
-            }
+            const response = await calculatePrint(data);
+            setResult(response.data);
 
-            try{
-                const data ={
-                    widthProduct: width,
-                    heightProduct: height,
-                    quantity: quantity,
-                    processingIds: processingList,
-                    paperId: paperId,
-                    companyId: companyId ?? "",
-                    printPrice: printPriceId,
-                    profit: null,
-                    discount: null
-                }
-    
-                const response = await calculateMobile(data);
-                setResult(response.data);
-    
-            }catch(error){
-                console.error("Lỗi báo giá vui lòng kiểm tra lại thông tin:", error);
-            }
+        }catch(error){
+            console.error("Lỗi báo giá vui lòng kiểm tra lại thông tin:", error);
         }
+    }
 
        const handleAddProcessing = (newProcessing: proCal) => {
         setProcessingList([...processingList, newProcessing]);
@@ -85,19 +144,44 @@ const QuotationAdmin = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await getQuotations(companyId ?? "");
+                const response = await getQuotations(user?.companyId ?? "");
                 setList(response.data);
                 // setPrintList(list?.printPrices)
             } catch (error) {
                 console.error("Failed to fetch quotations:", error);
             }
         };
-        fetchData();
-    }, [companyId]);
+        const fetchProfitList = async () => {
+                                    try {
+                                        const response = await getAllProfitByCompany(user?.companyId ?? "");
+                                        setProfitList(response.data); // Cập nhật danh sách vào state để hiển thị
+                                    } catch (error) {
+                                        console.error("Lỗi khi lấy biên lợi nhuận:", error);
+                                    }
+                    }
+        
+        const fetchDiscountList = async () => {
+                        try {
+                            const response = await getAllDiscountByCompany(user?.companyId ?? "");
+                            setDiscountList(response.data);
+                        } catch (error) {
+                            console.error("Lỗi khi lấy chiết khấu:", error);
+                        }
+        }
 
- const handleContactZalo = () => {
-  window.open(  `https://zalo.me/${phone}`, "_blank", "noopener,noreferrer");
-};
+        const fetchPaperSizeList = async () => {
+                        try {
+                            const res = await getPaperById(paperId);
+                            setPaperSize(res.data.paperSizes);
+                        } catch (error) {
+                            console.error("Lỗi khi lấy chiết khấu:", error);
+                        }
+                    }
+        fetchProfitList();
+        fetchDiscountList();
+        fetchData();
+        fetchPaperSizeList();
+    }, [user?.companyId]);
   return (
     <div className="quotation-mobile">
       {/* Header */}
@@ -106,11 +190,12 @@ const QuotationAdmin = () => {
           {/* <FaArrowLeft /> */}
         </button>
 
-        <h1>BÁO GIÁ {companyName}</h1>
+        <h1>BÁO GIÁ</h1>
 
 
-        <button className="icon-btn-mobile">
+        <button className="icon-btn-mobile" onClick={() => handleSumitCalculate()}>
           {/* <FaPrint /> */}
+          Tính
         </button>
       </header>
 
@@ -223,28 +308,28 @@ const QuotationAdmin = () => {
           <span>THÔNG TIN CHUNG</span>
         </div>
         <label>Loại khách hàng<span className="spanred">*</span></label>
-        <select onChange={(e) => setprintPriceId(e.target.value)}>
+        <select onChange={(e) => setDiscountId(e.target.value)}>
           <option value={""}>Chọn loại</option>
-          {list?.printPrices?.map((item ) =>(
-            <option key={item.id} value={item.id ?? ""}>
-                    {item.name}
-                  </option>
-          ))}
+           {discountList.map((item) => (
+                    <option key={item.id} value={item.id ?? ""}>
+                        {item.name}
+                    </option>
+                ))}
         </select>
 
         <label>Biên lợi nhuận<span className="spanred">*</span></label>
-        <select onChange={(e) => setPaperId(e.target.value)}>
+        <select onChange={(e) => setProfit(e.target.value)}>
           <option value={""}>Chọn</option>
-          {list?.papers?.map((item) =>(
-            <option key={item.id} value={item.id ?? ""}>
-                    {item.name}
-                  </option>
-          ))}
+          {profitList.map((item) => (
+                    <option key={item.id} value={item.id}>
+                        {item.name}
+                    </option>
+                ))}
         </select>
 
 
         <label>VAT(%)<span className="spanred">*</span></label>
-        <input placeholder="Nhập VAT" onChange={(e) => setQuantity(Number(e.target.value))}/>
+        <input placeholder="Nhập VAT" onChange={(e) => setVat(Number(e.target.value))}/>
       </section>
 
       {/* Result */}
@@ -256,58 +341,43 @@ const QuotationAdmin = () => {
 
         <div className="result-row">
           <span>Khổ in</span>
-          <strong>{formatMoney(
-                                      (result?.price || 0) *
-                                      (8 / 100)
-                                  )}</strong>
+          <strong>{result?.paperSize || "0 x 0"} mm</strong>
         </div>
 
         <div className="result-row">
           <span>Giá 1 sản phẩm</span>
           <strong>{formatMoney(
-                                      (result?.price || 0) *
-                                      (8 / 100)
-                                  )}</strong>
+                             (result?.price || 0) /
+                            Number(quantity) || 0
+                        )}</strong>
         </div>
 
         <div className="result-row">
           <span>Số sản phẩm/tờ</span>
-          <strong>{formatMoney(
-                                      (result?.price || 0) *
-                                      (8 / 100)
-                                  )}</strong>
+          <strong>{formatNumber(result?.productSheet ?? 0)}</strong>
         </div>
 
                 <div className="result-row">
           <span>Số tờ in</span>
-          <strong>{formatMoney(
-                                      (result?.price || 0) *
-                                      (8 / 100)
-                                  )}</strong>
+          <strong>{formatNumber(result?.quantityPaper ?? 0)} tờ</strong>
         </div>
 
         <div className="result-row">
           <span>Giá gia công</span>
-          <strong>{formatMoney(
-                                      (result?.price || 0) *
-                                      (8 / 100)
-                                  )}</strong>
+          <strong>{formatMoney(result?.processingCost || 0)}</strong>
         </div>
 
         <div className="result-row">
           <span>Giá in 1 tờ</span>
-          <strong>{formatMoney(
-                                      (result?.price || 0) *
-                                      (8 / 100)
-                                  )}</strong>
+          <strong>{formatMoney(result?.paperCost|| 0)}/tờ</strong>
         </div>
 
         <div className="result-row">
           <span>Tạm tính</span>
           <strong>{formatMoney(
-                                      (result?.price || 0) *
-                                      (8 / 100)
-                                  )}</strong>
+                            (result?.price || 0)
+                            
+                        )}</strong>
         </div>
 
 
@@ -315,47 +385,43 @@ const QuotationAdmin = () => {
         <div className="result-row">
           <span>Giảm giá</span>
           <strong>{formatMoney(
-                                      (result?.price || 0) *
-                                      (8 / 100)
-                                  )}</strong>
+                            (result?.discount || 0)
+                            
+                        )}</strong>
         </div>
 
         <div className="result-row">
-          <span>VAT (8%)</span>
+          <span>VAT ({vat || 0}%)</span>
           <strong>{formatMoney(
-                                      (result?.price || 0) *
-                                      (8 / 100)
-                                  )}</strong>
+                            (result?.price || 0) *
+                            ((vat || 0) / 100) || 0
+                        )}</strong>
         </div>
 
         <div className="total-box">
           <span>TỔNG TIỀN </span>
           <strong>{formatMoney(
-                                      (result?.price || 0) +
-                                      (result?.price || 0) *
-                                      (8 / 100)
-                                  )}</strong>
+                            ((result?.price || 0) - 
+                            (result?.discount || 0)) +
+                            (result?.price || 0) *
+                            ((vat || 0) / 100)
+                        )}</strong>
         </div>
       </section>
 
       {/* Bottom Actions */}
-      <div className="bottom-actions">
+      {/* <div className="bottom-actions">
         <button className="btn-outline" onClick={() => handleSumitCalculate()}>
           <FaCalculator />
           Tính báo giá
         </button>
-
-        <button className="btn-primary" onClick={() => handleContactZalo()}>
-          <img src={zalo} alt="Zalo" style={{width:"20px", height: "20px"}}/>
-          Liên hệ ngay
-        </button>
-      </div>
+      </div> */}
 
     <ProcessingsCalModel
         open={openPaperModal}
         setOpen={setOpenPaperModal}
         onAdd={handleAddProcessing}
-        companyId={companyId ?? ""}
+        companyId={user?.companyId ?? ""}
         data={processingList}
     />
 

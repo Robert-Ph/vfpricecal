@@ -66,7 +66,7 @@ const QuotationPage = () => {
             return null;
     });
 
-       const handleAddProcessing = (newProcessing: proCal) => {
+    const handleAddProcessing = (newProcessing: proCal) => {
         setProcessingList([...processingList, newProcessing]);
     };
     
@@ -209,7 +209,15 @@ const QuotationPage = () => {
         }
     }
 
-  const handShare = () => {
+  const handShare = async () => {
+    const link = `${window.location.origin}/bao-gia/${user?.companyName}/${user?.phone}/${user?.companyId}`;
+    
+   try {
+        await navigator.clipboard.writeText(link);
+        toast.success("Đã sao chép liên kết");
+    } catch {
+        toast.error("Không thể sao chép");
+    }
   navigate(`/bao-gia/${user?.companyName}/${user?.phone}/${user?.companyId}`);
 };
 

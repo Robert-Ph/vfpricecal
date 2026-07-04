@@ -1,8 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
-import { FaFileAlt} from "react-icons/fa";
+import { FaFileAlt, FaCog} from "react-icons/fa";
 import { IoLayers } from "react-icons/io5";
-import { FiChevronDown, FiInfo, FiExternalLink } from "react-icons/fi";
+import { FiChevronDown, FiInfo, FiSmartphone } from "react-icons/fi";
 import "./sidebar.scss";
 import logo from "../assets/logo.png";
 import avata from "../assets/avata.png";
@@ -13,7 +13,7 @@ import ChangePasswordModal from "../components/auth/ChandePassword";
 
 const Sidebar = () => {
     const [openSubMenu, setOpenSubMenu] = useState(false);
-    // const [openSubMenuSystem, setOpenSubMenuSystem] = useState(false);
+    const [openSubMenuSystem, setOpenSubMenuSystem] = useState(false);
     const navigate = useNavigate();
      const [openPaperModal, setOpenPaperModal] = useState(false);
 
@@ -70,7 +70,7 @@ const Sidebar = () => {
                         VF<span className="text-cyan">print</span> ECOSYSTEM
                     </h3>
                     <p className="brand__subtitle--horizontal">Hệ thống báo giá in ấn</p>
-                     <p className="brand__subtitle--horizontal">Version: 0.1.0-beta.1</p>
+                     <p className="brand__subtitle--horizontal">Version: 0.2.0-beta.04072026</p>
                 </div>
             </div>
 
@@ -86,6 +86,7 @@ const Sidebar = () => {
                     <span>Sản phẩm</span>
                 </NavLink> */}
 
+                {user?.role === "ADMIN" || user?.role === "OWNER" ? (
                 <div className="menu-item parent"
                     onClick={() => setOpenSubMenu(!openSubMenu)}>
                     <div className="menu-left">
@@ -97,6 +98,11 @@ const Sidebar = () => {
                         className={`arrow ${openSubMenu ? "rotate" : ""}`}
                     />
                 </div>
+                ) : null}
+
+
+
+
                 {openSubMenu && (
                     <div className="submenu">
                         <NavLink to="/component/papers" className="submenu-item">
@@ -123,15 +129,12 @@ const Sidebar = () => {
                 }
                 
                 <NavLink className="menu-item" to="/mobile">
-                    <FiExternalLink className="menu-icon" />
-                    <span>Link di động</span>
-                </NavLink>
-                <NavLink className="menu-item" to="/about">
-                    <FiInfo className="menu-icon" />
-                    <span>About</span>
+                    <FiSmartphone className="menu-icon" />
+                    <span>Truy cập di động</span>
                 </NavLink>
 
-                {/* <div className="menu-item parent"
+                {user?.role === "ADMIN" || user?.role === "OWNER" ? (
+                    <div className="menu-item parent"
                     onClick={() => setOpenSubMenuSystem(!openSubMenuSystem)}>
                     <div className="menu-left">
                         <FaCog className="menu-icon" />
@@ -142,20 +145,28 @@ const Sidebar = () => {
                     />
 
                 </div>
+                ) : null}
+
+                
                 {openSubMenuSystem && (
                     <div className="submenu">
                         <NavLink to="/system/users" className="submenu-item">
                             Quản lý người dùng
                         </NavLink>
-                        <NavLink to="/system/settings" className="submenu-item">
-                            Cài đặt hệ thống
+                        <NavLink to="/system/profile" className="submenu-item">
+                            Thông tin tài khoản
                         </NavLink>
-                        <NavLink to="/system/backup" className="submenu-item">
+                        {/* <NavLink to="/system/backup" className="submenu-item">
                             Sao lưu dữ liệu
-                        </NavLink>
+                        </NavLink> */}
                     </div>
                 )
-                } */}
+                }
+
+            <NavLink className="menu-item" to="/about">
+                <FiInfo className="menu-icon" />
+                <span>About</span>
+            </NavLink>
             </nav>
 
            <div className="login__brand--horizontal info-account">
@@ -183,6 +194,8 @@ const Sidebar = () => {
                         </button>
                     </div>
             </div>
+
+
 
             <ChangePasswordModal
                 open={openPaperModal}

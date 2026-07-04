@@ -11,7 +11,8 @@ export interface UserInfo {
   role: string;
   phone: string;
   startTime: string;
-  endTime:string
+  endTime:string;
+  maxUsers: number;
 }
 
 export interface AuthContextType {

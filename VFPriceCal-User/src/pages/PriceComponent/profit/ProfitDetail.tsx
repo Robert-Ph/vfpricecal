@@ -1,34 +1,18 @@
 import "./styles/profitDetail.scss";
 import { FiEdit,  FiLayers, FiImage, FiTag, FiGrid } from "react-icons/fi";
 import {  useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import type { UserInfo } from "../../../context/AuthContext";
-import type { profitItem, profitItemReponse, profitRespone } from "../../../model/model";
-import { create, getProfitBId } from "../../../service/ProfitService";
+
+import type {  profitItemReponse, profitRespone } from "../../../model/model";
+import {  getProfitBId } from "../../../service/ProfitService";
 import { useParams } from "react-router-dom";
 import ProfitUpdate from "../../../components/profit/ProfitUpdate";
 
 const ProfitDetail = () => {
     const {id} = useParams();
     const [openPaperModal, setOpenPaperModal] = useState(false);
-    // const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    // const [selectedProcessingId, setSelectedProcessingId] = useState<string>("");
-    const [priority, setPrioity] = useState<string>("");
     const [profit, setProfit] = useState<profitRespone | null>(null);
-    const [data, setData] = useState<profitItem[]>([]); // State để lưu chi tiết gia công
-    const [name, setName] = useState("");
     const [update, setUpdate] = useState<profitItemReponse | null>(null);
-    const [user] = useState<UserInfo>(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-        try {
-            return JSON.parse(savedUser);
-        } catch (e) {
-            return e;
-        }
-    }
-        return null;
-    });
+
 
     useEffect(() => {
         // Gọi API để lấy chi tiết gia công theo id
@@ -49,43 +33,6 @@ const ProfitDetail = () => {
                 setUpdate(item);
                 setOpenPaperModal(true);
         };
-
-   const handleSave = async () => {
-        if (!name) {
-            toast.error("Vui lòng nhập tên giá in");
-            return;
-        }
-
-        if(!priority){
-            toast.error("Vui lòng chọn độ ưu tiên!")
-            return;
-        }
-
-        if (data.length === 0) {
-            alert("Vui lòng thêm ít nhất một kích thước");
-            return;
-        }
-        const payload = {
-            id: "",
-            companyId: user?.companyId,
-            name: name,
-            priority: priority,
-            itemList:data
-        };
-        try {
-            const res = await create(payload);
-            if (res.code === 200 || res.code === 201) {
-                toast.success("Lưu giá in thành công");
-
-                setOpenPaperModal(false);
-                setName("");
-                setData([]);
-            }
-        } catch (error) {
-            console.error("Lỗi khi lưu giá in:", error);
-            toast.error("Lưu giá in thất bại");
-        }
-    };
 
         
 
@@ -133,10 +80,9 @@ const ProfitDetail = () => {
                                             <div className="field-content">
                                                 <span>Lợi nhuận cho</span>
                                                 
-                                                <strong><input type="text" placeholder="Nhập tên ....." 
-                                                value={profit?.name}
-                                                onChange={(e) => setName(e.target.value)}
-                                                /></strong>
+                                                <strong>
+                                                {profit?.name}
+                                                </strong>
                                             </div>
                                             {/* <div className="info-card__status">
                                                 <FiCheck />
@@ -153,7 +99,7 @@ const ProfitDetail = () => {
                                             <div className="field-content">
                                                 <span>Độ ưu tiên</span>
                                                
-                                                <select name="" id="" onChange={(e) => setPrioity(e.target.value)}>
+                                                <select name="" id="">
                                                     <option value={profit?.priority}>{profit?.priority === "HIGH" ? "Ưu tiên" : "Mặc định"}</option>
                                                     <option value="HIGH">Ưu tiên</option>
                                                     <option value="NORMAL">Mặc định</option>
@@ -163,11 +109,11 @@ const ProfitDetail = () => {
                                         </div>
                                     </div>
                                     
-                                    <div className="save-state">
+                                    {/* <div className="save-state">
                                                         <button className="btn-save" onClick={handleSave}>
                                                             Lưu
                                                         </button>
-                                                    </div>
+                                                    </div> */}
                 
                                 </div>
 

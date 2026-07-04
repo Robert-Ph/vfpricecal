@@ -26,6 +26,7 @@ import ProfitNew from "../pages/PriceComponent/profit/ProfitNew";
 import ProfitDetail from "../pages/PriceComponent/profit/ProfitDetail";
 import LoginPage from "../pages/Auth/LoginMobile";
 import QuotationAdmin from "../pages/QuotationPage/QuotationAdmin";
+import CustomerProfile from "../pages/SystemPage/CustomerProfile";
 
 export const router = createBrowserRouter([
   {
@@ -76,7 +77,8 @@ export const router = createBrowserRouter([
       { path: "component/profit", element: <Profit />},
       { path: "component/profit/new", element: <ProfitNew/>},
       { path: "component/profit/:id", element: <ProfitDetail/>},
-      { path: "about", element: <About/>}
+      { path: "about", element: <About/>},
+      { path: "system/profile", element: <CustomerProfile/>}
 
 
     ],

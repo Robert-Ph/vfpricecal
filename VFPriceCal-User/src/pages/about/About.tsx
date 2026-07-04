@@ -37,7 +37,7 @@ const About = () => {
         <div className="about-container">
             <div className="about-header">
                 <h2>Hệ sinh thái VFprint - Ứng dụng báo giá in ấn</h2>
-                <button className="button-vesion">Phiên bản 0.1.0-beta.1</button>
+                <button className="button-vesion">Phiên bản 0.2.0-beta.04072026</button>
             </div>
 
             <div className="about-main">

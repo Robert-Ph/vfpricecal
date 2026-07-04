@@ -1,14 +1,54 @@
 import "./userManagement.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa";
 import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import UserModal from "../../../components/UserModal";
+import type { account } from "../../../model/model";
+import type { UserInfo } from "../../../context/AuthContext";
+import { getAllAccountByCompany } from "../../../service/AccountService";
+import NotificationModal from "../../../components/notification/Notification";
 
 const UserManagement = () => {
 
     const navigate = useNavigate();
     const [openUserModal, setOpenUserModal] = useState(false);
+    const [openNotificationModal, setOpenNotificationModal] = useState(false);
+    const [accountList, setAccountList] = useState<account[]>([]);
+
+    const [user] = useState<UserInfo | null>(() => {
+                const savedUser = localStorage.getItem("user");
+                if (savedUser) {
+                    try {
+                        return JSON.parse(savedUser);
+                    } catch (e) {
+                        return e;
+                    }
+                }
+                return null;
+    });
+
+    useEffect (() => {
+        const fetchAccountList = async () => {
+                    try {
+                        const data = await getAllAccountByCompany(user?.companyId ?? ""); // Sử dụng companyId từ context
+                        setAccountList(data.data);
+                    } catch (error) {
+                        console.error("Lỗi khi lấy danh sách giấy/vật liệu:", error);
+                    }
+                };
+                fetchAccountList();
+    },[user?.companyId])
+
+
+    const handleNewUser = () => {
+
+        if (user?.maxUsers === accountList.length) {
+            setOpenNotificationModal(true);
+            return;
+        }
+        setOpenUserModal(true);
+    }
 
 
     return (
@@ -16,7 +56,7 @@ const UserManagement = () => {
             <div className="user-header">
                 <h3>Người dùng</h3>
 
-                <button className="add-user-btn" onClick={() => setOpenUserModal(true)}> <FaPlus /> Thêm người dùng</button>
+                <button className="add-user-btn" onClick={() => handleNewUser()}> <FaPlus /> Thêm người dùng</button>
             </div>
 
             <div className="user-info">
@@ -24,7 +64,7 @@ const UserManagement = () => {
                 <div className="user-search">
                     <FiSearch className="search-icon" />
                     <input type="text" value="" placeholder="Tìm kiếm..." />
-                    <button>Tìm kiếm</button>
+                    <button >Tìm kiếm</button>
                 </div>
 
 
@@ -36,38 +76,37 @@ const UserManagement = () => {
                                 <th>Tên người dùng</th>
                                 <th>Email</th>
                                 <th>Vai trò</th>
+                                <th>Trạng thái</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
                             {/* người dùng sẽ được hiển thị ở đây. Mỗi người dùng sẽ có thông tin như tên, email, vai trò. Bạn có thể nhấp vào một người dùng để xem chi tiết hoặc chỉnh sửa thông tin của nó. */}
 
-                            {/* người dùng A */}
-                            <tr>
-                                <td>Người dùng A</td>
-                                <td>userA@example.com</td>
-                                <td>Admin</td>
-                                <td className="action-buttons">
+                            {accountList.map((item) => (
+                                <tr>
+                                <td>{item.username}</td>
+                                <td>{item.email}</td>
+                                <td>{item.code}</td>
+                                <td>{item.status}</td>
+
+                                {item.code !== "OWNER" ? (
+                                    <td className="action-buttons">
                                     <button className=" icon edit-btn"
                                         onClick={() => navigate("/user/1")}>
                                         <FiEdit />
                                     </button>
                                     <button className=" icon delete-btn"><FiTrash2 /></button>
                                 </td>
+                                ) : (
+                                null
+                                )}
+                                
 
                             </tr>
-
-                            {/* người dùng B */}
-                            <tr>
-                                <td>Người dùng B</td>
-                                <td>userB@example.com</td>
-                                <td>User</td>
-                                <td className="action-buttons">
-                                    <button className=" icon edit-btn"><FiEdit /></button>
-                                    <button className=" icon delete-btn" ><FiTrash2 /></button>
-                                </td>
-
-                            </tr>
+                            ))
+                            }
+                    
                         </tbody>
                     </table>
                 </div>
@@ -77,6 +116,12 @@ const UserManagement = () => {
    open={openUserModal}
    setOpen={setOpenUserModal}
 />
+
+<NotificationModal
+                open={openNotificationModal}
+                planMess="Bạn đã đạt đến số lượng người dùng tối đa cho gói hiện tại. Vui lòng nâng cấp gói để thêm người dùng mới."
+                onClose={() => setOpenNotificationModal(false)}
+            />
 
         </div>
     );

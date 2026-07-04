@@ -1,9 +1,10 @@
 export type account = {
-    id: number | null;
+    id: string;
     comapnyId: string;
+    email: string;
     username: string;
-    password: string;
-    roleId: number;
+    code: string;
+    status: string;
 }
 
 export type paper = {
@@ -12,13 +13,6 @@ export type paper = {
     name: string;
     gsm: number;
 }
-
-
-// export type paperPrice = {
-//     id: number | null;
-//     paperSizeId: number;
-//     price: number;
-// }
 
 export type category = {
     id:  string;
@@ -188,3 +182,20 @@ export type result = {
     cost: number;
 }
 
+export type companyInfo = {
+    id: string;
+    code: string;
+    name: string;
+    phone: string;
+    address: string;
+    taxCode: string;
+    email: string;
+    statusId: string;
+    plan: string;
+    logoUrl: string;
+    createAt: string;
+    startTime: string;
+    endTime: string;
+    updateAt: string;
+    priceMonth: number;
+}
