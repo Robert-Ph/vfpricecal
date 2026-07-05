@@ -199,3 +199,18 @@ export type companyInfo = {
     updateAt: string;
     priceMonth: number;
 }
+
+
+export type updateCompany = {
+    id: string;
+    code: string;
+    name: string;
+    phone: string;
+    address: string;
+    taxCode: string;
+    email: string;
+    statusId: string;
+    logoUrl: string;
+    createAt: string;
+    updateAt: string;
+}
