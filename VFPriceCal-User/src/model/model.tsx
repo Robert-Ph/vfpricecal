@@ -7,6 +7,16 @@ export type account = {
     status: string;
 }
 
+export type accountInfo = {
+    companyId: string;
+    email: string;
+    username: string;
+    password: string;
+    roleId: string;
+    statusId: string;
+}
+
+
 export type paper = {
     id: string | null;
     companyId: string;
@@ -213,4 +223,10 @@ export type updateCompany = {
     logoUrl: string;
     createAt: string;
     updateAt: string;
+}
+
+export type roles = {
+    id: string;
+    name: string;
+    description: string;
 }

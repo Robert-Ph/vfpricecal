@@ -1,21 +1,23 @@
 package com.example.vfprint.dto.response;
 
-import java.util.List;
 import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-@AllArgsConstructor
+
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class CategoryResponse {
+@Data
+public class RolesResponse {
     private UUID id;
-    private UUID companyId;
     private String name;
-    private Boolean canDelete;
-    private List<ProcessingResponse> processings;
+    private String code;
 }

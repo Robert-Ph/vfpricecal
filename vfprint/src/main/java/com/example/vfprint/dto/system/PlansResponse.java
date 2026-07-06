@@ -1,5 +1,6 @@
 package com.example.vfprint.dto.system;
 
+import java.util.UUID;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,15 +8,15 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import java.util.UUID;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-@Data
+@NoArgsConstructor
 @Builder
-public class PlansRequest {
+@Data
+public class PlansResponse {
     private UUID id;
     private String name;
     private String code;
@@ -25,6 +26,7 @@ public class PlansRequest {
     private Integer maxUsers;
     private Integer maxProducts;
     private Integer maxBranches;
+    private Timestamp createdAt;
+    private Timestamp updatedAt;
     private String description;
-
 }

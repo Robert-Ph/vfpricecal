@@ -509,6 +509,16 @@ const QuotationPage = () => {
                         )}</strong>
         </div>
 
+        <div className="result-row">
+          <span>Lợi nhuận</span>
+          <strong>{formatMoney(
+                            (((result?.price || 0) - 
+                            (result?.discount || 0)) +
+                            (result?.price || 0) *
+                            ((vat || 0) / 100)) - (result?.cost || 0)
+                        )}</strong> 
+        </div>
+
         <div className="total-box">
           <div>
             <h3>TỔNG TIỀN</h3>

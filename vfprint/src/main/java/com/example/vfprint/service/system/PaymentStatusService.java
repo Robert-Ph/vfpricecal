@@ -13,11 +13,13 @@ import com.example.vfprint.dto.response.PaymentStatusReponse;
 import com.example.vfprint.entity.system.PaymentStatus;
 import com.example.vfprint.repository.systemRepository.PaymentStatusRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class PaymentStatusService {
     
-    @Autowired
-    private PaymentStatusRepository paymentStatusRepository;
+    private final PaymentStatusRepository paymentStatusRepository;
 
     @Transactional
     public List<PaymentStatusReponse> getAllPaymentStatusAllowCreate(){

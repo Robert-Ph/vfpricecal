@@ -1,8 +1,6 @@
 package com.example.vfprint.controller;
 
 import java.util.UUID;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,15 +14,15 @@ import com.example.vfprint.service.CalculatorService;
 import org.springframework.web.bind.annotation.PathVariable;
 import com.example.vfprint.service.QuatationService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/bao-gia")
 public class QuotationMobileController {
     
-    @Autowired
-    private CalculatorService calculatorService;
-
-    @Autowired
-    private QuatationService quatationService;
+    private final CalculatorService calculatorService;
+    private final QuatationService quatationService;
 
 
     @PostMapping

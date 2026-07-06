@@ -25,7 +25,9 @@ public class Roles {
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;
-    private String description;
+
+    @Column(name = "code", nullable = false, unique = true)
+    private String code;
 
     @OneToMany(mappedBy = "role")
     private List<Account> accounts;

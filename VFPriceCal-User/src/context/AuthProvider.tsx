@@ -52,6 +52,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         phone: data.phone,
         startTime: data.startTime,
         endTime: data.endTime,
+        maxUsers: data.maxUsers
       };
 
       setUser(userInfo);

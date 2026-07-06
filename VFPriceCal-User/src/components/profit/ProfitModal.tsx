@@ -1,8 +1,8 @@
 import { useState} from "react";
 import "./profitModal.scss";
-import { toast } from "react-toastify";
-import { create, updateProfitById } from "../../service/ProfitService";
-import type { UserInfo } from "../../context/AuthContext";
+// import { toast } from "react-toastify";
+// import { create, updateProfitById } from "../../service/ProfitService";
+// import type { UserInfo } from "../../context/AuthContext";
 import type { profitItem } from "../../model/model";
 
 

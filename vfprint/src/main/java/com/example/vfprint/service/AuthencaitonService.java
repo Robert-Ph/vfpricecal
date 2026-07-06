@@ -46,7 +46,6 @@ public class AuthencaitonService {
 
     private final CompansySubscriptionsRepository compansySubscriptionsRepository;
 
-    private final PlansRepository plansRepository;
 
 
       /**
@@ -83,7 +82,10 @@ public class AuthencaitonService {
                         new NoSuchElementException("Email not found")    
                     );
 
-        //genarate JWT
+        // Thu hồi token cũ
+        revokeAllUserTokens(account);
+
+        // Tạo token mới
         String jwtToken = jwtService.generateToken(account);
 
         //save token DB
@@ -105,6 +107,7 @@ public class AuthencaitonService {
         String plan = "";
         Timestamp start = null;
         Timestamp end = null;
+        int maxUsers = 0;
 
         CompansySubscriptions subscriptionOpt = getSubscriptionsByActive(company);
 
@@ -112,6 +115,7 @@ public class AuthencaitonService {
             plan = subscriptionOpt.getPlan().getCode();
             start = subscriptionOpt.getStartDate();
             end = subscriptionOpt.getEndDate();
+            maxUsers = subscriptionOpt.getPlan().getMaxUsers();
         } else {
          // Logic dự phòng (fallback): Nếu không có gói thì gán mặc định là gói FREE chẳng hạn
             plan = "FREE"; 
@@ -129,6 +133,7 @@ public class AuthencaitonService {
             .plan(plan)
             .startTime(start)
             .endTime(end)
+            .maxUsers(maxUsers)
             .build();
 
 }
@@ -214,5 +219,21 @@ public class AuthencaitonService {
                 }
         }
         return result;
+}
+
+
+private void revokeAllUserTokens(Account account) {
+
+    List<Token> validTokens = tokenRepository.findAllValidTokenByAccount(account.getId());
+
+    if (validTokens.isEmpty()) {
+        return;
+    }
+
+    validTokens.forEach(token -> {
+        token.setRevoked(true);
+    });
+
+    tokenRepository.saveAll(validTokens);
 }
 }

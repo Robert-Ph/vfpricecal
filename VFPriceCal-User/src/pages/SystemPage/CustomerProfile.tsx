@@ -83,20 +83,6 @@ const CustomerProfile = () => {
                 if (companyId) {
                     const response = await getByCompanyId(companyId);
                     setCompany(response.data);
-
-                  //   setUpdatedCompany({
-                  //         id: response.data.id,
-                  //         code: response.data.code,
-                  //         name: response.data.name,
-                  //         phone: response.data.phone,
-                  //         address: response.data.address,
-                  //         taxCode: response.data.taxCode,
-                  //         email: response.data.email,
-                  //         statusId: response.data.statusId,
-                  //         logoUrl: "",
-                  //         createAt: "",
-                  //         updateAt: ""
-                  // });
                 }
 
                 

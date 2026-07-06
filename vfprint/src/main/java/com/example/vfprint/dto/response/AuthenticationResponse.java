@@ -24,4 +24,5 @@ public class AuthenticationResponse {
     private String phone;
     private Timestamp startTime;
     private Timestamp endTime;
+    private int maxUsers;
 }

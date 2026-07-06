@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.UUID;
-
-import com.example.vfprint.dto.request.ProfitItemRequest;
 import com.example.vfprint.dto.request.ProfitRequest;
 import com.example.vfprint.dto.response.ProfitItemResponse;
 import com.example.vfprint.dto.response.ProfitResponse;

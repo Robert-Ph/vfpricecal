@@ -28,22 +28,22 @@ public class Plans {
     private UUID id;
     private String code;
     private String name;
-    private float price;
+    private Double price;
 
     @Column(name = "duration_in_days")
-    private int durationInDays;
+    private Integer durationInDays;
 
     @Column(name = "max_users")
-    private int maxUsers;
+    private Integer maxUsers;
 
     @Column(name = "max_branches")
-    private int maxbranches;
+    private Integer maxBranches;
 
     @Column(name = "max_products")
-    private int maxProducts;
+    private Integer maxProducts;
 
     @Column(name = "is_custom")
-    private boolean isCustom;
+    private Boolean isCustom;
 
     @Column(name = "created_at")
     private Timestamp createdAt;

@@ -1,18 +1,21 @@
 import { useState } from "react";
 import "./createPlan.scss";
+import { toast } from "react-toastify";
+import { createPlans } from "../../service/PlansService";
 
 export default function CreatePlan() {
     const [formData, setFormData] = useState({
+        id: "",
         name: "",
         code: "",
-        durationInDays: "",
-        price: "",
+        durationInDays: 30,
+        price: 0,
         status: "ACTIVE",
-        maxProduct: "",
-        maxUser: "",
-        features: "",
-        custom: "",
-        icon: "BA",
+        maxProducts: 0,
+        maxUsers: 0,
+        maxBranches: 1,
+        isCustom: false,
+        description: "",
     });
 
     const handleChange = (
@@ -27,6 +30,29 @@ export default function CreatePlan() {
             [name]: value,
         }));
     };
+
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!formData.name || !formData.code || !formData.durationInDays || !formData.price) {
+            toast.error("Vui lòng điền đầy đủ thông tin bắt buộc.");
+            return;
+        }
+
+        try {
+            // Call the API to create the plan here
+            const response = await createPlans(formData);
+            if (response.code === "200" || response.code === "201") {
+                console.log("Form Data Submitted:", formData);
+                toast.success("Gói dịch vụ đã được tạo thành công!");
+            }
+            window.location.href = "/plans"; // Redirect to the plans page after successful submission
+        } catch (error) {
+            console.error("Error creating plan:", error);
+            toast.error("Đã xảy ra lỗi khi tạo gói dịch vụ.");
+        }
+
+    }
 
     return (
         <div className="create-plan-page">
@@ -112,8 +138,8 @@ export default function CreatePlan() {
 
                         <input
                             type="number"
-                            name="price"
-                            value={formData.maxProduct}
+                            name="maxProducts"
+                            value={formData.maxProducts}
                             onChange={handleChange}
                             placeholder="Nhập số lượng"
                         />
@@ -124,8 +150,8 @@ export default function CreatePlan() {
 
                         <input
                             type="number"
-                            name="price"
-                            value={formData.maxUser}
+                            name="maxUsers"
+                            value={formData.maxUsers}
                             onChange={handleChange}
                             placeholder="Nhập số lượng"
                         />
@@ -135,21 +161,21 @@ export default function CreatePlan() {
                         <label>Loại dịch vụ</label>
 
                         <select
-                            name="status"
-                            value={formData.custom}
+                            name="isCustom"
+                            value={String(formData.isCustom)}
                             onChange={handleChange}
                         >
-                            <option value="False">
+                            <option value="false">
                                 Gói phổ thông
                             </option>
 
-                            <option value="True">
+                            <option value="true">
                                 Gói tuỳ chỉnh
                             </option>
                         </select>
                     </div>
 
-                    <div className="form-group">
+                    {/* <div className="form-group">
                         <label>Trạng thái</label>
 
                         <select
@@ -165,7 +191,7 @@ export default function CreatePlan() {
                                 Ngừng hoạt động
                             </option>
                         </select>
-                    </div>
+                    </div> */}
 
                 </div>
 
@@ -182,8 +208,8 @@ export default function CreatePlan() {
 
                         <textarea
                             rows={8}
-                            name="features"
-                            value={formData.features}
+                            name="description"
+                            value={formData.description}
                             onChange={handleChange}
                             placeholder={`Nhập mỗi tính năng một dòng
 
@@ -194,7 +220,7 @@ Ví dụ:
                         />
                     </div>
 
-                    <div className="form-group">
+                    {/* <div className="form-group">
                         <label>Icon gói dịch vụ</label>
 
                         <div className="icon-selector">
@@ -235,7 +261,7 @@ Ví dụ:
                             + Chọn icon khác
                         </button>
 
-                    </div>
+                    </div> */}
 
                 </div>
 
@@ -247,7 +273,7 @@ Ví dụ:
                     Hủy
                 </button>
 
-                <button className="btn-save">
+                <button className="btn-save" onClick={handleSubmit}>
                     💾 Lưu gói dịch vụ
                 </button>
 

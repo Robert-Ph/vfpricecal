@@ -82,14 +82,14 @@ public class SecurityConfig {
                         * 2. API phân quyền nội bộ công ty (Cần đăng nhập)
                         */
                         // Bảng giá in ấn và Giảm giá: Cả Admin và User của công ty đều xem được
-                        .requestMatchers("/api/print-prices/**").hasAnyRole("OWNER", "STAFF")
-                        .requestMatchers("/api/discount/**").hasAnyRole("OWNER", "STAFF")
-                        .requestMatchers("/api/profit/**").hasAnyRole("OWNER", "STAFF")
-                        .requestMatchers("/api/paper-sizes/**").hasAnyRole("OWNER", "STAFF")
-                        .requestMatchers("/api/papers/**").hasAnyRole("OWNER", "STAFF")
-                        .requestMatchers("/api/category/**").hasAnyRole("OWNER", "STAFF")
-                        .requestMatchers("/api/role/**").hasAnyRole("OWNER", "STAFF")
-                        .requestMatchers("/api/processing/**").hasAnyRole("OWNER", "STAFF")
+                        .requestMatchers("/api/print-prices/**").hasAnyRole("OWNER", "STAFF", "ADMIN")
+                        .requestMatchers("/api/discount/**").hasAnyRole("OWNER", "STAFF", "ADMIN")
+                        .requestMatchers("/api/profit/**").hasAnyRole("OWNER", "STAFF", "ADMIN")
+                        .requestMatchers("/api/paper-sizes/**").hasAnyRole("OWNER", "STAFF", "ADMIN")
+                        .requestMatchers("/api/papers/**").hasAnyRole("OWNER", "STAFF", "ADMIN")
+                        .requestMatchers("/api/category/**").hasAnyRole("OWNER", "STAFF", "ADMIN")
+                        .requestMatchers("/api/role/**").hasAnyRole("OWNER", "STAFF", "ADMIN")
+                        .requestMatchers("/api/processing/**").hasAnyRole("OWNER", "STAFF", "ADMIN")
 
                         /**
                          * Protected API

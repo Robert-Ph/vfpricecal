@@ -12,12 +12,14 @@ import com.example.vfprint.dto.request.PaymentRequest;
 import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.service.system.PaymentService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/system/payment")
 public class PaymentController {
     
-    @Autowired
-    private PaymentService paymentService;
+    private final PaymentService paymentService;
 
     @PostMapping
     public ResponseEntity<ApiResponse> createPayment(@RequestBody PaymentRequest request){

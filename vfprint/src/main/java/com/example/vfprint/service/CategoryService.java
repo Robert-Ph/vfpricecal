@@ -13,16 +13,17 @@ import com.example.vfprint.entity.Processing;
 import com.example.vfprint.repository.CategoryRepository;
 import com.example.vfprint.repository.ProcessingRepository;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import java.util.UUID;
 @Service
+@RequiredArgsConstructor
 public class CategoryService {
     
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    @Autowired
-    private ProcessingRepository  processingRepository;
+    private final ProcessingRepository processingRepository;
 
     @Transactional
     public void deleteCategoryByName(String name){
@@ -36,9 +37,6 @@ public class CategoryService {
 
     @Transactional
     public Category createCategory(CategoryDTO categoryDTO, Boolean canDelete){
-        if (categoryRepository.existsByName(categoryDTO.getName())) {
-            throw new RuntimeException("Category with the given name already exists");
-        }
         return categoryRepository.save(Category.builder()
                 .company(Companies.builder().id(categoryDTO.getCompanyId()).build())
                 .name(categoryDTO.getName())
@@ -106,7 +104,8 @@ public class CategoryService {
 
         return CategoryResponse.builder()
                 .id(categories.getId())
-                // .companyId(categories.getCompany().getId())
+                .companyId(categories.getCompany().getId())
+                .canDelete(categories.getCanDelete())
                 .name(categories.getName())
                 .processings(processings.stream()
                         .map(processing -> ProcessingResponse.builder()

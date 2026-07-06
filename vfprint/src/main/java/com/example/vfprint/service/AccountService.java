@@ -3,15 +3,15 @@ package com.example.vfprint.service;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import com.example.vfprint.entity.Roles;
 import com.example.vfprint.entity.UserStatus;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.vfprint.repository.CompaniesRepository;
+import com.example.vfprint.config.EmailService;
+import com.example.vfprint.config.UltiService;
 import com.example.vfprint.dto.AccountDTO;
+import com.example.vfprint.dto.response.AccountResponse;
 import com.example.vfprint.entity.Account;
 import com.example.vfprint.entity.Companies;
 import com.example.vfprint.repository.AccountRepository;
@@ -19,24 +19,20 @@ import com.example.vfprint.repository.RolesRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import com.example.vfprint.repository.UserStatusREpository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class AccountService {
     
   
-    @Autowired
-    private AccountRepository accountRepository;
-
-    @Autowired
-    private CompaniesRepository companyRepository;
-
-    @Autowired
-    private RolesRepository roleRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserStatusREpository userStatusRepository;
+    private final AccountRepository accountRepository;
+    private final CompaniesRepository companyRepository;
+    private final RolesRepository roleRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final UserStatusREpository userStatusRepository;
+    private final EmailService emailService;
+    private final UltiService ultiService;
 
 
     // Create a new account with encoded password
@@ -59,18 +55,22 @@ public class AccountService {
     
         UserStatus activeStatus = userStatusRepository.findByCode("ACTIVE")
                 .orElseThrow(() -> new RuntimeException("User status not found"));
-                
+        
+
+        // sinh password ngau nhien cho account moi
+        String newPassword = ultiService.generateRandomPassword();
       // 4. Sử dụng Builder (Đúng chuẩn với annotation @Builder bạn đã đặt ở Entity)
         Account account = Account.builder()
             .email(accountDto.getEmail())
             .username(accountDto.getUsername())  
-            .password(passwordEncoder.encode(accountDto.getPassword()))
+            .password(passwordEncoder.encode(newPassword))
             .company(company)
             .role(role)
             .status(activeStatus) // Hoặc lấy từ DTO nếu bạn muốn cho phép set status khi tạo
             .build(); // Đảm bảo không có trường ID nào bị set thủ công ở đây
         //5. luu account moi vao database
         accountRepository.save(account);
+        emailService.sendPasswordNewAccount(account.getEmail(), newPassword);
 
     }
 
@@ -112,19 +112,20 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public List<AccountDTO> getAllByCompanyId(UUID companyIds){
+    public List<AccountResponse> getAllByCompanyId(UUID companyIds){
 
         List<Account> accounts = accountRepository.findByCompanyId(companyIds);
         return accounts.stream()
-                .map(account -> {
-                    AccountDTO dto = new AccountDTO();
-                    dto.setCompanyId(account.getCompany().getId());
-                    dto.setEmail(account.getEmail());
-                    dto.setUsername(account.getUsername());
-                    dto.setPassword(account.getPassword());
-                    dto.setRoleId(account.getRole().getId());
-                    return dto;
-                })
+                .map(account -> 
+                    AccountResponse.builder()
+                    .id(account.getId())
+                    .companyId(account.getCompany().getId())
+                    .email(account.getEmail())
+                    .username(account.getUsername())
+                    .code(account.getRole().getName())
+                    .status(account.getStatus().getName())
+                    .build()
+                )
                 .collect(Collectors.toList());
     }
 

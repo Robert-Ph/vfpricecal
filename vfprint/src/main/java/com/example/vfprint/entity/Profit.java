@@ -38,7 +38,6 @@ public class Profit {
     private Companies company;
 
     private String name;
-    private float percentage;
 
     @Column(nullable = false)
     private Priority priority = Priority.NORMAL;

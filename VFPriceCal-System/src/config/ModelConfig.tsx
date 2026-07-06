@@ -73,6 +73,19 @@ export type plans = {
     description: string;
 }
 
+export type crePlans = {
+    id: string;
+    name: string;
+    code: string;
+    price: number;
+    durationInDays: number;
+    isCustom: boolean;
+    maxUsers: number;
+    maxProducts: number;
+    maxBranches: number;
+    description: string;
+}
+
 export type plansRegistration = {
     id: string;
     companyResId: string;

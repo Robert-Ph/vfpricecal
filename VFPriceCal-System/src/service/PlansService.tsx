@@ -1,4 +1,5 @@
 import { apiClient } from "../config/APIConfig";
+import  {  type crePlans } from "../config/ModelConfig";
 
 export const getAllPlans = async () => {
     try{
@@ -16,6 +17,16 @@ export const getPlansById = async (id: string) => {
         return response.data;
     }catch(error){
         console.error('Error fetching plans:', error);
+        throw error;
+    }
+}
+
+export const createPlans = async (planData: crePlans): Promise<crePlans> => {
+    try{
+        const response = await apiClient.post('/system/plans', planData);
+        return response.data;
+    }catch(error){
+        console.error('Error creating plan:', error);
         throw error;
     }
 }

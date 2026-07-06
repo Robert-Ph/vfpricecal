@@ -373,6 +373,14 @@ const QuotationAdmin = () => {
         </div>
 
         <div className="result-row">
+          <span>Giá vốn</span>
+          <strong>{formatMoney(
+                            (result?.cost || 0)
+                            
+                        )}</strong>
+        </div>
+
+        <div className="result-row">
           <span>Tạm tính</span>
           <strong>{formatMoney(
                             (result?.price || 0)
@@ -396,6 +404,16 @@ const QuotationAdmin = () => {
                             (result?.price || 0) *
                             ((vat || 0) / 100) || 0
                         )}</strong>
+        </div>
+
+        <div className="result-row">
+          <span>Lợi nhuận</span>
+          <strong>{formatMoney(
+                            (((result?.price || 0) - 
+                            (result?.discount || 0)) +
+                            (result?.price || 0) *
+                            ((vat || 0) / 100)) - (result?.cost || 0)
+                        )}</strong> 
         </div>
 
         <div className="total-box">

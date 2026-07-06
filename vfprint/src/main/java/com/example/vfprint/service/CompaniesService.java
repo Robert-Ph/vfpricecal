@@ -23,7 +23,9 @@ import com.example.vfprint.repository.systemRepository.CompansySubscriptionsRepo
 import com.example.vfprint.entity.UserStatus;
 import com.example.vfprint.entity.system.CompansySubscriptions;
 import lombok.RequiredArgsConstructor;
-
+import com.example.vfprint.dto.request.ProfitRequest;
+import com.example.vfprint.dto.request.ProfitItemRequest;
+import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +40,7 @@ public class CompaniesService {
     private final UserStatusREpository userStatusRepository;
     private final CompansySubscriptionsRepository compansySubscriptionsRepository;
     private final CategoryService categoryService;
+    private final ProfitService profitService;
 
 
 
@@ -82,6 +85,32 @@ public class CompaniesService {
         Category category2 = categoryService.createCategory(cate2, true);
         Category category3 = categoryService.createCategory(cate3, true);
 
+        List<ProfitItemRequest> itemList = Arrays.asList(
+                ProfitItemRequest.builder()
+                        .name("Giấy in")
+                        .percent(30.0)
+                        .build(),
+
+                ProfitItemRequest.builder()
+                        .name("In ấn")
+                        .percent(30.0)
+                        .build(),
+
+                ProfitItemRequest.builder()
+                        .name("Gia công")
+                        .percent(30.0)
+                        .build()
+        );
+        ProfitRequest profitRequest = ProfitRequest.builder()
+                .companyId(companies.getId())
+                .name("Lợi nhuận mặc định")
+                .priority(com.example.vfprint.enums.Priority.HIGH)
+                .itemList(itemList)
+                .build();
+
+        profitService.createProfit(profitRequest);
+        
+
         Roles role = roleRepository.findByName("OWNER")
                 .orElseThrow(() -> new RuntimeException("Role not found"));
 
@@ -107,7 +136,7 @@ public class CompaniesService {
 
     // Update company details
     @Transactional
-    public Companies updateCompany(Companies company){
+    public Companies updateCompany(CompanyRequest company){
         Companies existingCompany = companiesRepository.findById(company.getId())
                 .orElseThrow(() -> new RuntimeException("Company not found"));  
         existingCompany.setName(company.getName());

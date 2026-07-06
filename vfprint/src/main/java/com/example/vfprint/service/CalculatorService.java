@@ -125,7 +125,7 @@ public class CalculatorService {
                 .quantityPaper(sheetsNeeded)
                 .productSheet(infoPriceDTO.getQuantity()/sheetsNeeded)
                 .paperSize(paperSizeDTO.getWidth() + " x " + paperSizeDTO.getHeight())
-                .processingCost(totalProcessingCost * sheetsNeeded)
+                .processingCost(totalProcessingCost)
                 .discount(price - (price*(1-discount/100)))
                 .paperCost(price / sheetsNeeded)
                 .cost(materialPrice + prinPrice + totalProcessingCost)
