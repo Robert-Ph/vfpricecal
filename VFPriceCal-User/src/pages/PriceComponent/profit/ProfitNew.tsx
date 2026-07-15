@@ -27,8 +27,21 @@ const ProfitNew = () => {
         return null;
     });
 
-     const handleAddSize = (newSize: profitItem) => {
-        setData([...data, newSize]);
+     const handleAddItem = (newItem: profitItem) => {
+        const exists = data.some(
+        item => item.name.trim().toLowerCase() === newItem.name.trim().toLowerCase()
+    );
+
+    if (exists) {
+        toast.error("Tên này đã tồn tại!");
+        return;
+    }
+
+    setData(prev => [...prev, newItem]);
+    };
+
+    const handleDelete = (name: string) => {
+    setData(prev => prev.filter(item => item.name !== name));
     };
 
    const handleSave = async () => {
@@ -183,7 +196,7 @@ const ProfitNew = () => {
                                                     <td className="action-buttons">
                                                         <button className=" icon edit-btn"><FiEdit /></button>
                                                         <button className=" icon delete-btn" 
-                                                        // onClick={() => handleOpenDelete(item.name?? "")}
+                                                        onClick={() => handleDelete(item.name)}
                                                         ><FiTrash2 /></button>
                                                     </td>
                                                 </tr>
@@ -209,7 +222,7 @@ const ProfitNew = () => {
              <ProfitModal
                 open={openPaperModal} 
                 setOpen={setOpenPaperModal} 
-                onSubmit={handleAddSize}
+                onSubmit={handleAddItem}
 
             />
 

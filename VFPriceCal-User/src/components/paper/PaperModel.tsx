@@ -2,18 +2,20 @@ import { useState} from "react";
 import "./paperModel.scss";
 import { v4 as uuidv4 } from 'uuid';
 import { toast } from "react-toastify";
+import type { paperList } from "../../model/model";
+
 
 interface Props {
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    onAdd: (data: any) => void;
+    onAdd: (data: paperList) => void;
 }
 
 const PaperModal = ({ open, setOpen, onAdd }: Props) => {
 
-  const [width, setWidth] = useState("");
-  const [height, setHeight] = useState("");
-  const [price, setPrice] = useState("");
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
+  const [price, setPrice] = useState(0);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
 
   if (!open) return null;
@@ -27,7 +29,7 @@ const PaperModal = ({ open, setOpen, onAdd }: Props) => {
     }
 
     const newData = {
-      id: uuidv4(), // Tạo chuỗi ID duy nhất như: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
+      id: String(uuidv4()), // Tạo chuỗi ID duy nhất như: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
       width,
       height,
       price
@@ -36,7 +38,7 @@ const PaperModal = ({ open, setOpen, onAdd }: Props) => {
     onAdd(newData);
     setOpen(false);
     // Reset fields
-    setWidth(""); setHeight(""); setPrice("");
+    setWidth(0); setHeight(0); setPrice(0);
     setError(""); // Reset error message
   };
 
@@ -57,7 +59,7 @@ const PaperModal = ({ open, setOpen, onAdd }: Props) => {
               type="number"
               placeholder="Nhập chiều rộng..."
               value={width}
-              onChange={(e) => {setWidth(e.target.value)
+              onChange={(e) => {setWidth(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />
@@ -70,7 +72,7 @@ const PaperModal = ({ open, setOpen, onAdd }: Props) => {
               type="number"
               placeholder="Nhập chiều cao..."
               value={height}
-              onChange={(e) => {setHeight(e.target.value)
+              onChange={(e) => {setHeight(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />
@@ -83,7 +85,7 @@ const PaperModal = ({ open, setOpen, onAdd }: Props) => {
               type="number"
               placeholder="Nhập giá..."
               value={price}
-              onChange={(e) => {setPrice(e.target.value)
+              onChange={(e) => {setPrice(Number(e.target.value))
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />

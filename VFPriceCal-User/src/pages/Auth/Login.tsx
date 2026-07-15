@@ -18,9 +18,29 @@ const Login = () => {
     const [showExpiredModal, setShowExpiredModal] = useState(false);
     const [planMess, setPlanMess] = useState<string>("TRIAL");
 
+
+    const isValidEmail = (email: string): boolean => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email.trim());
+    };
+
     const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     // setLoading(true);
+     if (!email.trim()) {
+        toast.error("Vui lòng nhập email");
+        return;
+    }
+
+    if (!isValidEmail(email)) {
+        toast.error("Email không đúng định dạng");
+        return;
+    }
+
+    if (!password.trim()) {
+        toast.error("Vui lòng nhập mật khẩu");
+        return;
+    }
 
     try {
         const response = await login(email, password);

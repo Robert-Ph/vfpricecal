@@ -1,5 +1,5 @@
 import { apiClient } from "../api/APIConfig";
-import { type category, type processing } from "../model/model";
+import { type category, type processing, type processingCreate } from "../model/model";
 
 export const createCategory = async (data: category) => {
     try {
@@ -12,7 +12,7 @@ export const createCategory = async (data: category) => {
     }
 };
 
-export const createProcessingByCategory = async (data: processing) =>{
+export const createProcessingByCategory = async (data: processingCreate) =>{
     try{
         const response = await apiClient.post('/processing', data);
         return response.data;
@@ -73,3 +73,14 @@ export const updateProcessingById = async (data: processing) => {
         throw error;
     }
 }
+
+export const getTierProcessingById = async (processingId: string) => {
+    try {
+        const response = await apiClient.get(`/processing/detail/${processingId}`); 
+        return response.data; // Assuming the processing details are in response.data
+    }
+    catch (error) {
+        console.error('Failed to fetch processing details:', error);
+        throw error;
+    }
+};

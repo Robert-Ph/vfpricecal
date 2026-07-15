@@ -42,8 +42,8 @@ $primary: #2563eb;
 
 .icon-btn,
 .logo-box {
-  width: 56px;
-  height: 56px;
+  width:32px;
+  height: 32px;
   border-radius: 16px;
   border: none;
   background: white;
@@ -306,7 +306,7 @@ $primary: #2563eb;
 .table-panel {
   background: white;
   border-radius: 24px;
-  padding: 24px;
+  padding: 10px;
   margin-right: 14px;
   box-shadow: 0 10px 35px rgba(15, 23, 42, 0.2);
 }
@@ -495,3 +495,45 @@ tbody tr {
   gap: 8px;
 }
 
+.button-save{
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 20px;
+    .cancel{
+        padding: 8px 16px;
+        background-color: #e5e7eb;
+        color: #374151;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        margin-right: 20px;
+
+        &:hover {
+            background-color: #d1d5db;
+        }
+    }
+
+    .save{
+        padding: 8px 16px;
+        background-color: #3b82f6;
+        background: #2563eb;
+        color: white;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        
+        &:hover {
+            background-color: #2563eb;
+        }
+    }
+}
+
+.icon-item {
+            width:48px;
+            height:48px;
+            border: none;
+            border-radius: 12px;
+            background: #f7f7f7;
+            cursor: pointer;
+            transition: 0.2s;
+        }

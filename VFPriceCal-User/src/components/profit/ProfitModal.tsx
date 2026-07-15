@@ -18,6 +18,11 @@ const ProfitModal = ({ open, setOpen, data, onSubmit }: Props) => {
   const [profitName, setProfitName] = useState( data?.name ?? "");
   const [percentage, setPercentage] = useState(data?.percent ?? 0);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
+  const profitTypes = [
+  "Giá giấy",
+  "In ấn",
+  "Gia công",
+  ];
 
   const handleSubmit = () => {
         // Validate inputs
@@ -49,24 +54,32 @@ const ProfitModal = ({ open, setOpen, data, onSubmit }: Props) => {
         <div className="modal-header">
           Thông tin biên lợi nhuận
         </div>
-
+        <p className="error">{error}</p>
         <div className="main">
 
           <div className="info">
-            <label>Tên </label>
-            <input
-            className={!profitName && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
-              type="text"
-              placeholder="Nhập tên..."
-              value={profitName}
-              onChange={(e) => {setProfitName(e.target.value)
-                if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
+            <label>Loại chi phí<span className="required">*</span></label>
+
+              <select
+                className={!profitName && error ? "input-error" : ""}
+                value={profitName}
+                onChange={(e) => {
+                  setProfitName(e.target.value);
+                    if (error) setError("");
               }}
-            />
+              >
+                <option value="">-- Chọn loại --</option>
+
+                    {profitTypes.map((type) => (
+                      <option key={type} value={type}>
+                          {type}
+                      </option>
+                  ))}
+                </select>
           </div>
 
           <div className="info">
-            <label>Tỷ lệ lợi nhuận(%)</label>
+            <label>Tỷ lệ lợi nhuận(%) <span className="required">*</span></label>
             <input
             className={!percentage && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
               type="text"

@@ -24,6 +24,13 @@ export type paper = {
     gsm: number;
 }
 
+export type paperList = {
+    id: string;
+    width: number;
+    height: number;
+    price: number;
+}
+
 export type category = {
     id:  string;
     companyId: string;
@@ -37,7 +44,24 @@ export type processing = {
     id: string | null;
     categoryId: string | null;
     name: string;
+    unit: string;
+}
+
+export type processingCreate = {
+    id: string | null;
+    categoryId: string | null;
+    name: string;
+    unit: string;
+    pTierRequests: processingTier[] | null;
+}
+export type processingTier = {
+    id: string | null;
+    processingId: string | null;
+    minVolume: number;
+    maxVolume: number;
     price: number;
+    minCharge: number;
+    isActive: boolean;
 }
 
 export type company = {

@@ -1,57 +1,61 @@
 import "./processingDetail.scss";
 import { FiEdit, FiTrash2, FiLayers, FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
-import { useEffect, useState } from "react";
-import { useParams, useNavigate  } from "react-router-dom";
-import { deleteProcessing, getProcessingById } from "../../../service/ProcessingService";
-import ConfirmModal from "../../../components/ConfirmModal";
+import { FaPlus } from "react-icons/fa";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import ProcessingAddModel from "../../../components/processing/ProcessingAdd";
 import { toast } from "react-toastify";
-import type { category, processing } from "../../../model/model";
+import type {processingTier } from "../../../model/model";
+import { formatMoney } from "../../../utils/formatMoney";
+import { createProcessingByCategory } from "../../../service/ProcessingService";
 
-const ProcessingDetail = () => {
-    const navigate = useNavigate();
-    const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    const [selectedProcessingId, setSelectedProcessingId] = useState<string>();
+const NewProcessing = () => {
+
+    const [openPaperModal, setOpenPaperModal] = useState(false);
+    const [name, setName] = useState("");
+    const [unit, setUnit] = useState("sheet");
+    const [dataProcessing, setDataProcessing] = useState<processingTier>();
+    const [data, setData] = useState<processingTier[]>([]);
     const {id} = useParams();
-    const [processingData, setProcessingData] = useState<category>(); // State để lưu chi tiết gia công 
     
 
-    useEffect(() => {
-        // Gọi API để lấy chi tiết gia công theo id
-        // Ví dụ: getProcessingById(id).then(data => setProcessingData(data));
-        const fetchProcessingDetail = async () => {
-            try {
-                // Giả sử bạn có API getProcessingById
-                // const data = await getProcessingById(id); 
-                // setProcessingData(data);
-                // Tạm thời dùng dữ liệu giả để hiển thị
-                const data = await getProcessingById(id!);
-                setProcessingData(data.data);
-            } catch (error) {
-                console.error("Lỗi khi lấy chi tiết gia công:", error);
-            }
-            };
-            fetchProcessingDetail();
-    }, [id]);
-
-    const handleOpenDelete = (id: string) => {
-            setSelectedProcessingId(id);
-            setOpenDeleteModal(true);
+    const handleAddProcessingTier = (newData: processingTier) => {
+        setData([...data, newData]);
     };
-        
-    const handleDeletePaper = async () => {
-            try {
-                if (!selectedProcessingId) return;
-        
-                await deleteProcessing(selectedProcessingId, id ?? "");
-        
-        
-                toast.success("Xoá thành công");
-        
-                setOpenDeleteModal(false);
-            } catch (error) {
-                console.error(error);
-                toast.error("Xoá thất bại");
+    const handleDeleteProcessingTier = (id: string) => {
+    setData(data.filter(item => item.id !== id));
+    };
+
+    const handleSumit = async () => {
+        if(!name){
+            toast.error("Vui lòng nhập đầy đủ thông tin!")
+        }
+
+        if(data.length === 0){
+            toast.error("Tồn tại tối thiểu 1 thành phần trong danh sách!")
+        }
+        const payload = {
+            id: null,
+            categoryId: id ?? "",
+            name: name,
+            unit: unit,
+            pTierRequests: data
+        }
+
+        try{
+            const reponse = await createProcessingByCategory(payload);
+            if(reponse.code === 200 || reponse.code === 201){
+                setTimeout(() => {
+                     window.location.reload(); // Hoặc navigate("/component/papers") nếu bạn dùng react-router
+                }, 500); // Đợi 2 giây trước khi reload hoặc navigate
+                toast.success(`Tạo gia công ${name} thành công!`)
             }
+        } catch (error)
+        {
+             console.error("Lỗi khi lưu:", error);
+            // alert("Có lỗi xảy ra khi tạo giấy mới. Vui lòng thử lại.");
+            toast.error(`Có lỗi xảy ra khi tạo loại giấy ${name}.`);
+        }
     };
 
     return (
@@ -68,7 +72,7 @@ const ProcessingDetail = () => {
                     </div>
 
                     <div>
-                        <h3>Gia công /{processingData?.name || ""}</h3>
+                        <h3>Thêm gia công</h3>
                         <p>Quản lý thông tin gia công</p>
                     </div>
 
@@ -97,30 +101,35 @@ const ProcessingDetail = () => {
                 
                                             <div className="field-content">
                                                 <span>Tên gia công</span>
-                                                <strong>{processingData?.name || ""}</strong>
+                                                <input type="text" value={name} onChange={(e) => setName(e.target.value) }/>
                                             </div>
                                             {/* <div className="info-card__status">
                                                 <FiCheck />
                                             </div> */}
                                         </div>
                                     </div>
-                
                                     <div className="info-card">
                                         <div className="field">
                                             <div className="field-icon">
-                                                <FiLayers />
+                                                <FiTag />
                                             </div>
                 
                                             <div className="field-content">
-                                                <span>Trạng thái</span>
-                
-                                                <div className="status">
-                                                    <span className="dot" />
-                                                    Đang hoạt động
-                                                </div>
+                                                <span>Đơn vị</span>
+                                                <select name="" id="" value={unit} onChange={(e) => setUnit(e.target.value)}>
+                                                    <option value="sheet">Tờ</option>
+                                                    <option value="m2">m²</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
+                                     <div className="button-save">
+                                                            <button className="cancel" onClick={() => window.history.back()}>Quay lại</button>
+                                                            {/* 3. Gắn hàm handleSave vào đây */}
+                                                            <button className="save" onClick={handleSumit}>
+                                                                <FaPlus /> Tạo mới
+                                                            </button>
+                                                        </div>
                 
                 
                                 </div>
@@ -131,7 +140,7 @@ const ProcessingDetail = () => {
                                                 <FiGrid />
                                             </div>
                                             <div className="section-title__content">
-                                                <h3>Danh sách danh sách</h3>
+                                                <h3>Danh sách</h3>
                                                 <p>Quản lý danh sách và giá tương ứng</p>
                                             </div>
                     </div>
@@ -142,20 +151,24 @@ const ProcessingDetail = () => {
                                     <table className="paper-list">
                                         <thead>
                                             <tr>
-                                                <th>Tên loại màng</th>
-                                                <th>Quy cách</th>
+                                                <th title="Đơn vị tờ là số tờ tối thiểu. Đối với m2 tức là m2 tối thiểu">Tối thiểu</th>
+                                                <th title="Đơn vị tờ là số tờ tối đa. Đối với m2 tức là m2 tối đa">Tối đa</th>
+                                                <th>Giá</th>
+                                                <th title="Nếu giá gia công thấp hơn giá sàn thì sẻ lấy giá sàn để tính chi phí">Giá sàn</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             {/* Ví dụ về một sản phẩm */}
-                                            {processingData?.processings?.map((item: processing) => (
+                                            {data?.map((item: processingTier) => (
                                                 <tr key={item.id}>
-                                                    <td>{item.name}</td>
-                                                    <td>{item.unit === "sheet" ? "Tờ" : "m²"}</td>
+                                                    <td>{item.minVolume}</td>
+                                                    <td>{item.maxVolume}</td>
+                                                    <td>{formatMoney(item.price)}</td>
+                                                    <td>{formatMoney(item.minCharge)}</td>
                                                     <td className="action-buttons">
-                                                        <button className=" icon-item edit-btn" onClick={() => navigate(`/component/processing/detail/${item.id}`)}><FiEdit /></button>
-                                                        <button className=" icon-item delete-btn" onClick={() => handleOpenDelete(item.id ?? "")}><FiTrash2 /></button>
+                                                        <button className=" icon edit-btn"><FiEdit /></button>
+                                                        <button className=" icon delete-btn" onClick={() => handleDeleteProcessingTier(item.id ?? "")}><FiTrash2 /></button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -167,7 +180,7 @@ const ProcessingDetail = () => {
                             </div>
 
                             <div className="empty-state">
-                                                        <button className="btn-primary" onClick={() => navigate(`/component/processing/new/${id}`)}>
+                                                        <button className="btn-primary" onClick={() => setOpenPaperModal(true)}>
                                                             <FiPlus />
                                                         Thêm mới
                                                         </button>
@@ -177,18 +190,16 @@ const ProcessingDetail = () => {
                 </div>
             </div>
 
-
-
-            <ConfirmModal
-            isOpen={openDeleteModal}
-            title="Xác nhận xoá"
-            message="Bạn có chắc muốn xoá gia công này?"
-            onCancel={() => setOpenDeleteModal(false)}
-            onConfirm={handleDeletePaper}
+            <ProcessingAddModel
+                key={dataProcessing?.id ?? "create"}
+                open={openPaperModal}
+                setOpen={setOpenPaperModal}
+                data = {dataProcessing}
+                onAdd={handleAddProcessingTier}
             />
 
         </div>
     );
 };
 
-export default ProcessingDetail;
+export default NewProcessing;

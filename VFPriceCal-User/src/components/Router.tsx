@@ -27,6 +27,9 @@ import ProfitDetail from "../pages/PriceComponent/profit/ProfitDetail";
 import LoginPage from "../pages/Auth/LoginMobile";
 import QuotationAdmin from "../pages/QuotationPage/QuotationAdmin";
 import CustomerProfile from "../pages/SystemPage/CustomerProfile";
+import NewProduct from "../pages/ProductPage/NewProduct";
+import NewProcessing from "../pages/PriceComponent/Processing/NewProcessing";
+import ProcessingTier from "../pages/PriceComponent/Processing/ProcessingTier";
 
 export const router = createBrowserRouter([
   {
@@ -58,12 +61,14 @@ export const router = createBrowserRouter([
       },
       { path: "quotation", element: <QuotationPage /> }, // Chuyển Quotation sang một path cụ thể
       { path: "product", element: <ProductPage /> },
-      // { path: "product/new", element: <NewProduct /> },
+      { path: "product/new", element: <NewProduct /> },
       { path: "product/:id", element: <ProductDetail /> },
       { path: "component/papers", element: <ComponentPaper /> },
       { path: "component/paper/add", element: <PaperAdd /> },
       { path: "component/processing", element: <Processing /> },
       { path: "component/processing/:id", element: <ProcessingDetail /> },
+      { path: "component/processing/new/:id", element: <NewProcessing/>},
+      { path: "component/processing/detail/:id", element: <ProcessingTier/>},
       { path: "component/papers/:id", element: <PaperDetail /> },
       { path: "system/users", element: <UserManagement /> },
       { path: "component/printcost", element: <PrintCost /> },

@@ -6,17 +6,18 @@ import PaperModel from "../../../components/paper/PaperModel";
 import { createPaper } from "../../../service/PaperService";
 import { toast } from "react-toastify";
 import type { UserInfo } from "../../../context/AuthContext";
+import type { paperList } from "../../../model/model";
 
 const MaterialAdd = () => {
     const [activeTab, setActiveTab] = useState("paper");
     const [openPaperModal, setOpenPaperModal] = useState(false);
-    const [paperList, setPaperList] = useState<any[]>([]); 
+    const [paperList, setPaperList] = useState<paperList[]>([]); 
 
     // 1. Khai báo state để quản lý dữ liệu nhập vào
     const [name, setName] = useState("");
     const [gsm, setGsm] = useState("");
 
-    const handleAddSize = (newSize: any) => {
+    const handleAddSize = (newSize: paperList) => {
         setPaperList([...paperList, newSize]);
     };
 
@@ -26,7 +27,7 @@ const MaterialAdd = () => {
             try {
                 return JSON.parse(savedUser);
             } catch (e) {
-                return null;
+                return e;
             }
         }
         return null;
