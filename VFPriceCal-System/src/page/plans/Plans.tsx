@@ -140,7 +140,7 @@ const Plans = () => {
                     </div> */}
 
                     <div className="actions">
-                        <button onClick={() => navigate(`/company-management/${item.id}`)}>✏️</button>
+                        <button onClick={() => navigate(`/plans/${item.id}`)}>✏️</button>
                         <button>🗑️</button>
                     </div>
 

@@ -2,6 +2,8 @@ package com.example.vfprint.controller;
 
 import com.example.vfprint.service.AuthencaitonService;
 import com.nimbusds.jose.JOSEException;
+
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import java.text.ParseException;
 import org.springframework.http.HttpStatus;
@@ -25,13 +27,13 @@ public class AuthencaitonController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest request){
+    public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest){
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse
             .builder()
             .code(Code.SUCCESS)
             .message("Login successful")
-            .data(authencaitonService.authenticateResponse(request))
+            .data(authencaitonService.authenticateResponse(request, httpRequest))
             .build()
         );
     }

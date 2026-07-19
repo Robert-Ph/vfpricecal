@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import java.util.Date;
+import com.example.vfprint.enums.DeviceType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
 
 @Getter
 @Setter
@@ -27,6 +30,10 @@ public class Token {
     private String id;
     private Date exDate;
     private boolean revoked;
+
+    @Column(name = "device_type")
+    @Enumerated(EnumType.STRING)
+    private DeviceType deviceType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id")

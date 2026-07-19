@@ -12,6 +12,7 @@ import com.example.vfprint.dto.system.PlansRequest;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -53,6 +54,17 @@ public class PlansController {
             ApiResponse.builder()
             .code(200)
             .message("Create plan successfully")
+            .build()
+        );
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse> updatePlan(@PathVariable UUID id, @RequestBody PlansRequest plansRequest){
+        plansService.updatePlan(id, plansRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse.builder()
+            .code(200)
+            .message("Update plan successfully")
             .build()
         );
     }

@@ -13,6 +13,7 @@ import { formatMoney } from "../../../utils/formatMoney";
 const PrintCostDetail = () => {
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [openDeleteModal, setOpenDeleteModal] = useState(false);
+    const [unit, setUnit] = useState("click");
     const [selectedId, setSelectedId] = useState<string>();
     const [rangeData, setRangeData] = useState<printPriceRanges>();
     const {id} = useParams();
@@ -26,6 +27,7 @@ const PrintCostDetail = () => {
             try {
                 const data = await getById(id as string); 
                 setPrintData(data.data);
+                setUnit(data.unit);
             } catch (error) {
                 console.error("Lỗi khi lấy chi tiết gia công:", error);
             }
@@ -101,12 +103,26 @@ const PrintCostDetail = () => {
                                             </div>
                 
                                             <div className="field-content">
-                                                <span>Tên gia công</span>
+                                                <span>Tên loại hình in</span>
                                                 <strong>{printData?.name || ""}</strong>
                                             </div>
-                                            {/* <div className="info-card__status">
-                                                <FiCheck />
-                                            </div> */}
+                                        </div>
+                                    </div>
+
+                                    <div className="info-card">
+                                        <div className="field">
+                                            <div className="field-icon">
+                                                <FiTag />
+                                            </div>
+                
+                                            <div className="field-content">
+                                                <span>Đơn vị</span>
+                                                <select name="" id="" value={unit} onChange={(e) => setUnit(e.target.value)}>
+                                                    <option value="click">Lượt in</option>
+                                                    <option value="size">Khổ in</option>
+                                                    <option value="m2">m²</option>
+                                                </select>
+                                            </div>
                                         </div>
                                     </div>
                 

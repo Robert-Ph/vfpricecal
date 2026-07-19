@@ -20,9 +20,11 @@ import {
   FiSettings,     // Gia công sau in
   FiGrid,         // Kết quả báo giá
   FiTrash2,
-  FiExternalLink
+  FiExternalLink,
+  
 } from "react-icons/fi";
 import { FaCalculator } from "react-icons/fa";
+// import { exportQuotationPDF } from "../../utils/exportPdf";
 import type {  printPrice, paper, profitRequest, discountRequest, proCal, paperSize, result } from "../../model/model";
 import { toast } from "react-toastify";
 
@@ -50,7 +52,6 @@ const QuotationPage = () => {
     const [discountId, setDiscountId] = useState<string | null>(null);
     const [name, setName] = useState<string>("");
     const [paperSize, setPaperSize] = useState<paperSize[]>([]);
-    
 
 
     
@@ -221,6 +222,26 @@ const QuotationPage = () => {
   navigate(`/bao-gia/${user?.companyName}/${user?.phone}/${user?.companyId}`);
 };
 
+  const handExport = async () => {
+    if(!name){
+       toast.error("Vui lòng điền tên sản phẩm");
+      return;
+    }
+    const selectedPaper = paperList.find(
+      item => item.id === selectedPaperId
+    );
+     navigate("/export-pdf",{
+      state: {
+        result,
+        quantity,
+        vat,
+        processingList,
+        paper: selectedPaper?.name ?? "",
+        name
+      }
+     });
+  };
+
     return (
         <div className="quotation-page">
 
@@ -246,6 +267,10 @@ const QuotationPage = () => {
       <button className="btn-primary btn-share" onClick={() => handShare()}>
         <FiExternalLink />
         Chia sẻ
+      </button>
+      <button className="btn-primary" onClick={handExport}>
+          <FiFileText />
+          Xuất file
       </button>
        <button className="btn-primary" onClick={handleSumitCalculate}>
           <FaCalculator />

@@ -1,6 +1,9 @@
 package com.example.vfprint.entity;
 
+import java.sql.Timestamp;
 import java.util.UUID;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -16,24 +19,38 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import jakarta.persistence.ForeignKey;
 
+
 @Getter
 @Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "print_price")
 @Builder
-public class PrintPrice {
+@Table(name = "processing_tier")
+public class ProcessingTier {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-     // Khoá ngoại tới bảng company, nhưng chỉ lưu id của company, không cần ánh xạ đối tượng company
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "company_id",foreignKey = @ForeignKey(name = "fk_print_price_company"))
-    private Companies company;
+    @JoinColumn(name = "processing_id", foreignKey = @ForeignKey(name = "fk_processing_tier"))
+    private Processing processing;
 
-    private String name;
-    private String unit;
-    private Boolean is_active;
+    @Column(name = "min_volume")
+    private double minVolume;
+
+    @Column(name = "max_volume")
+    private double maxVolume;
+
+    private double price;
+
+    @Column(name = "min_charge")
+    private double minCharge;
+
+    @Column(name = "is_active")
+    private boolean isActive;
+
+    @Column(name = "create_at")
+    private Timestamp createAt;
 }

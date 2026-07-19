@@ -1,26 +1,27 @@
 package com.example.vfprint.service;
 
 import com.example.vfprint.repository.CategoryRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.example.vfprint.repository.ProcessingRepository;
+import lombok.RequiredArgsConstructor;
 import com.example.vfprint.dto.ProcessingDTO;
+import com.example.vfprint.dto.request.ProcessingRequest;
+import com.example.vfprint.dto.response.ProcessingAndTierReponse;
+import com.example.vfprint.dto.response.ProcessingTierReponse;
 import com.example.vfprint.entity.Processing;
+import com.example.vfprint.entity.ProcessingTier;
 import java.util.List;
 import java.util.UUID;
 import com.example.vfprint.entity.Category;
 
 @Service
+@RequiredArgsConstructor
 public class ProcessingService {
     
     private final CategoryRepository categoryRepository;
-    @Autowired
-    private ProcessingRepository processingRepository;
-
-    ProcessingService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
+    private final ProcessingRepository processingRepository;
+    private final ProcessingTierService processingTierService;
 
     @Transactional
     public void deleteProcessingByName(String name){
@@ -35,37 +36,41 @@ public class ProcessingService {
 
     // tạo mới processing, nếu categoryId không tồn tại thì throw exception, nếu name đã tồn tại thì throw exception
     @Transactional
-    public void createProcessing(ProcessingDTO processingDTO){
+    public void createProcessing(ProcessingRequest processingDTO){
         if (categoryRepository.findById(processingDTO.getCategoryId()).isEmpty()) {
             throw new RuntimeException("Category with the given ID does not exist");
         }
         if (processingRepository.existsByName(processingDTO.getName())) {
             throw new RuntimeException("Processing with the given name already exists");
         }
-        processingRepository.save(Processing.builder()
+        Processing processing = processingRepository.save(Processing.builder()
                 .category(Category.builder().id(processingDTO.getCategoryId()).build())
                 .name(processingDTO.getName())
-                .price(processingDTO.getPrice())
+                .unit(processingDTO.getUnit())
                 .is_active(true)
                 .build());
+        
+        processingTierService.createProcessingTierList(processingDTO.getPTierRequests(), processing);
+        
     }
 
     //tạo mới processing theo categoryId, với đầu vào là 1 danh sách các processingDTO, nếu categoryId không tồn tại thì throw exception, nếu name đã tồn tại thì throw exception
     @Transactional
-    public void createProcessingByCategoryId( List<ProcessingDTO> processingDTOList){
-        for (ProcessingDTO processingDTO : processingDTOList) {
+    public void createProcessingByCategoryId( List<ProcessingRequest> processingDTOList){
+        for (ProcessingRequest processingDTO : processingDTOList) {
             if (categoryRepository.findById(processingDTO.getCategoryId()).isEmpty()) {
                 throw new RuntimeException("Category with the given ID does not exist");
             }
             if (processingRepository.existsByName(processingDTO.getName())) {
                 throw new RuntimeException("Processing with the given name already exists");
             }
-            processingRepository.save(Processing.builder()
+            Processing processing = processingRepository.save(Processing.builder()
                     .category(Category.builder().id(processingDTO.getCategoryId()).build())
                     .name(processingDTO.getName())
-                    .price(processingDTO.getPrice())
                     .is_active(true)
                     .build());
+
+            processingTierService.createProcessingTierList(processingDTO.getPTierRequests(), processing);
         }
     }
 
@@ -79,7 +84,6 @@ public class ProcessingService {
         ProcessingDTO dto = new ProcessingDTO();
         dto.setCategoryId(processing.getCategory().getId());
         dto.setName(processing.getName());
-        dto.setPrice(processing.getPrice());
         return dto;
     }
 
@@ -95,7 +99,6 @@ public class ProcessingService {
         ProcessingDTO dto = new ProcessingDTO();
         dto.setCategoryId(processing.getCategory().getId());
         dto.setName(processing.getName());
-        dto.setPrice(processing.getPrice());
     
         return dto;
     }
@@ -114,19 +117,48 @@ public class ProcessingService {
     }
 
    @Transactional
-public void updateProcessingById(ProcessingDTO dto) {
+public void updateProcessingById(ProcessingRequest dto) {
 
     Processing processing = processingRepository.findById(dto.getId())
         .orElseThrow(() -> new RuntimeException("Processing not found"));
 
     processing.setName(dto.getName());
-    processing.setPrice(dto.getPrice());
-
+    processing.setUnit(dto.getUnit());
     Category category = categoryRepository.findById(dto.getCategoryId())
         .orElseThrow(() -> new RuntimeException("Category not found"));
-
     processing.setCategory(category);
 
+
+    processingTierService.updateProcessingTier(dto.getPTierRequests(), processing);
     processingRepository.save(processing); // optional vì @Transactional đã đủ
 }
+
+    @Transactional
+    public ProcessingAndTierReponse getProcessingAndTierById(UUID id){
+        Processing result = new Processing();
+        result = processingRepository.findById(id).orElseThrow();
+
+        List<ProcessingTier> tier = processingTierService.getAllByProcessingId(result);
+
+        List<ProcessingTierReponse> tierResponses = tier.stream()
+            .map(item -> ProcessingTierReponse.builder()
+            .id(item.getId())
+            .isActive(item.isActive())
+            .processingId(id)
+            .minVolume(item.getMinVolume())
+            .maxVolume(item.getMaxVolume())
+            .minCharge(item.getMinCharge())
+            .price(item.getPrice())
+            .build())
+        .toList();
+
+        return ProcessingAndTierReponse.builder()
+                .id(id)
+                .categoryId(result.getCategory().getId())
+                .name(result.getName())
+                .unit(result.getUnit())
+                .tierReponses(tierResponses)
+                .build();
+        
+    }
 }

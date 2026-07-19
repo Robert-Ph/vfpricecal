@@ -4,13 +4,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.example.vfprint.entity.Account;
+import com.example.vfprint.enums.DeviceType;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import java.util.Base64;
 import java.util.Date;
 import java.security.Key;
 
@@ -33,12 +33,13 @@ public class JwtService {
 
 
     //Tao Token
-    public String generateToken(Account account){
+    public String generateToken(Account account, DeviceType deviceType){
         return Jwts.builder()
             .setSubject(account.getEmail())
             .claim("role", account.getRole().getName())
             .claim("username", account.getUsername())
             .claim("companyId", account.getCompany().getId())
+            .claim("deviceType", deviceType.name())
             .setIssuedAt(new Date())
             .setExpiration(new Date(System.currentTimeMillis() + expiration))
             .signWith(getSignKey(), SignatureAlgorithm.HS256)

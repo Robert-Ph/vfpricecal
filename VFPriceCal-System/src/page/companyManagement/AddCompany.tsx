@@ -3,11 +3,12 @@ import { type CompaniesRegistration} from "../../config/ModelConfig";
 import { useState  } from "react";
 import { createCompanyRegistration } from "../../service/CompanyRegistrationsService";
 import { useNavigate } from "react-router-dom";
-
+import { toast } from "react-toastify";
 
 
 const AddCompany = () => {
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<CompaniesRegistration>({
         id: '',
         fullName: '',
@@ -28,9 +29,13 @@ const AddCompany = () => {
         }));
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSubmit = async () => {
+        if (!formData.fullName || !formData.name || !formData.phone || !formData.address || !formData.email) {
+            toast.error("Vui lòng điền đầy đủ thông tin bắt buộc.");
+            return;
+        }
         try {
+            setLoading(true);
             // Gọi API bằng fetch hoặc axios
             const response = await createCompanyRegistration( formData);
             if (response.code === 200 || response.code === 201) {
@@ -42,46 +47,15 @@ const AddCompany = () => {
            
         } catch (error) {
             console.error("Lỗi khi thêm công ty:", error);
+        }finally {
+            setLoading(false);
         }
     };
 
-    //     const endTime = useMemo(() => {
-    //     if (!time) return null;
-
-    //     const end = new Date(startTime);
-
-    //     switch (time) {
-    //         case "one-month":
-    //             end.setMonth(end.getMonth() + 1);
-    //             break;
-    //         case "one-year":
-    //             end.setFullYear(end.getFullYear() + 1);
-    //             break;
-    //         case "two-year":
-    //             end.setFullYear(end.getFullYear() + 2);
-    //             break;
-    //         case "three-year":
-    //             end.setFullYear(end.getFullYear() + 3);
-    //             break;
-    //         default:
-    //             return null;
-    //     }
-
-    //     return end;
-    // }, [time, startTime]);
-
-    //     const formatDate = (date: Date) => {
-    //     const year = date.getFullYear();
-    //     const month = String(date.getMonth() + 1).padStart(2, "0");
-    //     const day = String(date.getDate()).padStart(2, "0");
-
-    //     return `${year}-${month}-${day}`;
-    // };
 
 
     return (
         <div className="add-company">
-
             {/* HEADER */}
             <div className="page-header">
                 <div>
@@ -89,24 +63,23 @@ const AddCompany = () => {
                     <p>Create new company subscription</p>
                 </div>
 
-                <button className="back-btn" onClick={() => {
-                    window.location.href = "/user-management";
-                }}>
+                <button className="back-btn" onClick={() => navigate("/company-management")}>
                     ← 
                 </button>
             </div>
 
             {/* FORM */}
-            <div className="form-container">
+           
+                <div className="form-container">
 
                 {/* LEFT */}
                 <div className="form-left">
 
                     <div className="card">
-                        <h3>Company Information</h3>
+                        <h3>Thông tin doanh nghiệp</h3>
 
                         <div className="form-group">
-                            <label>Company Name</label>
+                            <label>Company Name <span className="required">*</span></label>
                             <input
                                 type="text"
                                 name="fullName"
@@ -117,7 +90,7 @@ const AddCompany = () => {
                         </div>
 
                          <div className="form-group">
-                            <label>Name</label>
+                            <label>Name <span className="required">*</span></label>
                             <input
                                 type="text"
                                 name="name"
@@ -128,7 +101,7 @@ const AddCompany = () => {
                         </div>
 
                         <div className="form-group">
-                            <label>Email</label>
+                            <label>Email <span className="required">*</span></label>
                             <input
                                 type="email"
                                 name="email"
@@ -139,7 +112,7 @@ const AddCompany = () => {
                         </div>
 
                         <div className="form-group">
-                            <label>Phone Number(Zalo)</label>
+                            <label>Phone Number(Zalo) <span className="required">*</span></label>
                             <input
                                 type="text"
                                 name="phone"
@@ -150,7 +123,7 @@ const AddCompany = () => {
                         </div>
 
                         <div className="form-group">
-                            <label>Address</label>
+                            <label>Address <span className="required">*</span></label>
                             <textarea
                                 rows={4}
                                 name="address"
@@ -161,7 +134,7 @@ const AddCompany = () => {
                         </div>
 
                          <div className="form-group">
-                            <label>Tax code</label>
+                            <label>Tax code </label>
                             <input
                                 type="text"
                                 name="taxCode"
@@ -256,7 +229,7 @@ const AddCompany = () => {
                                 PNG, JPG up to 5MB
                             </span>
 
-                            <button>
+                            <button type="button">
                                 Choose File
                             </button>
                         </div>
@@ -295,15 +268,14 @@ const AddCompany = () => {
 
             {/* ACTION */}
             <div className="action-bar">
-                <button className="cancel-btn">
+                <button className="cancel-btn" type="button">
                     Huỷ
                 </button>
 
-                <button className="save-btn" onClick={handleSubmit}>
-                    Tiếp tục
+                <button className="save-btn" type="button" onClick={handleSubmit} disabled={loading}>
+                    {loading ? "Đang xử lý..." : "💾 Tiếp tục"}
                 </button>
             </div>
-
         </div>
     );
 };

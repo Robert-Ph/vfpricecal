@@ -1,5 +1,5 @@
 import "./styles/printCostNew.scss";
-import { FiEdit, FiTrash2, FiLayers, FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
+import { FiEdit, FiTrash2,  FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import type { UserInfo } from "../../../context/AuthContext";
@@ -10,8 +10,7 @@ import type { printPriceRanges } from "../../../model/model";
 
 const PrintCostNew = () => {
     const [openPaperModal, setOpenPaperModal] = useState(false);
-    // const [openDeleteModal, setOpenDeleteModal] = useState(false);
-    // const [selectedProcessingId, setSelectedProcessingId] = useState<string>("");
+    const [unit, setUnit] = useState("click");
     const [printData, setPrintData] = useState<printPriceRanges[]>([]); // State để lưu chi tiết gia công
     const [name, setName] = useState("");
     const [user] = useState<UserInfo>(() => {
@@ -43,6 +42,7 @@ const PrintCostNew = () => {
             id: null,
             companyId: user?.companyId,
             name: name,
+            unit: unit,
             isActive: true,
             printPriceRanges: printData
         };
@@ -61,10 +61,6 @@ const PrintCostNew = () => {
         }
     };
 
-    // const handleOpenDelete = (id: string) => {
-    //         // setSelectedProcessingId(id);
-    //         // setOpenDeleteModal(true);
-    //         };
 
     return (
         <div className="processing-detail">
@@ -108,35 +104,33 @@ const PrintCostNew = () => {
                                             </div>
                 
                                             <div className="field-content">
-                                                <span>Tên gia công</span>
+                                                <span>Tên loại hình in</span>
                                                 
                                                 <strong><input type="text" placeholder="Nhập tên giá in" 
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
                                                 /></strong>
                                             </div>
-                                            {/* <div className="info-card__status">
-                                                <FiCheck />
-                                            </div> */}
                                         </div>
                                     </div>
-                
+
                                     <div className="info-card">
                                         <div className="field">
                                             <div className="field-icon">
-                                                <FiLayers />
+                                                <FiTag />
                                             </div>
                 
                                             <div className="field-content">
-                                                <span>Trạng thái</span>
-                                                <div className="status">
-                                                    <span className="dot" />
-                                                    Đang hoạt động
-                                                </div>
+                                                <span>Đơn vị</span>
+                                                <select name="" id="" value={unit} onChange={(e) => setUnit(e.target.value)}>
+                                                    <option value="click">Lượt in</option>
+                                                    <option value="size">Khổ in</option>
+                                                    <option value="m2">m²</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
-                                    
+                
                                     <div className="save-state">
                                                         <button className="btn-save" onClick={handleSave}>
                                                             Lưu giá in
@@ -162,8 +156,8 @@ const PrintCostNew = () => {
                                     <table className="paper-list">
                                         <thead>
                                             <tr>
-                                                <th>Từ</th>
-                                                <th>Đến</th>
+                                                <th>Từ(click & m2) - chiều rộng</th>
+                                                <th>Đến(click & m2) - chiều dài</th>
                                                 <th>Giá</th>
                                                 <th></th>
                                             </tr>

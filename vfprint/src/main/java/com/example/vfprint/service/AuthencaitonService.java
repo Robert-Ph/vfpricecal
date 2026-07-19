@@ -7,11 +7,12 @@ import com.example.vfprint.entity.system.CompansySubscriptions;
 import com.example.vfprint.repository.AccountRepository;
 import com.example.vfprint.repository.TokenRepository;
 import com.example.vfprint.repository.systemRepository.CompansySubscriptionsRepository;
-import com.example.vfprint.repository.systemRepository.PlansRepository;
 import com.nimbusds.jose.JOSEException;
 
-import lombok.RequiredArgsConstructor;
+import jakarta.servlet.http.HttpServletRequest;
 
+import com.example.vfprint.enums.DeviceType;
+import lombok.RequiredArgsConstructor;
 import com.example.vfprint.repository.CompaniesRepository;
 import java.util.List;
 import java.sql.Timestamp;
@@ -48,19 +49,18 @@ public class AuthencaitonService {
 
 
 
+
       /**
      * Check email/password
      */
     public boolean authenticate(LoginRequest loginRequest) {
         // Thực hiện xác thực người dùng (ví dụ: kiểm tra email và password trong cơ sở dữ liệu)
         // Trả về true nếu xác thực thành công, ngược lại trả về false
-        Account account = accountRepository.findByEmail(loginRequest.getEmail())
+        Account account = accountRepository.findByEmail(loginRequest.getEmail().toLowerCase())
                         .orElseThrow(() -> 
                         new NoSuchElementException("Email not found")    
                     );
-        
-    System.out.println("Input password : " + loginRequest.getPassword());
-    System.out.println("DB password    : " + account.getPassword());
+    
 
         return passwordEncoder.matches(loginRequest.getPassword(), account.getPassword());
     }
@@ -68,7 +68,7 @@ public class AuthencaitonService {
     /*
         login
      */
-    public AuthenticationResponse authenticateResponse(LoginRequest request) {
+    public AuthenticationResponse authenticateResponse(LoginRequest request, HttpServletRequest httpRequest) {
 
         boolean isAuthenticate = authenticate(request);
 
@@ -76,17 +76,30 @@ public class AuthencaitonService {
             throw new RuntimeException("Invalid credentials");
         }
 
+        String mobileHeader = httpRequest.getHeader("sec-ch-ua-mobile");
+        String platformHeader = httpRequest.getHeader("sec-ch-ua-platform");
 
-        Account account = accountRepository.findByEmail(request.getEmail())
+        DeviceType deviceType;
+
+        if ("?1".equals(mobileHeader)) {
+            deviceType = DeviceType.MOBILE;
+        } else {
+            deviceType = DeviceType.WEB;
+        }
+
+        //  DeviceType deviceType = DeviceType.valueOf(request.getDeviceType());
+
+        Account account = accountRepository.findByEmail(request.getEmail().toLowerCase())
                         .orElseThrow(() -> 
                         new NoSuchElementException("Email not found")    
                     );
 
         // Thu hồi token cũ
-        revokeAllUserTokens(account);
+        revokeAllUserTokens(account, deviceType);
 
+       
         // Tạo token mới
-        String jwtToken = jwtService.generateToken(account);
+        String jwtToken = jwtService.generateToken(account, deviceType);
 
         //save token DB
         Token token = Token.builder()
@@ -222,9 +235,9 @@ public class AuthencaitonService {
 }
 
 
-private void revokeAllUserTokens(Account account) {
+private void revokeAllUserTokens(Account account, DeviceType deviceType) {
 
-    List<Token> validTokens = tokenRepository.findAllValidTokenByAccount(account.getId());
+    List<Token> validTokens = tokenRepository.findByAccountIdAndDeviceTypeAndRevokedFalse(account.getId(), deviceType);
 
     if (validTokens.isEmpty()) {
         return;

@@ -39,7 +39,7 @@ public class AccountService {
     @Transactional
     public void createAccount(AccountDTO accountDto){
         //1. kiem tra email da ton tai chua
-        if (accountRepository.existsByEmail(accountDto.getEmail())) {
+        if (accountRepository.existsByEmail(accountDto.getEmail().toLowerCase())) {
             throw new RuntimeException("Email already exists");
             
         }
@@ -61,7 +61,7 @@ public class AccountService {
         String newPassword = ultiService.generateRandomPassword();
       // 4. Sử dụng Builder (Đúng chuẩn với annotation @Builder bạn đã đặt ở Entity)
         Account account = Account.builder()
-            .email(accountDto.getEmail())
+            .email(accountDto.getEmail().toLowerCase())
             .username(accountDto.getUsername())  
             .password(passwordEncoder.encode(newPassword))
             .company(company)
@@ -70,7 +70,7 @@ public class AccountService {
             .build(); // Đảm bảo không có trường ID nào bị set thủ công ở đây
         //5. luu account moi vao database
         accountRepository.save(account);
-        emailService.sendPasswordNewAccount(account.getEmail(), newPassword);
+        emailService.sendPasswordNewAccount(account.getEmail().toLowerCase(), newPassword);
 
     }
 

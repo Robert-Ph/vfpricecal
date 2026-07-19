@@ -17,6 +17,7 @@ public class PrintPriceDTO {
     private UUID id;
     private UUID companyId;
     private String name;
+    private String unit;
     private boolean isActive;
     private List<PrintPriceRangeRequest> printPriceRanges;
 }

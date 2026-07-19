@@ -1,5 +1,7 @@
 import "./processingDetail.scss";
-import { FiEdit, FiTrash2,  FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
+import { 
+    FiEdit, 
+    FiTrash2,  FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
 import {  FaSave } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -7,15 +9,15 @@ import ProcessingAddModel from "../../../components/processing/ProcessingAdd";
 import { toast } from "react-toastify";
 import type {processingCreate, processingTier } from "../../../model/model";
 import { formatMoney } from "../../../utils/formatMoney";
-import { createProcessingByCategory, getTierProcessingById } from "../../../service/ProcessingService";
+import {  getTierProcessingById, updateProcessingById } from "../../../service/ProcessingService";
 
 const ProcessingTier = () => {
 
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [name, setName] = useState("");
     const [unit, setUnit] = useState("sheet");
+    const [categoryId, setCategoryId] = useState("");
     const [dataProcessing, setDataProcessing] = useState<processingTier>();
-    const [load, setLoad] = useState<processingCreate>()
     const [data, setData] = useState<processingTier[]>([]);
     const {id} = useParams();
     
@@ -23,7 +25,7 @@ const ProcessingTier = () => {
         const fetchGetData = async () => {
             try{
             const reponse = await getTierProcessingById(id ?? "");
-            setLoad(reponse.data);
+            setCategoryId(reponse.data.categoryId);
             setData(reponse.data.tierReponses);
             setName(reponse.data.name);
             setUnit(reponse.data.unit);
@@ -36,8 +38,21 @@ const ProcessingTier = () => {
     },[id])
 
     const handleAddProcessingTier = (newData: processingTier) => {
-        setData([...data, newData]);
+       if (newData.id) {
+        setData(prev =>
+            prev.map(item =>
+                item.id === newData.id ? newData : item
+            )
+        );
+        return;
+    }
+
+    setData(prev => [...prev, newData]);
     };
+    const handEditProcessingTier = (data: processingTier) => {
+        setDataProcessing(data);
+        setOpenPaperModal(true);
+    }
     const handleDeleteProcessingTier = (id: string) => {
     setData(data.filter(item => item.id !== id));
     };
@@ -50,27 +65,27 @@ const ProcessingTier = () => {
         if(data.length === 0){
             toast.error("Tồn tại tối thiểu 1 thành phần trong danh sách!")
         }
-        const payload = {
-            id: null,
-            categoryId: id ?? "",
-            name: name,
-            unit: unit,
-            pTierRequests: data
-        }
+    const payload: processingCreate = {
+        id: id ?? null,
+        categoryId: categoryId ?? null,
+        name: name,
+        unit: unit,
+        pTierRequests: data
+    };
 
         try{
-            const reponse = await createProcessingByCategory(payload);
+            const reponse = await updateProcessingById(payload);
             if(reponse.code === 200 || reponse.code === 201){
                 setTimeout(() => {
                      window.location.reload(); // Hoặc navigate("/component/papers") nếu bạn dùng react-router
                 }, 500); // Đợi 2 giây trước khi reload hoặc navigate
-                toast.success(`Tạo gia công ${name} thành công!`)
+                toast.success(`Cập nhật gia công ${name} thành công!`)
             }
         } catch (error)
         {
              console.error("Lỗi khi lưu:", error);
             // alert("Có lỗi xảy ra khi tạo giấy mới. Vui lòng thử lại.");
-            toast.error(`Có lỗi xảy ra khi tạo loại giấy ${name}.`);
+            toast.error(`Có lỗi xảy ra khi cập nhật ${name}.`);
         }
     };
 
@@ -183,7 +198,7 @@ const ProcessingTier = () => {
                                                     <td>{formatMoney(item.price)}</td>
                                                     <td>{formatMoney(item.minCharge)}</td>
                                                     <td className="action-buttons">
-                                                        <button className=" icon edit-btn"><FiEdit /></button>
+                                                        <button className=" icon edit-btn" onClick={() => handEditProcessingTier(item)}><FiEdit /></button>
                                                         <button className=" icon delete-btn" onClick={() => handleDeleteProcessingTier(item.id ?? "")}><FiTrash2 /></button>
                                                     </td>
                                                 </tr>

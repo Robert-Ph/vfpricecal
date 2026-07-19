@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.example.vfprint.entity.Token;
 import java.util.List;
 import java.util.UUID;
+import com.example.vfprint.enums.DeviceType;
 @Repository
 public interface TokenRepository extends JpaRepository<Token, String> {
 
@@ -15,4 +16,5 @@ public interface TokenRepository extends JpaRepository<Token, String> {
        AND t.revoked = false
        """)
 List<Token> findAllValidTokenByAccount(UUID accountId);
+List<Token> findByAccountIdAndDeviceTypeAndRevokedFalse(UUID accountId, DeviceType deviceType);
 }

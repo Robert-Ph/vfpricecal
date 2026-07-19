@@ -1,8 +1,6 @@
 package com.example.vfprint.entity;
 
 import java.util.UUID;
-
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,6 +32,6 @@ public class Processing {
     @JoinColumn(name = "category_id", foreignKey = @ForeignKey(name = "fk_processing_category"))
     private Category category; // Khoá ngoại tới bảng category, nhưng chỉ lưu id của category, không cần ánh xạ đối tượng category
     private String name;
-    private Float price;
+    private String unit;
     private Boolean is_active;
 }

@@ -131,7 +131,7 @@ const ProcessingDetail = () => {
                                                 <FiGrid />
                                             </div>
                                             <div className="section-title__content">
-                                                <h3>Danh sách danh sách</h3>
+                                                <h3>Danh sách</h3>
                                                 <p>Quản lý danh sách và giá tương ứng</p>
                                             </div>
                     </div>
@@ -142,8 +142,8 @@ const ProcessingDetail = () => {
                                     <table className="paper-list">
                                         <thead>
                                             <tr>
-                                                <th>Tên loại màng</th>
-                                                <th>Quy cách</th>
+                                                <th>Tên</th>
+                                                <th>Đơn vị tính</th>
                                                 <th></th>
                                             </tr>
                                         </thead>

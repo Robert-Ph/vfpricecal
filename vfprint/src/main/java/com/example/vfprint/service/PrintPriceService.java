@@ -37,6 +37,7 @@ public class PrintPriceService {
             PrintPrice.builder()
             .company(Companies.builder().id(priceDTO.getCompanyId()).build())
             .name(priceDTO.getName())
+            .unit(priceDTO.getUnit())
             .is_active(priceDTO.isActive())
             .build()
         );
@@ -57,6 +58,7 @@ public class PrintPriceService {
                                             .id(item.getId())
                                             .companyId(companyId)
                                             .name(item.getName())
+                                            .unit(item.getUnit())
                                             .isActive(item.getIs_active())
                                             .printPriceRanges(List.of())
                                         .build()).toList();
@@ -76,6 +78,7 @@ public class PrintPriceService {
                 .id(printPrice.getId())
                 .companyId(printPrice.getCompany().getId())
                 .name(printPrice.getName())
+                .unit(printPrice.getUnit())
                 .isActive(printPrice.getIs_active())
                 .printPriceRanges(lRanges)
                 .build();

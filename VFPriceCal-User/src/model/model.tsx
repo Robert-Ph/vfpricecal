@@ -49,7 +49,7 @@ export type processing = {
 
 export type processingCreate = {
     id: string | null;
-    categoryId: string | null;
+    categoryId: string;
     name: string;
     unit: string;
     pTierRequests: processingTier[] | null;
@@ -98,6 +98,7 @@ export type printPrice = {
     id: string | null;
     companyId: string;
     name: string;
+    unit: string;
     isActive: boolean;
     printPriceRanges: printPriceRanges[];
 }

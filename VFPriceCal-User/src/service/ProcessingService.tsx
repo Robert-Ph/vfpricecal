@@ -1,5 +1,5 @@
 import { apiClient } from "../api/APIConfig";
-import { type category, type processing, type processingCreate } from "../model/model";
+import { type category, type processingCreate } from "../model/model";
 
 export const createCategory = async (data: category) => {
     try {
@@ -64,7 +64,7 @@ export const deleteCategoryByCompany = async (id: string, companyId: string) => 
     }
 }
 
-export const updateProcessingById = async (data: processing) => {
+export const updateProcessingById = async (data: processingCreate) => {
     try{
         const response = await apiClient.put(`/processing/update`, data);
         return response.data;

@@ -54,6 +54,9 @@ public class PlansService {
                 .name(plans.getName())
                 .durationInDays(plans.getDurationInDays())
                 .price(plans.getPrice())
+                .maxProducts(plans.getMaxProducts())
+                .maxUsers(plans.getMaxUsers())
+                .maxBranches(plans.getMaxBranches())
                 .description(plans.getDescription())
                 .createdAt(plans.getCreatedAt())
                 .updatedAt(plans.getUpdatedAt())
@@ -77,6 +80,22 @@ public class PlansService {
                 .build();
         plansRepository.save(plans);
         
+    }
+
+    @Transactional
+    public void updatePlan(UUID id, PlansRequest plansRequest){
+        Plans plans = plansRepository.findById(id).orElseThrow();
+        plans.setName(plansRequest.getName());
+        plans.setCode(plansRequest.getCode());
+        plans.setPrice(plansRequest.getPrice());
+        plans.setDurationInDays(plansRequest.getDurationInDays());
+        plans.setIsCustom(plansRequest.getIsCustom());
+        plans.setMaxUsers(plansRequest.getMaxUsers());
+        plans.setMaxProducts(plansRequest.getMaxProducts());
+        plans.setMaxBranches(plansRequest.getMaxBranches());
+        plans.setDescription(plansRequest.getDescription());
+        plans.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
+        plansRepository.save(plans);
     }
 }
         

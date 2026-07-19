@@ -8,32 +8,29 @@ import com.example.vfprint.dto.request.CalculateRequest;
 import com.example.vfprint.dto.response.CalculateResponse;
 import com.example.vfprint.entity.Discount;
 import com.example.vfprint.entity.DiscountRange;
+import com.example.vfprint.entity.PrintPrice;
 import com.example.vfprint.entity.PrintPriceRange;
 import com.example.vfprint.entity.Processing;
 import com.example.vfprint.entity.Profit;
 import com.example.vfprint.entity.ProfitItem;
 import com.example.vfprint.enums.Priority;
-import com.example.vfprint.repository.CategoryRepository;
 import com.example.vfprint.repository.DiscountRangeRepository;
 import com.example.vfprint.repository.DiscountRepository;
 import com.example.vfprint.repository.PrintPriceRangeRepository;
+import com.example.vfprint.repository.PrintPriceRepository;
 import com.example.vfprint.repository.ProcessingRepository;
+import com.example.vfprint.repository.ProcessingTierRepository;
 import com.example.vfprint.repository.ProfitItemRepository;
 import com.example.vfprint.repository.ProfitRepository;
-
 import lombok.RequiredArgsConstructor;
-
+import com.example.vfprint.entity.ProcessingTier;
 import java.util.Comparator;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
-import com.example.vfprint.entity.Category;
 @Service
 @RequiredArgsConstructor
 public class CalculatorService {
-    
-    
-    private final PaperService paperService;
 
     private final PaperSizeService paperSizeService;
 
@@ -47,9 +44,11 @@ public class CalculatorService {
 
     private final DiscountRepository discountRepository;
 
-    private final CategoryRepository categoryRepository;
-
     private final ProfitItemRepository profitItemRepository;
+
+    private final ProcessingTierRepository processingTierRepository;
+
+    private final PrintPriceRepository priceRepository;
 
 
 
@@ -98,11 +97,10 @@ public class CalculatorService {
 
         
         // Giá in ấn
-        double prinPrice = sheetsNeeded * getPrintPrice(infoPriceDTO.getPrintPrice(), paperSizeDTO.getHeight());
-        System.out.println("Giá in: " + prinPrice);
+        double prinPrice = sheetsNeeded * getPrintPrice(infoPriceDTO.getPrintPrice(), paperSizeDTO.getWidth(), paperSizeDTO.getHeight(), sheetsNeeded);
 
         // Giá gia công
-        double totalProcessingCost = (sheetsNeeded * calculateTotalProcessingCost(infoPriceDTO.getProcessingIds()));
+        double totalProcessingCost = calculateTotalProcessingCost(infoPriceDTO.getProcessingIds(), sheetsNeeded, paperSizeDTO.getWidth(), paperSizeDTO.getHeight());
 
         //Kết quả báo giá in ấn
         double price = (materialPrice  * (100 + profitMaterial)/100 ) + (prinPrice * (100 + profitPrint)/100) + (totalProcessingCost * (100 + profitProcessing)/100);
@@ -224,16 +222,44 @@ public class CalculatorService {
     //ham tinh kiemr tra processing tong tien cua processingIds:
     // Neu processingIds rong thi tra ve 0, neu processingId khong ton tai thi bo qua processing do,
     //  neu processingId ton tai thi cong gia processing do vao tong tien  
-    public double calculateTotalProcessingCost(List<CalculateRequest> processingIds) {
+    public double calculateTotalProcessingCost(List<CalculateRequest> processingIds, int amount, double w, double h) {
         double totalCost = 0.0;
         if (processingIds.isEmpty()) {
             return totalCost;
         }
         for (CalculateRequest processingId : processingIds) {
-            List<Processing> processingList = processingRepository.findByCategoryId(processingId.getId());
+            List<Processing> processingList = processingRepository.findByCategoryIdAndName(processingId.getId(), processingId.getName());
             for (Processing item : processingList){
-                if ((item.getName()).equals(processingId.getName())) {
-                    totalCost += item.getPrice();
+                List<ProcessingTier> listTier = processingTierRepository.findByProcessing(item);
+
+                    switch (item.getUnit()) {
+                    case "m2":
+                        double area = w * h * amount;
+                        for(ProcessingTier tier: listTier){
+                            if (area <= tier.getMaxVolume() || tier.getMaxVolume() == -1) {
+                                if ((tier.getPrice()*amount) <= tier.getMinCharge()) {
+                                    totalCost += tier.getMinCharge();
+                                }else{
+                                    totalCost += tier.getPrice()*amount;
+                                }
+                                break;
+                            }
+                            
+                        }
+                        break;
+                
+                    default:
+                        for(ProcessingTier tier: listTier){
+                            if (amount <= tier.getMaxVolume() || tier.getMaxVolume() == -1) {
+                                if ((tier.getPrice()*amount) <= tier.getMinCharge()) {
+                                    totalCost += tier.getMinCharge();
+                                }else{
+                                    totalCost += tier.getPrice()*amount;
+                                }
+                                break;
+                            }
+                        }
+                        break;
                 }
             }
         }
@@ -284,17 +310,35 @@ public class CalculatorService {
             .getDiscount();
     }
 
-    public double getPrintPrice(UUID id, int height ){
+    public double getPrintPrice(UUID id, int width, int height, int amount){
 
+        PrintPrice price = priceRepository.findById(id).orElseThrow();
         List<PrintPriceRange> pRanges = printPriceRangeRepository.findByPrintPriceId(id);
         if(pRanges.size() == 1){
            return pRanges.get(0).getPricePerMeter();
         }else{
-            for(PrintPriceRange print: pRanges){
-                if (height <= print.getMaxLengthCm()) {
-                    return print.getPricePerMeter();
-                }
+            switch (price.getUnit()) {
+                case "m2":
+                    double area = width * height * amount;
+                    for(PrintPriceRange print: pRanges){
+                        if (area <= print.getMaxLengthCm()) {
+                            return print.getPricePerMeter();
+                        }
+                    }
+                    break;
+            
+                case "size":
+
+                    break;
+                default:
+                    for(PrintPriceRange print: pRanges){
+                        if (height <= print.getMaxLengthCm()) {
+                            return print.getPricePerMeter();
+                        }
+                    }
+                    break;
             }
+            
         }
     
         return 0;

@@ -1,7 +1,6 @@
 package com.example.vfprint.service;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.vfprint.dto.CategoryDTO;
@@ -111,7 +110,7 @@ public class CategoryService {
                         .map(processing -> ProcessingResponse.builder()
                             .id(processing.getId())
                             .name(processing.getName())
-                            .price(processing.getPrice())
+                            .unit(processing.getUnit())
                             .build())
                         .toList())
                 .build();

@@ -14,7 +14,7 @@ type Props = {
 const ProcessingAddModel = ({ open, setOpen, data, onAdd }: Props) => {
 
   const [priceProcessing, setPriceProcessing] = useState(data?.price ?? 0);
-  const [min, setMin] = useState(data?.minVolume ?? 0);
+  const [min, setMin] = useState(data?.minVolume ?? 1);
   const [max, setMax] = useState(data?.maxVolume ?? 0);
   const [charge, setCharge] = useState(data?.minCharge ?? 0);
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
@@ -26,11 +26,7 @@ const ProcessingAddModel = ({ open, setOpen, data, onAdd }: Props) => {
 
     setError(""); 
     const payload = {
-        // id: data?.id ?? "", // ID sẽ được backend tạo tự động
-        // categoryId: id, // ID ẩn từ context
-        // name: processingName,
-        // price: priceProcessing
-      id: null,
+      id: data?.id ?? "",
       processingId: null,
       minVolume: min,
       maxVolume: max,
@@ -40,27 +36,10 @@ const ProcessingAddModel = ({ open, setOpen, data, onAdd }: Props) => {
     };
     onAdd(payload);
     setOpen(false);
-    setMin(0);
+    setMin(1);
     setMax(0);
     setCharge(0);
     setPriceProcessing(0);
-
-    // let response;
-
-    // if(data?.id){
-    //   response = await updateProcessingById(payload);
-    // }else{
-    //   response = await createProcessingByCategory(payload);
-    // }
-
-    // if (response.code === 200 || response.code === 201) {
-    //     toast.success(`Tạo danh mục ${processingName} thành công!`);
-    //     setTimeout(() => {
-    //         window.location.reload(); // Hoặc navigate("/component/processing") nếu bạn dùng react-router
-    //     }, 500); // Đợi 0.5 giây trước khi reload hoặc navigate
-    // } else {
-    //     toast.error(`Có lỗi xảy ra khi tạo danh mục ${processingName}.`);
-    // }
   };
 
     if (!open) return null;
@@ -88,7 +67,7 @@ const ProcessingAddModel = ({ open, setOpen, data, onAdd }: Props) => {
             />
           </div>
                     <div className="info">
-            <label>Đến tối đa</label>
+            <label>Đến tối đa: không giới hạn nhập -1</label>
             <input
             className={!max && error ? "input-error" : ""} // Thêm class để viền đỏ nếu cần
               type="number"

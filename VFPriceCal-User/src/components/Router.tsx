@@ -30,6 +30,7 @@ import CustomerProfile from "../pages/SystemPage/CustomerProfile";
 import NewProduct from "../pages/ProductPage/NewProduct";
 import NewProcessing from "../pages/PriceComponent/Processing/NewProcessing";
 import ProcessingTier from "../pages/PriceComponent/Processing/ProcessingTier";
+import QuotationPreview from "./QuotationPreview";
 
 export const router = createBrowserRouter([
   {
@@ -83,7 +84,8 @@ export const router = createBrowserRouter([
       { path: "component/profit/new", element: <ProfitNew/>},
       { path: "component/profit/:id", element: <ProfitDetail/>},
       { path: "about", element: <About/>},
-      { path: "system/profile", element: <CustomerProfile/>}
+      { path: "system/profile", element: <CustomerProfile/>},
+      { path: "export-pdf", element: <QuotationPreview/>}
 
 
     ],

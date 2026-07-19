@@ -1,17 +1,17 @@
 package com.example.vfprint.controller;
 
 import com.example.vfprint.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
-
 import com.example.vfprint.dto.ProcessingDTO;
+import com.example.vfprint.dto.request.ProcessingRequest;
 import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.service.ProcessingService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,22 +23,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/processing")
 public class ProcessingController {
     
     
-    @Autowired
-    private ProcessingService processingService;
+    private final ProcessingService processingService;
 
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
 
 
 
 
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createProcessingbyCategory(@RequestBody ProcessingDTO processingDTO){
+    public ResponseEntity<ApiResponse> createProcessingbyCategory(@RequestBody ProcessingRequest processingDTO){
         processingService.createProcessing(processingDTO);
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse
@@ -53,7 +52,7 @@ public class ProcessingController {
 
     
     @PostMapping("/list")
-    public ResponseEntity<String> postMethodName(@RequestBody List<ProcessingDTO> processingDTOList) {
+    public ResponseEntity<String> postMethodName(@RequestBody List<ProcessingRequest> processingDTOList) {
         processingService.createProcessingByCategoryId(processingDTOList);
         return ResponseEntity.ok("Processing list created successfully");
     }
@@ -82,6 +81,16 @@ public class ProcessingController {
        
      }
 
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<ApiResponse> getTierProcessingById(@PathVariable UUID id){
+        return ResponseEntity.status(HttpStatus.OK).body(
+            ApiResponse.builder()
+            .code(200)
+            .data(processingService.getProcessingAndTierById(id))
+            .build()
+        );
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse> deleteProcessingByCategory(@PathVariable UUID id, @RequestParam UUID categoryId){
         processingService.deleteProcessingByCategory(id, categoryId);
@@ -94,7 +103,7 @@ public class ProcessingController {
     }
     
     @PutMapping("/update")
-    public ResponseEntity<ApiResponse> updateProcessingById(@RequestBody ProcessingDTO processingDTO){
+    public ResponseEntity<ApiResponse> updateProcessingById(@RequestBody ProcessingRequest processingDTO){
         processingService.updateProcessingById(processingDTO);
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse.builder()
