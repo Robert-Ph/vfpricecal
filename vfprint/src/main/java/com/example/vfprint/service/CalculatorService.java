@@ -328,7 +328,11 @@ public class CalculatorService {
                     break;
             
                 case "size":
-
+                    for(PrintPriceRange print: pRanges){
+                        if (height <= print.getMaxLengthCm() && width <= print.getMinLengthCm()) {
+                            return print.getPricePerMeter();
+                        }
+                    }
                     break;
                 default:
                     for(PrintPriceRange print: pRanges){

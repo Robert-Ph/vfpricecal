@@ -157,9 +157,9 @@ const Sidebar = () => {
                         <NavLink to="/system/profile" className="submenu-item">
                             Thông tin tài khoản
                         </NavLink>
-                        {/* <NavLink to="/system/backup" className="submenu-item">
-                            Sao lưu dữ liệu
-                        </NavLink> */}
+                        <NavLink to="/system/log" className="submenu-item">
+                            Log
+                        </NavLink> 
                     </div>
                 )
                 }

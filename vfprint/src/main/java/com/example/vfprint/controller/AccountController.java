@@ -55,10 +55,10 @@ public class AccountController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createAccount(@RequestBody AccountDTO account){
+    public ResponseEntity<ApiResponse<Void>> createAccount(@RequestBody AccountDTO account){
         accountService.createAccount(account);
         return ResponseEntity.status(HttpStatus.CREATED).body(
-            ApiResponse.builder()
+            ApiResponse.<Void>builder()
             .code(201)
             .message("Account created successfully")
             .build()

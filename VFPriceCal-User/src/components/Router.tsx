@@ -31,6 +31,7 @@ import NewProduct from "../pages/ProductPage/NewProduct";
 import NewProcessing from "../pages/PriceComponent/Processing/NewProcessing";
 import ProcessingTier from "../pages/PriceComponent/Processing/ProcessingTier";
 import QuotationPreview from "./QuotationPreview";
+import Log from "../pages/SystemPage/log/Log";
 
 export const router = createBrowserRouter([
   {
@@ -80,6 +81,7 @@ export const router = createBrowserRouter([
       { path: "component/discount/new", element: <DiscountNew/>},
       { path: "system/settings", element: <SystemSetting /> },
       { path: "system/backup", element: <SystemBackup /> },
+      { path: "system/log", element: <Log/>},
       { path: "component/profit", element: <Profit />},
       { path: "component/profit/new", element: <ProfitNew/>},
       { path: "component/profit/:id", element: <ProfitDetail/>},
