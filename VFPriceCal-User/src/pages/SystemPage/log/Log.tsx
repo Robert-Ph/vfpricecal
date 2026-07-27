@@ -1,28 +1,42 @@
 
 import "./log.scss"
-// import { useNavigate } from "react-router-dom";
 // import { FaPlus } from "react-icons/fa";
 // // import { FiSearch, FiEdit, FiTrash2 } from "react-icons/fi";
-// import { useState } from "react";
+import { useEffect, useState } from "react";
 
-// import type { UserInfo } from "../../../context/AuthContext";
+import type { UserInfo } from "../../../context/AuthContext";
+import type { log } from "../../../model/model";
+import { getByLog } from "../../../service/LogService";
 
 
 
 
 const Log = () => {
 
-    // const [user] = useState<UserInfo | null>(() => {
-    // const savedUser = localStorage.getItem("user");
-    // if (savedUser) {
-    //     try {
-    //         return JSON.parse(savedUser);
-    //     } catch (e) {
-    //         return e;
-    //     }
-    // }
-    //     return null;
-    // });
+    const [log, setLog] = useState<log[]>([]);
+    const [user] = useState<UserInfo | null>(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+        try {
+            return JSON.parse(savedUser);
+        } catch (e) {
+            return e;
+        }
+    }
+        return null;
+    });
+
+    useEffect(()=>{
+                const fetchData = async () => {
+                    try {
+                        const response = await getByLog(user?.companyId ?? "");
+                        setLog(response.data);
+                    } catch (error) {
+                        console.error("Failed to fetch quotations:", error);
+                    }
+                };
+                fetchData();
+    }, [user?.companyId])
 
 
     return (
@@ -53,6 +67,22 @@ const Log = () => {
                             </tr>
                         </thead>
                         <tbody>
+                            {[...log]
+                                .sort(
+                                    (a, b) =>
+                                    new Date(b.createAt).getTime() - new Date(a.createAt).getTime()
+                                ).map((item: log) => (
+                            <tr>
+                                <td>#{String(item.id).padStart(6,"0")}</td>
+                                <td>{item.createAt}</td>
+                                <td>{item.level}</td>
+                                <td>{item.action}</td>
+                                <td>{item.accountName}</td>
+                                <td>{item.content}</td>
+                                <td>{item.status}</td>
+                            </tr>
+                            ))}
+
 
                         </tbody>
                     </table>

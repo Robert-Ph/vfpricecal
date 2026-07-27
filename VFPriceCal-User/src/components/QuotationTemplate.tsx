@@ -1,4 +1,4 @@
-import "./QuotationTemplate.scss";
+import "./quotationTemplate.scss";
 import type { UserInfo } from "../context/AuthContext";
 import {useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";

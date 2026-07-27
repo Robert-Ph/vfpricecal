@@ -1,11 +1,13 @@
 package com.example.vfprint.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.vfprint.service.CalculatorService;
+
+import lombok.RequiredArgsConstructor;
+
 import com.example.vfprint.dto.InfoPriceDTO;
 import com.example.vfprint.dto.response.ApiResponse;
 
@@ -13,11 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/calculator")
 public class CalculatorController {
     
-    @Autowired
-    private CalculatorService calculatorService;
+    private final CalculatorService calculatorService;
 
 
     @PostMapping

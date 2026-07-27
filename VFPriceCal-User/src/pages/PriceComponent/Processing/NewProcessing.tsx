@@ -1,5 +1,7 @@
 import "./processingDetail.scss";
-import { FiEdit, FiTrash2, FiLayers, FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
+import { FiEdit, FiTrash2,
+    //  FiLayers,
+      FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -14,7 +16,9 @@ const NewProcessing = () => {
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [name, setName] = useState("");
     const [unit, setUnit] = useState("sheet");
-    const [dataProcessing, setDataProcessing] = useState<processingTier>();
+    const [dataProcessing
+        // ,setDataProcessing
+        ] = useState<processingTier>();
     const [data, setData] = useState<processingTier[]>([]);
     const {id} = useParams();
     

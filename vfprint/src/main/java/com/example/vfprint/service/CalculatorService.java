@@ -13,7 +13,10 @@ import com.example.vfprint.entity.PrintPriceRange;
 import com.example.vfprint.entity.Processing;
 import com.example.vfprint.entity.Profit;
 import com.example.vfprint.entity.ProfitItem;
+import com.example.vfprint.enums.ActionLog;
+import com.example.vfprint.enums.LevelLog;
 import com.example.vfprint.enums.Priority;
+import com.example.vfprint.enums.StatusLog;
 import com.example.vfprint.repository.DiscountRangeRepository;
 import com.example.vfprint.repository.DiscountRepository;
 import com.example.vfprint.repository.PrintPriceRangeRepository;
@@ -50,20 +53,23 @@ public class CalculatorService {
 
     private final PrintPriceRepository priceRepository;
 
+    private final LogUserService logUserService;
+
 
 
     // Ham tinh gia in an theo kich thuoc san pham va loai giay
     public CalculateResponse calculatePrintingCost(InfoPriceDTO infoPriceDTO) {
 
-        // Kiem tra xem paper size va paper co ton tai hay khong
+        try{
+
+            // Kiem tra xem paper size va paper co ton tai hay khong
         PaperSizeDTO paperSizeDTO = selectOptimalPaperSize(infoPriceDTO.getWidthProduct(), infoPriceDTO.getHeightProduct(), infoPriceDTO.getQuantity(), infoPriceDTO.getPaperId());
         if (paperSizeDTO == null) {
             throw new RuntimeException("Paper size không tồn tại với ID: " + infoPriceDTO.getPaperId());
+            
         }
 
         Profit profit = profitRepository.findById(infoPriceDTO.getProfit()).orElseThrow();
-        
-
         
         if (infoPriceDTO.getProfit() == null ){
             profit = profitRepository.findByPriority(Priority.HIGH);
@@ -93,9 +99,6 @@ public class CalculatorService {
         //Giá giấy
         double materialPrice = (sheetsNeeded * paperSizeDTO.getPrice()) ;
         
-    
-
-        
         // Giá in ấn
         double prinPrice = sheetsNeeded * getPrintPrice(infoPriceDTO.getPrintPrice(), paperSizeDTO.getWidth(), paperSizeDTO.getHeight(), sheetsNeeded);
 
@@ -115,10 +118,15 @@ public class CalculatorService {
         //Lấy chiết khấu cho khách hàng
         double discount = getDiscount(discountId, BigDecimal.valueOf(price));
 
-        System.out.println(price);
+        logUserService.createLogUser(infoPriceDTO.getCompanyId(), 
+                                        LevelLog.INFO, ActionLog.QUOTATION, 
+                                        infoPriceDTO.getAccoutId() , 
+                                        "Tính báo giá", 
+                                        StatusLog.Success);
        
-                // Tinh tong chi phi in an
-        return CalculateResponse.builder()
+       
+        // Tinh tong chi phi in an
+        CalculateResponse result = CalculateResponse.builder()
                 .price(Math.round(price))
                 .quantityPaper(sheetsNeeded)
                 .productSheet(infoPriceDTO.getQuantity()/sheetsNeeded)
@@ -128,6 +136,19 @@ public class CalculatorService {
                 .paperCost(price / sheetsNeeded)
                 .cost(materialPrice + prinPrice + totalProcessingCost)
                 .build();
+        return result;
+        }catch(Exception e){
+             logUserService.createLogUser(infoPriceDTO.getCompanyId(), 
+                                        LevelLog.INFO, ActionLog.QUOTATION, 
+                                        infoPriceDTO.getAccoutId() , 
+                                        "Tính báo giá", 
+                                        StatusLog.Error);
+            
+            throw e;
+
+        }
+
+        
     }
 
 

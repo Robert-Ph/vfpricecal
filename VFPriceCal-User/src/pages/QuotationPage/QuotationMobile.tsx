@@ -18,7 +18,7 @@ import ProcessingsCalModel from "../../components/processing/ProcessingsCalModel
 import {calculateMobile} from "../../service/CalculateService";
 import { formatMoney } from "../../utils/formatMoney";
 import zalo from "../../assets/zalo.png";
-import type { mobile, proCal } from "../../model/model";
+import type { mobile, proCal, result } from "../../model/model";
 import { toast } from "react-toastify";
 
 
@@ -32,7 +32,7 @@ const QuotationMobile = () => {
     const [quantity, setQuantity] = useState<number>(0);
     const [paperId, setPaperId] = useState<string>("");
     const [printPriceId, setprintPriceId] = useState<string>("");
-    const [result, setResult] = useState<any>(null);
+    const [result, setResult] = useState<result>();
     // const [printList, setPrintList] = useState<printPrice>();
 
 
@@ -59,6 +59,7 @@ const QuotationMobile = () => {
 
             try{
                 const data ={
+                    accoutId: "",
                     widthProduct: width,
                     heightProduct: height,
                     quantity: quantity,
@@ -71,7 +72,7 @@ const QuotationMobile = () => {
                 }
     
                 const response = await calculateMobile(data);
-                setResult(response);
+                setResult(response.data);
     
             }catch(error){
                 console.error("Lỗi báo giá vui lòng kiểm tra lại thông tin:", error);
@@ -226,7 +227,7 @@ const QuotationMobile = () => {
         <div className="result-row">
           <span>VAT (8%)</span>
           <strong>{formatMoney(
-                                      (result?.data?.price || 0) *
+                                      (result?.price || 0) *
                                       (8 / 100)
                                   )}</strong>
         </div>
@@ -234,8 +235,8 @@ const QuotationMobile = () => {
         <div className="total-box">
           <span>TỔNG TIỀN </span>
           <strong>{formatMoney(
-                                      (result?.data?.price || 0) +
-                                      (result?.data?.price || 0) *
+                                      (result?.price || 0) +
+                                      (result?.price || 0) *
                                       (8 / 100)
                                   )}</strong>
         </div>

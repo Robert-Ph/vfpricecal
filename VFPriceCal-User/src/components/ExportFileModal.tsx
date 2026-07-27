@@ -12,7 +12,7 @@ const UserModal = ({ open, setOpen }: Props) => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
+  // const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
 
 
 
@@ -28,7 +28,7 @@ const UserModal = ({ open, setOpen }: Props) => {
         <div className="modal-header">
           Thông tin người dùng
         </div>
-        <p style={{ color: "red" }}>{error}</p>
+        {/* <p style={{ color: "red" }}>{error}</p> */}
 
         <div className="main">
 

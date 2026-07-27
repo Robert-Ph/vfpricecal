@@ -92,6 +92,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/category/**").hasAnyRole("OWNER", "STAFF", "ADMIN")
                         .requestMatchers("/api/role/**").hasAnyRole("OWNER", "STAFF", "ADMIN")
                         .requestMatchers("/api/processing/**").hasAnyRole("OWNER", "STAFF", "ADMIN")
+                        .requestMatchers("/api/log-user/**").hasAnyRole("OWNER", "ADMIN")
 
                         /**
                          * Protected API

@@ -4,6 +4,7 @@ import { createContext } from "react";
 export interface UserInfo {
   companyId: string; // Hoặc number nếu companyId là số
   companyName: string;
+  userId: string;
   username: string;
   fullname: string;
   email: string;

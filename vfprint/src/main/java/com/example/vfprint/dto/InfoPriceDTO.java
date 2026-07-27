@@ -9,6 +9,7 @@ import lombok.Data;
 
 @Data
 public class InfoPriceDTO {
+    private UUID accoutId;
     private int widthProduct;
     private int heightProduct;
     private Integer quantity;

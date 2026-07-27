@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
 import QuotationPage from "../pages/QuotationPage/QuotationPage";
 import ProductPage from "../pages/ProductPage/ProductPage";
-import ProductDetail from "../pages/ProductPage/ProductDetail/ProductDetail";
+// import ProductDetail from "../pages/ProductPage/ProductDetail/ProductDetail";
 import ComponentPaper from "../pages/PriceComponent/Paper/Material";
 import Processing from "../pages/PriceComponent/Processing/Processing";
 import ProcessingDetail from "../pages/PriceComponent/Processing/ProcessingDetail";
@@ -64,7 +64,7 @@ export const router = createBrowserRouter([
       { path: "quotation", element: <QuotationPage /> }, // Chuyển Quotation sang một path cụ thể
       { path: "product", element: <ProductPage /> },
       { path: "product/new", element: <NewProduct /> },
-      { path: "product/:id", element: <ProductDetail /> },
+      // { path: "product/:id", element: <ProductDetail /> },
       { path: "component/papers", element: <ComponentPaper /> },
       { path: "component/paper/add", element: <PaperAdd /> },
       { path: "component/processing", element: <Processing /> },

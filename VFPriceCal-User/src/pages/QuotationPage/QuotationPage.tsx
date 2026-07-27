@@ -191,6 +191,7 @@ const QuotationPage = () => {
 
         try{
             const data ={
+                accoutId: user?.userId ?? "",
                 widthProduct: width,
                 heightProduct: height,
                 quantity: quantity,
@@ -203,7 +204,12 @@ const QuotationPage = () => {
             }
 
             const response = await calculatePrint(data);
-            setResult(response.data);
+            
+            if(response.code === 200 || response.code === 201){
+              setResult(response.data);
+            }else{
+              console.error("Lỗi báo giá vui lòng kiểm tra lại thông tin!");
+            }
 
         }catch(error){
             console.error("Lỗi báo giá vui lòng kiểm tra lại thông tin:", error);

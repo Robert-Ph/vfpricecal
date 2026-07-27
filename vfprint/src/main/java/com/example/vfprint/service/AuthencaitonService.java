@@ -139,6 +139,7 @@ public class AuthencaitonService {
             .companyId(account.getCompany().getId())
             .companyName(company.getCode())
             .username(account.getUsername())
+            .userId(account.getId())
             .email(account.getEmail())
             .role(account.getRole().getName()) // Gửi role để FE phân quyền Menu
             .phone(company.getPhone())

@@ -1,6 +1,8 @@
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
-import { FaFileAlt, FaCog, FaBox } from "react-icons/fa";
+import { FaFileAlt, FaCog
+    // , FaBox
+ } from "react-icons/fa";
 import { IoLayers } from "react-icons/io5";
 import { FiChevronDown, FiInfo, FiSmartphone } from "react-icons/fi";
 import "./sidebar.scss";
@@ -82,10 +84,10 @@ const Sidebar = () => {
                     <span>Báo giá</span>
                 </NavLink>
 
-                <NavLink className="menu-item" to="/product">
+                {/* <NavLink className="menu-item" to="/product">
                     <FaBox className="menu-icon" />
                     <span>Sản phẩm</span>
-                </NavLink>
+                </NavLink> */}
 
                 {user?.role === "ADMIN" || user?.role === "OWNER" ? (
                 <div className="menu-item parent"

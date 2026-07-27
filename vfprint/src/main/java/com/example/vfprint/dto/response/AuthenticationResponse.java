@@ -18,6 +18,7 @@ public class AuthenticationResponse {
     private String companyName;
     private String fullname;
     private String username;
+    private UUID userId;
     private String plan;
     private String email;
     private String role;

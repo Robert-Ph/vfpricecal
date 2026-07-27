@@ -65,6 +65,7 @@ const ProcessingTier = () => {
         if(data.length === 0){
             toast.error("Tồn tại tối thiểu 1 thành phần trong danh sách!")
         }
+        
     const payload: processingCreate = {
         id: id ?? null,
         categoryId: categoryId ?? null,

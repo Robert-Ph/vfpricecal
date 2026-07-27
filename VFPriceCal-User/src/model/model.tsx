@@ -114,6 +114,7 @@ export type printPriceRanges = {
 
 //du lieu tinh toan
 export type calculate = {
+    accoutId: string;
     widthProduct: number | null;
     heightProduct: number | null;
     quantity: number | null;
@@ -254,4 +255,19 @@ export type roles = {
     id: string;
     name: string;
     description: string;
+}
+
+export type log = {
+    id: string;
+    level: string;
+    action: string;
+    accountName: string;
+    content: string;
+    status: string;
+    createAt: string;
+}
+
+export type LogRequest = {
+    id: string;
+    companyId: string;
 }
