@@ -1,0 +1,161 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background: #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  z-index: 999;
+
+  .container {
+    max-width: 1280px;
+    height: 100%;
+    margin: auto;
+    padding: 0 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  // Logo
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    img {
+      width: 45px;
+      height: 45px;
+      object-fit: contain;
+    }
+
+    h2 {
+      font-size: 28px;
+      color: #2563eb;
+      font-weight: 700;
+    }
+  }
+
+  // Menu
+  .nav-menu {
+    display: flex;
+    gap: 36px;
+
+    a {
+      position: relative;
+      text-decoration: none;
+      color: #334155;
+      font-size: 16px;
+      font-weight: 500;
+      transition: all 0.3s;
+
+      &:hover {
+        color: #2563eb;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #2563eb;
+        transition: 0.3s;
+      }
+
+      &:hover::after {
+        width: 100%;
+      }
+    }
+  }
+
+  // Buttons
+  .nav-actions {
+    display: flex;
+    gap: 15px;
+
+    button {
+      padding: 11px 24px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .3s;
+    }
+
+    .btn-login {
+      background: white;
+      border: 1px solid #d1d5db;
+      color: #334155;
+
+      &:hover {
+        border-color: #2563eb;
+        color: #2563eb;
+      }
+    }
+
+    .btn-trial {
+      background: #2563eb;
+      color: white;
+      border: none;
+
+      &:hover {
+        background: #1d4ed8;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(37, 99, 235, .25);
+      }
+    }
+  }
+
+  // Mobile icon
+  .menu-toggle {
+    display: none;
+    cursor: pointer;
+    color: #334155;
+  }
+}
+
+/* Responsive */
+
+@media (max-width: 992px) {
+
+  .navbar {
+
+    .nav-menu,
+    .nav-actions {
+      display: none;
+    }
+
+    .menu-toggle {
+      display: block;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+
+  .navbar {
+
+    .container {
+      padding: 0 20px;
+    }
+
+    .logo h2 {
+      font-size: 22px;
+    }
+
+    .logo img {
+      width: 38px;
+      height: 38px;
+    }
+  }
+}

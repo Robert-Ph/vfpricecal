@@ -1,0 +1,45 @@
+.footer {
+  background: #0f172a;
+  color: #fff;
+  padding: 70px 0 20px;
+
+  .container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 0 30px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 40px;
+  }
+
+  h3,
+  h4 {
+    margin-bottom: 20px;
+    color: #fff;
+  }
+
+  p {
+    color: #94a3b8;
+    line-height: 1.7;
+  }
+
+  a {
+    display: block;
+    color: #cbd5e1;
+    text-decoration: none;
+    margin-bottom: 12px;
+    transition: color .3s;
+
+    &:hover {
+      color: #3b82f6;
+    }
+  }
+
+  .copyright {
+    margin-top: 40px;
+    text-align: center;
+    border-top: 1px solid #334155;
+    padding-top: 20px;
+    color: #94a3b8;
+  }
+}
