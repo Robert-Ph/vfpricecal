@@ -13,6 +13,9 @@ $text-light: #ffffff;
   top: 0;
   bottom: 0;
 
+  
+  
+
   /* Container chính bên trái màn hình đăng nhập */
 .login__left {
     background: linear-gradient(135deg, #0F2027 0%, #203A43 50%, #2C5364 100%);
@@ -96,6 +99,27 @@ $text-light: #ffffff;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    overflow-y: auto; /* Kích hoạt thanh cuộn dọc khi menu dài */
+    padding-right: 4px; /* Tạo khoảng trống nhỏ để thanh cuộn không đè vào chữ */
+
+    /* Custom thanh cuộn đẹp mắt, xịn xò hơn */
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.4);
+      }
+    }
 
     .menu-item {
       display: flex;

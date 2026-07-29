@@ -1,23 +1,23 @@
-.quotation-page {
-  padding: 20px;
+.quotation-list-page {
+  padding: 10px;
   background: #f5f7fb;
   min-height: 100vh;
 }
 
-.quotation-header {
+.quotation-list-header {
   background: #fff;
   border-radius: 18px;
-  padding: 5px 30px;
-  margin-bottom: 10px;
+  padding: 10px 30px;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 
-  position: sticky;
-    top: 0;
-    z-index: 100;
+  // position: sticky;
+  //   top: 0;
+  //   z-index: 100;
 
   // margin-bottom: 20px;
 }
@@ -28,7 +28,7 @@
   gap: 18px;
 
   h1 {
-    font-size: 28px;
+    font-size: 18px;
     margin: 0;
   }
 
@@ -42,50 +42,60 @@
   font-size: 42px;
   color: #2563eb;
 }
-
+.icon-list {
+            width:42px;
+            height:42px;
+            border: none;
+            border-radius: 12px;
+            background: #f7f7f7;
+            cursor: pointer;
+            transition: 0.2s;
+}
 .header-actions {
+    font-size: 12px;
   display: flex;
-  gap: 12px;
+  gap: 5px;
 }
 
-.quotation-content {
+.quotation-list-content {
   display: grid;
+  margin-top: 10px;
   grid-template-columns: 1fr 380px;
   gap: 10px;
 }
 
-.quotation-main {
+.quotation-list-main {
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
 
-.card-quotation,
+.card-list-quotation,
 .notice-box {
   background: white;
-  border-radius: 18px;
-  // margin-top: 16px;
+  border-radius: 12px;
   padding: 10px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 }
 
 
-.section-title-quote {
+.section-list-title-quote {
   display: flex;
   align-items: center;
   // gap: 10px;
 
   color: #2563eb;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 700;
 
   // margin-bottom: 24px;
 }
 
-.general-form {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+.general-list-form {
+  display: flex;
+  flex-direction: row; /* Xếp nằm ngang */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  gap: 10px; /* Khoảng cách giữa các hàng (tùy chỉnh 5px hoặc 10px) */
 }
 
 .vat-field {
@@ -94,6 +104,7 @@
 
 .field-quotation {
   display: flex;
+  font-size: 12px;
   flex-direction: column;
   gap: 5px;
 
@@ -105,10 +116,10 @@
 
 input,
 select {
-  height: 52px;
+  height: 42px;
   border: 1px solid #dbe2ea;
-  border-radius: 12px;
-  padding: 0 16px;
+  border-radius: 8px;
+  padding: 0 8px;
   background: white;
 }
 
@@ -133,10 +144,18 @@ select {
   }
 }
 
-.product-grid {
-  display: grid;
-  grid-template-columns: 1fr 1px 1fr;
-  gap: 24px;
+.add-product{
+      height: 36px;
+      font-size: 14px;
+  border: 1px solid #2563eb;
+  border-radius: 5px;
+  float: left;
+
+  background: white;
+  color: #2563eb;
+
+  margin-top: 10px;
+  margin-bottom: 20px;
 }
 
 .divider {
@@ -175,24 +194,44 @@ select {
   color: #2563eb;
 
   padding: 0 18px;
-  margin-bottom: 20px;
+//   margin-bottom: 10px;
 }
 
-.processing-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
 
-  th {
-    background: #f8fafc;
-    // padding: 14px;
-    text-align: left;
-  }
+.product-list-grid {
+display: flex;
+  flex-direction: column; /* Xếp các thẻ con thành các hàng dọc */
+  align-items: flex-start; /* Căn nút sát lề trái (hoặc 'stretch' nếu muốn nút dài 100%) */
 
-  td {
-    padding: 0px;
-  }
 }
+.product-list-table{
+    th{
+         padding: 5px;
+        font-size: 12px;
+    }
+    tr{
+        padding: 0px;
+    }
+    td{
+        padding: 5px;
+        font-size: 12px;
+    }
+}
+// .processing-table {
+//   width: 100%;
+//   border-collapse: collapse;
+//   text-align: left;
+
+//   th {
+//     background: #f8fafc;
+//     padding: 10px;
+//     text-align: left;
+//   }
+
+//   td {
+//     padding: 10px;
+//   }
+// }
 
 .empty-table {
   text-align: center;
@@ -205,13 +244,11 @@ select {
   }
 }
 
-.result-card {
-  display: flex;
-  flex-direction: column;
-}
 
-.total-box {
-  margin-top: 10px;
+
+
+.total-list-box {
+  margin-top: 20px;
 
   border: 1px solid #cfe0ff;
   border-radius: 16px;
@@ -220,21 +257,25 @@ select {
   padding: 22px;
 
   display: flex;
+  flex-direction: column; /* Xếp các thẻ con thành các hàng dọc */
+  align-items: flex-start;
   justify-content: space-between;
   align-items: center;
 
   h3 {
     color: #2563eb;
     margin: 0;
+    font-size: 14px;
   }
 
   p {
     margin-top: 5px;
     color: #64748b;
+     font-size: 14px;
   }
 
   span {
-    font-size: 48px;
+    font-size: 24px;
     font-weight: 700;
     color: #2563eb;
   }
@@ -264,14 +305,14 @@ select {
 .btn-outline {
   flex: 1;
 
-  height: 56px;
+  height: 42px;
 
   border-radius: 12px;
 
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+//   gap: 10px;
 
   font-weight: 600;
 }
@@ -301,12 +342,39 @@ select {
   text-align: center;
 }
 
-.result-card {
+
+.result-list-card {
   background: white;
-  border-radius: 18px;
-  // margin-top: 16px;
+  border-radius: 12px;
   padding: 10px;
+
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 
+  .result-list-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 14px;
 
+  strong {
+    font-size: 18px;
+  }
+}
+
+}
+
+.quotation-list-sidebar{
+  width: 93%;
+}
+
+
+.summary-container{
+  display: flex;
+  justify-content: flex-end; /* Đẩy tất cả nội dung về sát mép phải */
+  align-items: center;
+  width: 100%;
+
+  strong{
+    font-size: 14px;
+    color: #2563eb;
+  }
 }

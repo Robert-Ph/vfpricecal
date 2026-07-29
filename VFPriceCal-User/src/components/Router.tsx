@@ -32,6 +32,7 @@ import NewProcessing from "../pages/PriceComponent/Processing/NewProcessing";
 import ProcessingTier from "../pages/PriceComponent/Processing/ProcessingTier";
 import QuotationPreview from "./QuotationPreview";
 import Log from "../pages/SystemPage/log/Log";
+import OderQuote from "../pages/oderQuote/OderQuote";
 
 export const router = createBrowserRouter([
   {
@@ -61,7 +62,8 @@ export const router = createBrowserRouter([
         index: true, 
         element: <Navigate to="/login" replace /> 
       },
-      { path: "quotation", element: <QuotationPage /> }, // Chuyển Quotation sang một path cụ thể
+      { path: "quotation", element: <QuotationPage /> },
+      { path: "quotation-list", element: <OderQuote/>}, // Chuyển Quotation sang một path cụ thể
       { path: "product", element: <ProductPage /> },
       { path: "product/new", element: <NewProduct /> },
       // { path: "product/:id", element: <ProductDetail /> },

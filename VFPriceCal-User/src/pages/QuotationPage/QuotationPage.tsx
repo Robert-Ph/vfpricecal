@@ -565,14 +565,14 @@ const QuotationPage = () => {
         </div>
       </div>
 
-      <div className="notice-box">
+      {/* <div className="notice-box">
         <h4>Thông tin</h4>
 
         <p>
           Vui lòng nhập đầy đủ thông tin sản phẩm và gia công
           để tính báo giá chính xác nhất.
         </p>
-      </div>
+      </div> */}
 
     </div>
   </div>

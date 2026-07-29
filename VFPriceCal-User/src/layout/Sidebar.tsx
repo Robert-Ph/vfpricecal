@@ -14,8 +14,20 @@ import {logout} from "../service/AuthService";
 import ChangePasswordModal from "../components/auth/ChandePassword";
 
 const Sidebar = () => {
-    const [openSubMenu, setOpenSubMenu] = useState(false);
-    const [openSubMenuSystem, setOpenSubMenuSystem] = useState(false);
+    // const [openSubMenu, setOpenSubMenu] = useState(false);
+    // const [openSubMenuSystem, setOpenSubMenuSystem] = useState(false);
+    // Lưu tên submenu đang mở ("price" | "system" | null)
+    const [activeSubMenu, setActiveSubMenu] = useState<string | null>(null);
+
+    // Hàm toggle chuyển đổi trạng thái mở/đóng
+    const toggleSubMenu = (menuName: string) => {
+        setActiveSubMenu((prev) => (prev === menuName ? null : menuName));
+    };
+
+    // Hàm đóng tất cả submenu khi chọn menu đơn
+    const closeAllSubMenus = () => {
+        setActiveSubMenu(null);
+    };
     const navigate = useNavigate();
      const [openPaperModal, setOpenPaperModal] = useState(false);
 
@@ -79,9 +91,14 @@ const Sidebar = () => {
 
             <hr />
             <nav>
-                <NavLink className="menu-item" to="/quotation">
+                <NavLink className="menu-item" to="/quotation" onClick={closeAllSubMenus}>
                     <FaFileAlt className="menu-icon" />
-                    <span>Báo giá</span>
+                    <span>Báo giá nhanh</span>
+                </NavLink>
+
+                <NavLink className="menu-item" to="/quotation-list" onClick={closeAllSubMenus}>
+                    <FaFileAlt className="menu-icon" />
+                    <span>Đơn báo giá</span>
                 </NavLink>
 
                 {/* <NavLink className="menu-item" to="/product">
@@ -91,14 +108,14 @@ const Sidebar = () => {
 
                 {user?.role === "ADMIN" || user?.role === "OWNER" ? (
                 <div className="menu-item parent"
-                    onClick={() => setOpenSubMenu(!openSubMenu)}>
+                    onClick={() => toggleSubMenu("price")}>
                     <div className="menu-left">
                         <IoLayers className="menu-icon" />
                         <span>Giá & Thành phần</span>
                     </div>
 
                     <FiChevronDown
-                        className={`arrow ${openSubMenu ? "rotate" : ""}`}
+                        className={`arrow ${activeSubMenu === "price" ? "rotate" : ""}`}
                     />
                 </div>
                 ) : null}
@@ -106,7 +123,7 @@ const Sidebar = () => {
 
 
 
-                {openSubMenu && (
+                {activeSubMenu === "price" && (
                     <div className="submenu">
                         <NavLink to="/component/papers" className="submenu-item">
                             Giấy
@@ -138,20 +155,20 @@ const Sidebar = () => {
 
                 {user?.role === "ADMIN" || user?.role === "OWNER" ? (
                     <div className="menu-item parent"
-                    onClick={() => setOpenSubMenuSystem(!openSubMenuSystem)}>
+                    onClick={() => toggleSubMenu("system")}>
                     <div className="menu-left">
                         <FaCog className="menu-icon" />
                         <span>Hệ thống</span>
                     </div>
                     <FiChevronDown
-                        className={`arrow ${openSubMenuSystem ? "rotate" : ""}`}
+                        className={`arrow ${activeSubMenu === "system" ? "rotate" : ""}`}
                     />
 
                 </div>
                 ) : null}
 
                 
-                {openSubMenuSystem && (
+                {activeSubMenu === "system" && (
                     <div className="submenu">
                         <NavLink to="/system/users" className="submenu-item">
                             Quản lý người dùng
@@ -166,7 +183,7 @@ const Sidebar = () => {
                 )
                 }
 
-            <NavLink className="menu-item" to="/about">
+            <NavLink className="menu-item" to="/about" onClick={closeAllSubMenus}>
                 <FiInfo className="menu-icon" />
                 <span>About</span>
             </NavLink>
