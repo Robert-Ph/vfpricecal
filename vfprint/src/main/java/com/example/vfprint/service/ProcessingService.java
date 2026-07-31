@@ -40,9 +40,9 @@ public class ProcessingService {
         if (categoryRepository.findById(processingDTO.getCategoryId()).isEmpty()) {
             throw new RuntimeException("Category with the given ID does not exist");
         }
-        if (processingRepository.existsByName(processingDTO.getName())) {
-            throw new RuntimeException("Processing with the given name already exists");
-        }
+        // if (processingRepository.existsByName(processingDTO.getName())) {
+        //     throw new RuntimeException("Processing with the given name already exists");
+        // }
         Processing processing = processingRepository.save(Processing.builder()
                 .category(Category.builder().id(processingDTO.getCategoryId()).build())
                 .name(processingDTO.getName())

@@ -5,12 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.util.UUID;
-
 import com.example.vfprint.enums.Priority;
-
 import java.util.List;
-
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

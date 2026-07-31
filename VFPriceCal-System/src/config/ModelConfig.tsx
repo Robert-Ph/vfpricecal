@@ -7,6 +7,7 @@ export type companiesStatus = {
 export type Companies = {
     id: string;
     code: string;
+    userName: string;
     name: string;
     phone: string;
     address: string;
@@ -22,11 +23,13 @@ export type Companies = {
     endTime: string;
     updateAt: string;
     priceMonth: number;
+    customType: string;
 }
 
 export type createCompany = {
     id: string;
     code: string;
+    userName: string;
     name: string;
     phone: string;
     address: string;
@@ -36,6 +39,7 @@ export type createCompany = {
     logoUrl: string;
     createAt: string;
     updateAt: string;
+    customType: string;
 }
 
 export type createSub = {
@@ -54,6 +58,7 @@ export type paymentRequest = {
 
 export type CompaniesRegistration = {
     id: string;
+    userName: string;
     fullName: string;
     name: string;
     phone: string;
@@ -61,6 +66,7 @@ export type CompaniesRegistration = {
     taxCode: string;
     email: string;
     status: string;
+    customType: string;
 }
 
 export type plans = {

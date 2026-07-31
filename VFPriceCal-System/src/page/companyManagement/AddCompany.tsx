@@ -4,35 +4,55 @@ import { useState  } from "react";
 import { createCompanyRegistration } from "../../service/CompanyRegistrationsService";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 
 const AddCompany = () => {
     const navigate = useNavigate();
+    const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState<CompaniesRegistration>({
         id: '',
+        userName:'',
         fullName: '',
         name: '',
         phone: '',
         address: '',
         taxCode: '',
         email: '',
-        status: ''
+        status: '',
+        customType: 'PERSONAL'
     });
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
+    // const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    //     const { name, value } = e.target;
         
-        setFormData(prevState => ({
-            ...prevState,
-            [name]: name === 'statusId' ? value : value
-        }));
-    };
+    //     setFormData(prevState => ({
+    //         ...prevState,
+    //         [name]: name === 'statusId' ? value : value
+    //     }));
+    // };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    
+    setFormData(prevState => ({
+        ...prevState,
+        [name]: value
+    }));
+};
 
     const handleSubmit = async () => {
-        if (!formData.fullName || !formData.name || !formData.phone || !formData.address || !formData.email) {
+        if (!formData.userName || !formData.phone || !formData.address || !formData.email) {
             toast.error("Vui lòng điền đầy đủ thông tin bắt buộc.");
             return;
+        }
+
+        if(formData.customType === 'BUSINESS'){
+            if (!formData.fullName || !formData.name) {
+            toast.error("Vui lòng điền đầy đủ thông tin bắt buộc.");
+            return;
+        }
         }
         try {
             setLoading(true);
@@ -43,10 +63,22 @@ const AddCompany = () => {
                 navigate(`/company-management/select-plan/${"new"}/${registerId}`)
                 
             }
+            if(response === 409){
+                setError(response.message);
+
+            }
 
            
-        } catch (error) {
-            console.error("Lỗi khi thêm công ty:", error);
+        } catch (error: any) {
+             if (axios.isAxiosError(error)) {
+        if (error.response?.status === 409) {
+            toast.error(error.response.data.message);
+        } else {
+            toast.error(error.response?.data?.message || "Đã xảy ra lỗi");
+        }
+    } else {
+        toast.error("Đã xảy ra lỗi");
+    }
         }finally {
             setLoading(false);
         }
@@ -76,27 +108,39 @@ const AddCompany = () => {
                 <div className="form-left">
 
                     <div className="card">
-                        <h3>Thông tin doanh nghiệp</h3>
-
+                        <h3>Thông tin cá nhân/doanh nghiệp</h3>
                         <div className="form-group">
-                            <label>Company Name <span className="required">*</span></label>
+    <label>Loại hình tài khoản <span className="required">*</span></label>
+    <div className="radio-group" style={{ display: 'flex', gap: '20px', marginTop: '8px' }}>
+        <label style={{ fontWeight: 'normal', cursor: 'pointer' }}>
+            <input
+                type="radio"
+                name="customType"
+                value="PERSONAL"
+                checked={formData.customType === 'PERSONAL'}
+                onChange={handleChange}
+            /> Cá nhân
+        </label>
+        
+        <label style={{ fontWeight: 'normal', cursor: 'pointer' }}>
+            <input
+                type="radio"
+                name="customType"
+                value="BUSINESS"
+                checked={formData.customType === 'BUSINESS'}
+                onChange={handleChange}
+            /> Doanh nghiệp
+        </label>
+    </div>
+</div>
+                        <div className="form-group">
+                            <label>Họ và Tên <span className="required">*</span></label>
                             <input
                                 type="text"
-                                name="fullName"
-                                value={formData.fullName}
+                                name="userName"
+                                value={formData.userName}
                                 onChange={handleChange}
-                                placeholder="VFprint Company"
-                            />
-                        </div>
-
-                         <div className="form-group">
-                            <label>Name <span className="required">*</span></label>
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                placeholder="VFprint"
+                                placeholder="Họ và Tên"
                             />
                         </div>
 
@@ -112,7 +156,7 @@ const AddCompany = () => {
                         </div>
 
                         <div className="form-group">
-                            <label>Phone Number(Zalo) <span className="required">*</span></label>
+                            <label>Số điện thoại(Zalo) <span className="required">*</span></label>
                             <input
                                 type="text"
                                 name="phone"
@@ -122,8 +166,41 @@ const AddCompany = () => {
                             />
                         </div>
 
+
+                        {formData.customType === 'BUSINESS' && (
+                            <>
+                            <div className="form-group">
+                            <label>Tên công ty đầy đủ <span className="required">*</span></label>
+                            <input
+                                type="text"
+                                name="fullName"
+                                value={formData.fullName}
+                                onChange={handleChange}
+                                placeholder="VFprint Company"
+                            />
+                        </div>
+
+                         <div className="form-group">
+                            <label>Tên thương mại <span className="required">*</span></label>
+                            <input
+                                type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                placeholder="VFprint"
+                            />
+                        </div>
+                        </>
+                        )}
+
+                        
+
+                        
+
+                        
+
                         <div className="form-group">
-                            <label>Address <span className="required">*</span></label>
+                            <label>Địa chỉ(Address) <span className="required">*</span></label>
                             <textarea
                                 rows={4}
                                 name="address"
@@ -134,7 +211,7 @@ const AddCompany = () => {
                         </div>
 
                          <div className="form-group">
-                            <label>Tax code </label>
+                            <label>Mã số thuế(Tax code) </label>
                             <input
                                 type="text"
                                 name="taxCode"

@@ -88,7 +88,7 @@ const UserManagement = () => {
                     <div className="company-info">
 
                         <div className="company-logo blue">
-                            {item.code.substring(0,2)}
+                            {item.code?.substring(0,2) || item.name?.substring(0,2)}
                         </div>
 
                         <div>

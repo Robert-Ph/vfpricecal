@@ -1,6 +1,9 @@
 package com.example.vfprint.dto.system;
 
 import java.util.UUID;
+
+import com.example.vfprint.enums.CustomType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +17,7 @@ import java.sql.Timestamp;
 public class CompaniesReponse {
     private UUID id;
     private String code;
+    private String userName;
     private String name;
     private String phone;
     private String address;
@@ -27,5 +31,5 @@ public class CompaniesReponse {
     private Timestamp endTime;
     private Timestamp updateAt;
     private double priceMonth;
-
+    private CustomType sCustomType;
 }

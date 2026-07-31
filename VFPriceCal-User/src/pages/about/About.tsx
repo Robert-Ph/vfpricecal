@@ -141,9 +141,9 @@ const About = () => {
                             {/* Thêm class động dựa theo tên gói dịch vụ */}
                             <div className={`plan-badge ${user?.plan ? user.plan.toLowerCase() : 'trial'}-plan`}>
                                 <span className="icon">
-                                {user?.plan === 'PRO' ? '👑' : user?.plan === 'BASIC' ? '⭐' : '🌱'}
+                                {user?.plan === 'PRO' ? '👑' : user?.plan === 'BASIC' ? '⭐' : user?.plan === 'BETA' ? '🧪' : '🌱'}
                             </span> 
-                            GÓI {user?.plan || 'TRIAL'} - {user?.plan === "TRIAL" ? "DÙNG THỬ" : "ĐĂNG KÝ HẰNG NĂM"}
+                            GÓI {user?.plan || 'TRIAL'} - {user?.plan === "TRIAL" ? "DÙNG THỬ"  : user?.plan === "BETA"? "THỬ NGHIỆM" : "ĐĂNG KÝ HẰNG NĂM"}
                             </div>
                         </div>
 
@@ -151,7 +151,7 @@ const About = () => {
                             <div className="icon-indicator">📅</div>
                             <div className="text-data">
                                 <label>Hạn sử dụng</label>
-                                <span>{formatDate(user?.endTime)}</span>
+                                <span>{user?.plan === 'BETA' ? "Không xác định" : formatDate(user?.endTime)}</span>
                             </div>
                         </div>
 

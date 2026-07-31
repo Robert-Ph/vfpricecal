@@ -4,6 +4,10 @@ import java.sql.Timestamp;
 import java.util.UUID;
 
 import org.hibernate.annotations.CreationTimestamp;
+
+import com.example.vfprint.enums.CustomType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Column;
@@ -57,6 +61,10 @@ public class Companies {
 
     @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
     private java.util.List<Account> accounts;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "custom_type")
+    private CustomType customType;
 
     @Column(name = "update_at")
     @CreationTimestamp

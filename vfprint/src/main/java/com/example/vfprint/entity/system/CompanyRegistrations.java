@@ -2,9 +2,10 @@ package com.example.vfprint.entity.system;
 
 import java.sql.Timestamp;
 import java.util.UUID;
-
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import com.example.vfprint.enums.CustomType;
 import com.example.vfprint.enums.Status;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,6 +34,8 @@ public class CompanyRegistrations {
     @Column(name = "full_name")
     private String fullName;
 
+    @Column(name = "user_name")
+    private String userName;
     private String name;
     private String email;
     private String phone;
@@ -41,9 +44,14 @@ public class CompanyRegistrations {
     @Column(name = "tax_code")
     private String taxCode;
 
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     @Column(name = "create_at")
     private Timestamp createAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "custom_type")
+    private CustomType customType;
 
 }

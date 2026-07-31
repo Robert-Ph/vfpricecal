@@ -15,6 +15,8 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @Builder
 @Data
 public class ProcessingRequest {

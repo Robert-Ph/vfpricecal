@@ -18,7 +18,7 @@ export default function Footer() {
 
         <div>
           <h4>Hỗ trợ</h4>
-          <a href="#">Liên hệ</a>
+          <a href="/lien-he">Liên hệ</a>
           <a href="#">Email</a>
         </div>
 

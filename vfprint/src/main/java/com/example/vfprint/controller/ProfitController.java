@@ -17,19 +17,22 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.vfprint.dto.request.ProfitRequest;
 import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.service.ProfitService;
+
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/profit")
 public class ProfitController {
 
-    @Autowired
-    private ProfitService profitService;
+    private final ProfitService profitService;
 
     @PostMapping
     public ResponseEntity<ApiResponse> createProfitByCompanyId(@RequestBody ProfitRequest profitRequest){
-        profitService.createProfit(profitRequest);
+        profitService.createProfit(profitRequest, true);
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse.builder()
             .code(200)

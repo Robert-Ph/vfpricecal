@@ -2,10 +2,11 @@ package com.example.vfprint.entity.system;
 
 import java.util.UUID;
 import java.sql.Timestamp;
-
+import jakarta.persistence.EnumType;
 import com.example.vfprint.enums.Status;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -37,6 +38,8 @@ public class SubscriptionsRegistration {
 
     private int month;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     private Status status;
 
     @Column(name = "create_at")

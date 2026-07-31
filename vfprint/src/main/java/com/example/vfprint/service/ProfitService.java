@@ -24,15 +24,20 @@ public class ProfitService {
 
 
     @Transactional
-    public void createProfit(ProfitRequest profitRequest){
-        if (profitRepository.existsByName(profitRequest.getName())) {
-            throw new RuntimeException("Profit with the given name already exists");
-        }
-
-        Companies company = companyRepository.findById(profitRequest.getCompanyId())
+    public void createProfit(ProfitRequest profitRequest, boolean n){
+                Companies company = companyRepository.findById(profitRequest.getCompanyId())
                         .orElseThrow(() -> 
                         new RuntimeException("Company with the given ID does not exist")    
                     );
+        
+        if (n) {
+            if (profitRepository.existsByNameAndCompany(profitRequest.getName(), company)) {
+            throw new RuntimeException("Profit with the given name already exists");
+        }
+        }
+        
+
+
         Profit profit = profitRepository.save(
             Profit.builder()
             .company(company)

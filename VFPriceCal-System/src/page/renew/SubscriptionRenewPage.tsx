@@ -67,6 +67,7 @@ const totalAmount = baseAmount + vat;
           const createcom = {
               id: companies?.id || companiesNew?.id || "",
               code: companies?.code || companiesNew?.name || "",
+              userName:companies?.userName || companiesNew?.userName || "",
               name: companies?.name || companiesNew?.fullName || "",
               phone: companies?.phone || companiesNew?.phone || "",
               address: companies?.address || companiesNew?.address || "",
@@ -75,7 +76,8 @@ const totalAmount = baseAmount + vat;
               statusId: "5c7a3b1e-92fd-4a6c-bc84-1d2e3f4a5b6c",
               logoUrl: '',
               createAt: '',
-              updateAt: ''
+              updateAt: '',
+              customType: companies?.customType || companiesNew?.customType || ""
           }
 
           const createSub = {
@@ -171,7 +173,7 @@ const totalAmount = baseAmount + vat;
                   <div>
                 <h3>{companies?.name}</h3>
 
-                <div>Mã KH: {companies?.code}</div>
+                <div>Tên KH: {companies?.customType === 'PERSONAL' ? companies.userName : companies?.name}</div>
                 <div>MST: {companies?.taxCode}</div>
                 <div>Email: {companies?.email}</div>
                 <div>Điện thoại: {companies?.phone}</div>
@@ -180,7 +182,7 @@ const totalAmount = baseAmount + vat;
                 <div>
                 <h3>{companiesNew?.fullName}</h3>
 
-                <div>Mã KH: {companiesNew?.name}</div>
+                <div>Mã KH: {companiesNew?.customType === 'PERSONAL' ? companiesNew.userName : companies?.name}</div>
                 <div>MST: {companiesNew?.taxCode}</div>
                 <div>Email: {companiesNew?.email}</div>
                 <div>Điện thoại: {companiesNew?.phone}</div>

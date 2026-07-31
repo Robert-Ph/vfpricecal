@@ -23,22 +23,21 @@ import com.example.vfprint.repository.systemRepository.PlansRepository;
 import com.example.vfprint.repository.systemRepository.SubscriptionStatusesRepository;
 import com.example.vfprint.repository.systemRepository.SubscriptionTypesRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class CompansySubscriptionsService {
-    @Autowired
-    private CompansySubscriptionsRepository compansySubscriptionsRepository;
+   
+    private final CompansySubscriptionsRepository compansySubscriptionsRepository;
 
-    @Autowired
-    private PlansRepository plansRepository;
+    private final PlansRepository plansRepository;
 
-    @Autowired
-    private CompaniesRepository companiesRepository;
+    private final CompaniesRepository companiesRepository;
 
-    @Autowired
-    private SubscriptionTypesRepository subscriptionTypesRepository;
+    private final SubscriptionTypesRepository subscriptionTypesRepository;
 
-    @Autowired
-    private SubscriptionStatusesRepository subscriptionStatusesRepository;
+    private final SubscriptionStatusesRepository subscriptionStatusesRepository;
 
     @Transactional
     public CompansySubscriptions createCompansySubscriptions(CompansySubscriptionsDTO dto){
@@ -49,7 +48,11 @@ public class CompansySubscriptionsService {
         String nameType = "";
         if(plan.getCode().equals("TRIAL")){
             nameType = "TRIAL";
-        }else{
+        }else if (plan.getCode().equals("BETA")) {
+            nameType = "BETA";
+            end = 0;
+        }
+        else{
             nameType = "PAID";
 
             // dto.getTime() là số tháng

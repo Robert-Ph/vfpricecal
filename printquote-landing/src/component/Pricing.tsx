@@ -1,36 +1,21 @@
 import "./pricing.scss";
 
 const plans = [
+  
   {
-    name: "Free",
+    name: "BETA(Thử nghiệm)",
     price: "0",
+    popular: false,
     features: [
-      "10 báo giá/tháng",
-      "Xuất PDF",
-      "1 người dùng",
-    ],
-  },
-  {
-    name: "Basic",
-    price: "199",
-    popular: true,
-    features: [
+      "Thời gian thử nghiệm đến khi thông báo ra mắt chính thức",
+      "Miễn phí toàn bộ tính năng",
       "Không giới hạn báo giá",
-      "Quản lý khách hàng",
-      "Thống kê",
       "Xuất PDF",
+      "Cập nhật tính năng mới",
+      "Hỗ trợ trực tuyến",
     ],
-  },
-  {
-    name: "Business",
-    price: "499",
-    features: [
-      "Tất cả tính năng",
-      "Nhiều nhân viên",
-      "API",
-      "Backup dữ liệu",
-    ],
-  },
+  }
+
 ];
 
 export default function Pricing() {
@@ -53,7 +38,7 @@ export default function Pricing() {
               <h3>{item.name}</h3>
 
               <div className="price">
-                £{item.price}
+                {item.price}
               </div>
 
               <ul>

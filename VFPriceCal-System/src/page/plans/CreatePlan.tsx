@@ -34,7 +34,7 @@ export default function CreatePlan() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!formData.name || !formData.code || !formData.durationInDays || !formData.price) {
+        if (!formData.name || !formData.code) {
             toast.error("Vui lòng điền đầy đủ thông tin bắt buộc.");
             return;
         }

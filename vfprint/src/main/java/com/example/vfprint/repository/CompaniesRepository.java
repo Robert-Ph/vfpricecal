@@ -18,4 +18,5 @@ public interface CompaniesRepository extends JpaRepository<Companies, UUID>{
 //             """)
 //     List<Companies> search(@Param("param") String param);
     boolean existsByName(String name);
+    boolean existsByEmailAndPhone(String email, String phone);
 }

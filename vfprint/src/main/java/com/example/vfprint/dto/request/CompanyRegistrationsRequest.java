@@ -1,6 +1,9 @@
 package com.example.vfprint.dto.request;
 
 import java.util.UUID;
+
+import com.example.vfprint.enums.CustomType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +19,7 @@ public class CompanyRegistrationsRequest {
 
     private UUID id;
     private String fullName;
+    private String userName;
     private String name;
     private String email;
     private String phone;
@@ -23,4 +27,5 @@ public class CompanyRegistrationsRequest {
     private String taxCode;
     private String status;
     private Timestamp createAt;
+    private CustomType customType;
 }

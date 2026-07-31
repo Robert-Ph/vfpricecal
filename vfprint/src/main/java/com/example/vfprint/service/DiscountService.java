@@ -14,16 +14,17 @@ import com.example.vfprint.entity.DiscountRange;
 import com.example.vfprint.repository.DiscountRangeRepository;
 import com.example.vfprint.repository.DiscountRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class DiscountService {
-    @Autowired
-    private DiscountRepository discountRepository;
 
-    @Autowired
-    private DiscountRangeService discountRangeService;
+    private final DiscountRepository discountRepository;
 
-    @Autowired
-    private DiscountRangeRepository discountRangeRepository;
+    private final DiscountRangeService discountRangeService;
+
+    private final DiscountRangeRepository discountRangeRepository;
 
 
 

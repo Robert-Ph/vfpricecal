@@ -9,6 +9,10 @@ import com.example.vfprint.entity.Category;
 import com.example.vfprint.repository.CompanyStatusRepository;
 import com.example.vfprint.repository.CompaniesRepository;
 import com.example.vfprint.dto.request.CompanyRequest;
+import com.example.vfprint.dto.request.DiscountRangeRequest;
+import com.example.vfprint.dto.request.DiscountRequest;
+import com.example.vfprint.dto.request.ProcessingRequest;
+import com.example.vfprint.dto.request.ProcessingTierRequest;
 import com.example.vfprint.dto.system.CompaniesReponse;
 import com.example.vfprint.entity.Companies;
 import com.example.vfprint.entity.CompaniesStatus;
@@ -22,9 +26,12 @@ import com.example.vfprint.repository.UserStatusREpository;
 import com.example.vfprint.repository.systemRepository.CompansySubscriptionsRepository;
 import com.example.vfprint.entity.UserStatus;
 import com.example.vfprint.entity.system.CompansySubscriptions;
+import com.example.vfprint.enums.Priority;
+import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import com.example.vfprint.dto.request.ProfitRequest;
 import com.example.vfprint.dto.request.ProfitItemRequest;
+
 import java.util.Arrays;
 
 @Service
@@ -41,6 +48,8 @@ public class CompaniesService {
     private final CompansySubscriptionsRepository compansySubscriptionsRepository;
     private final CategoryService categoryService;
     private final ProfitService profitService;
+    private final ProcessingService processingService;
+    private final DiscountService discountService;
 
 
 
@@ -48,20 +57,28 @@ public class CompaniesService {
     @Transactional
     public Companies createCompany(CompanyRequest company){
 
-        if(companiesRepository.existsByName(company.getName())){
+        if(companiesRepository.existsByName(company.getName()) || companiesRepository.existsByEmailAndPhone(company.getEmail(), company.getPhone()) ){
             throw new RuntimeException("Company with the same name already exists");
         }
 
+
         CompaniesStatus status = companyStatusRepository.findById(company.getStatusId())
                 .orElseThrow(() -> new RuntimeException("Company status not found"));
+        
+        String name = company.getName();
+        if(company.getCustomType().equals("PERSONAL")){
+                name = company.getUserName();
+        }
+
         Companies entity = Companies.builder()
-                .name(company.getName())
+                .name(name)
                 .phone(company.getPhone())
                 .address(company.getAddress())
                 .taxCode(company.getTaxCode())
                 .email(company.getEmail())
                 .code(company.getCode())
                 .logoUrl(company.getLogoUrl())
+                .customType(company.getCustomType())
                 .status(status)
                 .createAt(new java.sql.Timestamp(System.currentTimeMillis()))
                 .updateAt(new java.sql.Timestamp(System.currentTimeMillis()))
@@ -81,10 +98,91 @@ public class CompaniesService {
                                 .companyId(companies.getId())
                                 .name("Gia công khác")
                                 .build();
-        Category category1 = categoryService.createCategory(cate1, true);
-        Category category2 = categoryService.createCategory(cate2, true);
-        Category category3 = categoryService.createCategory(cate3, true);
+        Category category1 = categoryService.createCategory(cate1, false);
+        Category category2 = categoryService.createCategory(cate2, false);
+        categoryService.createCategory(cate3, false);
 
+
+                                             
+
+        // Tạo danh sách các tier mẫu
+List<ProcessingTierRequest> tierRequestList = Arrays.asList(
+    ProcessingTierRequest.builder()
+            .isActive(true)
+            .minVolume(1)
+            .maxVolume(100)
+            .minCharge(50000)
+            .price(2000)
+            .build(),
+
+    ProcessingTierRequest.builder()
+            .isActive(true)
+            .minVolume(101)
+            .maxVolume(500)
+            .minCharge(100000)
+            .price(1800)
+            .build(),
+
+    ProcessingTierRequest.builder()
+            .isActive(true)
+            .minVolume(501)
+            .maxVolume(1000)
+            .minCharge(200000)
+            .price(1500)
+            .build()
+);
+
+        ProcessingRequest processingRequest = ProcessingRequest.builder()
+                                                .categoryId(category1.getId())
+                                                .name("Cán bóng")
+                                                .unit("sheet")
+                                                .pTierRequests(tierRequestList)
+                                                .build();
+        ProcessingRequest processingRequest_1 = ProcessingRequest.builder()
+                                                .categoryId(category1.getId())
+                                                .name("Cán mờ")
+                                                .unit("sheet")
+                                                .pTierRequests(tierRequestList)
+                                                .build();
+
+        processingService.createProcessing(processingRequest);
+        processingService.createProcessing(processingRequest_1);
+
+        List<ProcessingTierRequest> tierRequestList_cutter = Arrays.asList(
+    ProcessingTierRequest.builder()
+            .isActive(true)
+            .minVolume(1)
+            .maxVolume(100)
+            .minCharge(50000)
+            .price(2000)
+            .build(),
+
+    ProcessingTierRequest.builder()
+            .isActive(true)
+            .minVolume(101)
+            .maxVolume(500)
+            .minCharge(100000)
+            .price(1800)
+            .build(),
+
+    ProcessingTierRequest.builder()
+            .isActive(true)
+            .minVolume(501)
+            .maxVolume(1000)
+            .minCharge(200000)
+            .price(1500)
+            .build()
+);
+
+        ProcessingRequest processingRequest_3 = ProcessingRequest.builder()
+                                                .categoryId(category2.getId())
+                                                .name("Bế demi")
+                                                .unit("sheet")
+                                                .pTierRequests(tierRequestList_cutter)
+                                                .build();
+
+        processingService.createProcessing(processingRequest_3);
+                                        
         List<ProfitItemRequest> itemList = Arrays.asList(
                 ProfitItemRequest.builder()
                         .name("Giấy in")
@@ -108,8 +206,33 @@ public class CompaniesService {
                 .itemList(itemList)
                 .build();
 
-        profitService.createProfit(profitRequest);
+        profitService.createProfit(profitRequest, false);
         
+
+        List<DiscountRangeRequest> listRang = Arrays.asList(
+                DiscountRangeRequest.builder()
+                        .maxAmount(BigDecimal.valueOf(1000000))
+                        .discount(0)
+                        .build(),
+                DiscountRangeRequest.builder()
+                        .maxAmount(BigDecimal.valueOf(10000000))
+                        .discount(5)
+                        .build(),
+                DiscountRangeRequest.builder()
+                        .maxAmount(BigDecimal.valueOf(1000000000))
+                        .discount(15)
+                        .build()
+                        
+        );
+
+        DiscountRequest discountRequest = DiscountRequest.builder()
+                                                .companyId(companies.getId())
+                                                .discountRanges(listRang)
+                                                .isActive(true)
+                                                .name("Chiếc khấu mặc định")
+                                                .priority(Priority.HIGH)
+                                                .build();
+        discountService.createDiscountByCompany(discountRequest);
 
         Roles role = roleRepository.findByName("OWNER")
                 .orElseThrow(() -> new RuntimeException("Role not found"));
@@ -119,7 +242,7 @@ public class CompaniesService {
 
         AccountDTO accountDto = new AccountDTO();
         accountDto.setEmail(company.getEmail());
-        accountDto.setUsername(company.getName());
+        accountDto.setUsername(company.getUserName());
         accountDto.setPassword(newPassword); // Sử dụng mật khẩu ngẫu nhiên đã tạo
         accountDto.setCompanyId(entity.getId());
         accountDto.setRoleId(role.getId()); // ID của role "Owner"
