@@ -2,6 +2,8 @@ package com.example.vfprint.service.system;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.vfprint.dto.request.PaymentRequest;
@@ -18,7 +20,8 @@ import com.example.vfprint.repository.systemRepository.PaymentStatusRepository;
 import com.example.vfprint.repository.systemRepository.PlansRepository;
 import com.example.vfprint.repository.systemRepository.SubscriptionStatusesRepository;
 import com.example.vfprint.service.CompaniesService;
-
+import com.example.vfprint.service.system.CompansySubscriptionsService;
+import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -64,8 +67,8 @@ public void createPayment(PaymentRequest request){
             .findById(request.getSub().getPlanId())
             .orElseThrow();
 
-    double total =
-            (plans.getPrice() * request.getSub().getTime()) * 1.1;
+    BigDecimal total =
+            plans.getPrice().multiply(BigDecimal.valueOf(request.getSub().getTime())).multiply(BigDecimal.valueOf(1.1));
 
     CompansySubscriptions cSubscriptions =
             compansySubscriptionsService
@@ -84,26 +87,25 @@ public void createPayment(PaymentRequest request){
             .createdAt(Timestamp.valueOf(LocalDateTime.now()))
             .build();
 
-    switch (request.getType()) {
-        case "new":
-                payment.setActionType(ActionType.NEW);
-                break;
-        case "renew":
-                payment.setActionType(ActionType.RENEW);
-                break;
-        case "upgrade":
-                payment.setActionType(ActionType.UPGRADE);
-                break;
-        case "downgrade":
-                payment.setActionType(ActionType.DOWNGRADE);
-                break;
-        default:
-                break;
+
+    if (paymentStatus.getCode().equals("PAID")) {
+        payment.setPaidAt(Timestamp.valueOf(LocalDateTime.now()));
     }
 
-    if (plans.getCode().endsWith("TRIAL")) {
-        payment.setActionType(ActionType.TRIAL);
-    }
+    paymentRepository.save(payment);
+}
+
+
+        @Transactional
+public void createPaymentSubscription(BigDecimal totalAmount,PaymentStatus paymentStatus, CompansySubscriptions cSubscriptions){
+
+    Payment payment = Payment.builder()
+            .compansySubscription(cSubscriptions)
+            .amount(totalAmount)
+            .paymentStatus(paymentStatus)
+            .paidAt(null)
+            .createdAt(Timestamp.valueOf(LocalDateTime.now()))
+            .build();
 
     if (paymentStatus.getCode().equals("PAID")) {
         payment.setPaidAt(Timestamp.valueOf(LocalDateTime.now()));

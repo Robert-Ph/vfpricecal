@@ -37,7 +37,7 @@ public class AccountSystem {
 
      // Khoá ngoại tới bảng subscription_statuses, nhưng chỉ lưu id của subscription_status, không cần ánh xạ đối tượng subscription_status
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subscription_status_id",foreignKey = @ForeignKey(name = "fk_account_system_subscription_status"))
+    @JoinColumn(name = "system_roler_id",foreignKey = @ForeignKey(name = "fk_account_system_roler"))
     private RolesSystem role;
 
         // Khoá ngoại tới bảng user_statuses, nhưng chỉ lưu id của user_status, không cần ánh xạ đối tượng user_status

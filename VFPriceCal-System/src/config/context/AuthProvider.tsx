@@ -1,5 +1,5 @@
 import React, { useState, type ReactNode } from "react";
-import { login } from "../service/AuthService";
+import { login } from "../../service/AuthenService";
 import { AuthContext } from "./AuthContext";
 import type { UserInfo } from "./AuthContext";
 
@@ -41,26 +41,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     if (data) {
       const userInfo: UserInfo = {
-        // Kiểm tra chính xác tên trường Backend trả về (companyId hay company_id?)
-        companyId: String(data.companyId),
-        companyName: data.companyName,
         username: data.username,
-        userId: data.userId,
-        fullname: data.fullname,
         email: data.email,
-        plan: data.plan,
         role: data.role,
-        phone: data.phone,
-        startTime: data.startTime,
-        endTime: data.endTime,
-        maxUsers: data.maxUsers
+
       };
 
       setUser(userInfo);
       setRole(data.role);
       
       localStorage.setItem("user", JSON.stringify(userInfo));
-      localStorage.setItem("companyId", data.companyId.toString()); // Lưu companyId riêng nếu cần
       localStorage.setItem("role", data.role);
       localStorage.setItem("token", data.token); // Đừng quên lưu token để gọi API sau này
 

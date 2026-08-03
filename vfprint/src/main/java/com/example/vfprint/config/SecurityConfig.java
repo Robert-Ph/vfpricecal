@@ -71,9 +71,10 @@ public class SecurityConfig {
                          */
                         .requestMatchers(
                                 "/api/auth/**",
+                                "/api/public/**",
                                 "/api/companies/**",
                                 "/api/accounts/**",
-                                "/api/system/**",
+                                "/api/system/authen/**",
                                 "/api/bao-gia/**",
                                 "/api/plans/**"
                                 
@@ -83,6 +84,7 @@ public class SecurityConfig {
                         /**
                         * 2. API phân quyền nội bộ công ty (Cần đăng nhập)
                         */
+                        .requestMatchers("/api/system/**").hasAnyRole("ROOT", "MANAGER", "ADMIN","USER")
                         // Bảng giá in ấn và Giảm giá: Cả Admin và User của công ty đều xem được
                         .requestMatchers("/api/print-prices/**").hasAnyRole("OWNER", "STAFF", "ADMIN")
                         .requestMatchers("/api/discount/**").hasAnyRole("OWNER", "STAFF", "ADMIN")

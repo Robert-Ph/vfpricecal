@@ -13,6 +13,7 @@ import SubscriptionRenewPage from "../page/renew/SubscriptionRenewPage";
 import Orders from "../page/orders/Orders";
 import PaymentPage from "../page/paymentPay/PaymentPage";
 import PlanDetail from "../page/plans/Plandetail";
+import SystemConfig from "../page/system/SystemConfig";
 
 export const router = createBrowserRouter([
 
@@ -72,6 +73,10 @@ export const router = createBrowserRouter([
         {
           path: "/payment/:type/:id",
           element: <PaymentPage/>
+        },
+        {
+          path: "/system-config",
+          element: <SystemConfig/>
         }
 
     ],

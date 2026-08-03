@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.UUID;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -19,7 +20,7 @@ public class PlansRequest {
     private UUID id;
     private String name;
     private String code;
-    private Double price;
+    private BigDecimal price;
     private Integer durationInDays;
     private Boolean isCustom;
     private Integer maxUsers;

@@ -17,7 +17,7 @@ import com.example.vfprint.entity.Companies;
 import com.example.vfprint.repository.AccountRepository;
 import com.example.vfprint.repository.RolesRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import com.example.vfprint.repository.UserStatusREpository;
+import com.example.vfprint.repository.UserStatusRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,7 +30,7 @@ public class AccountService {
     private final CompaniesRepository companyRepository;
     private final RolesRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserStatusREpository userStatusRepository;
+    private final UserStatusRepository userStatusRepository;
     private final EmailService emailService;
     private final UltiService ultiService;
 

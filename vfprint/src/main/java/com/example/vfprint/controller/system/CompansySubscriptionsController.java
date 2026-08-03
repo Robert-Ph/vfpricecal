@@ -1,6 +1,6 @@
 package com.example.vfprint.controller.system;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.service.system.CompansySubscriptionsService;
 
+import lombok.RequiredArgsConstructor;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/system/orders")
 public class CompansySubscriptionsController {
-    @Autowired
-    private CompansySubscriptionsService compansySubscriptionsService;
+    
+    private final CompansySubscriptionsService compansySubscriptionsService;
 
     @GetMapping
     public ResponseEntity<ApiResponse> getAllOrder(){

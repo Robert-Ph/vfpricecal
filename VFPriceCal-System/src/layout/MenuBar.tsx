@@ -189,13 +189,13 @@ const MenuBar = () => {
                     </NavLink>
 
                     <NavLink
-                        to="/settings"
+                        to="/system-config"
                         className={({ isActive }) =>
                             isActive ? "menu-item active" : "menu-item"
                         }
                     >
                         <span>⚙️</span>
-                        Settings
+                        System Configuration
                     </NavLink>
                 </div>
 

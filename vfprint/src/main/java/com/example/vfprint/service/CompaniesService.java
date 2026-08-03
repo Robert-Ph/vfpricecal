@@ -22,7 +22,7 @@ import com.example.vfprint.dto.CategoryDTO;
 import com.example.vfprint.entity.Roles;
 import com.example.vfprint.config.UltiService;
 import com.example.vfprint.config.EmailService;
-import com.example.vfprint.repository.UserStatusREpository;
+import com.example.vfprint.repository.UserStatusRepository;
 import com.example.vfprint.repository.systemRepository.CompansySubscriptionsRepository;
 import com.example.vfprint.entity.UserStatus;
 import com.example.vfprint.entity.system.CompansySubscriptions;
@@ -44,7 +44,7 @@ public class CompaniesService {
     private final UltiService ultiService;
     private final AccountService accountService;
     private final EmailService emailService;
-    private final UserStatusREpository userStatusRepository;
+    private final UserStatusRepository userStatusRepository;
     private final CompansySubscriptionsRepository compansySubscriptionsRepository;
     private final CategoryService categoryService;
     private final ProfitService profitService;

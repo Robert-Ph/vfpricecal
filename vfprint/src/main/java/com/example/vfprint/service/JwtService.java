@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.example.vfprint.entity.Account;
+import com.example.vfprint.entity.system.AccountSystem;
 import com.example.vfprint.enums.DeviceType;
 
 import io.jsonwebtoken.Claims;
@@ -46,6 +47,17 @@ public class JwtService {
             .compact();
     }
 
+        //Tao Token
+    public String generateTokenSystem(AccountSystem account){
+        return Jwts.builder()
+            .setSubject(account.getEmail())
+            .claim("role", account.getRole().getName())
+            .claim("username", account.getName())
+            .setIssuedAt(new Date())
+            .setExpiration(new Date(System.currentTimeMillis() + expiration))
+            .signWith(getSignKey(), SignatureAlgorithm.HS256)
+            .compact();
+    }
 
 
     //Lay email tu Token

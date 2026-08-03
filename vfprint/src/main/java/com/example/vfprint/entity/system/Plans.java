@@ -13,6 +13,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 import java.sql.Timestamp;
+import java.math.BigDecimal;
+
 
 @Getter
 @Setter
@@ -28,7 +30,7 @@ public class Plans {
     private UUID id;
     private String code;
     private String name;
-    private Double price;
+    private BigDecimal price;
 
     @Column(name = "duration_in_days")
     private Integer durationInDays;

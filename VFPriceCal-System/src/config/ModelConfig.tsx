@@ -124,3 +124,25 @@ export type paymentMethod = {
     descprition: string;
     createAt: string;
 }
+
+
+export type SystemConfigRequest = {
+   configKey: string   ;
+    configValue: string;
+    configType: string;
+    description: string;
+    groupCode: string;
+    isActive: boolean;
+}
+
+export type SystemConfigResponse = {
+    id: string;
+   configKey: string   ;
+    configValue: string;
+    configType: string;
+    description: string;
+    groupCode: string;
+    updatedBy: string;
+    updateAt: string;
+    isActive: boolean;
+}

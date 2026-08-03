@@ -1,6 +1,7 @@
 package com.example.vfprint.entity.system;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -16,7 +17,12 @@ import java.util.UUID;
 import jakarta.persistence.Column;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.ForeignKey;
+
+import com.example.vfprint.enums.ActionType;
+import com.example.vfprint.enums.InvoiceStatus;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+import jakarta.persistence.EnumType;
 
 @Getter
 @Setter
@@ -32,21 +38,29 @@ public class Invoices {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subscription_status_id",foreignKey = @ForeignKey(name = "fk_invoices_subscription_statuses"))
+    @JoinColumn(name = "subscription_id",foreignKey = @ForeignKey(name = "fk_invoices_subscription_statuses"))
     private CompansySubscriptions compansySubscription;
 
     @Column(name = "invoice_number")
     private String invoiceNumber;
-    @Column(name = "amount")
-    private Double amount;
 
-    @Column(name = "tax_mount")
-    private Double taxMount;
+    @Column(name = "vat_rate")
+    private BigDecimal vatRate;
+    @Column(name = "amount")
+    private BigDecimal amount;
+
+    @Column(name = "tax_amount")
+    private BigDecimal taxAmount;
 
     @Column(name = "total_amount")
-    private Double totalAmount;
+    private BigDecimal totalAmount;
 
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private InvoiceStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "action_type")
+    private ActionType actionType;
 
     @Column(name = "issued_at")
     private Timestamp issuedAt;

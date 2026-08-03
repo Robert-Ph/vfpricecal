@@ -1,0 +1,239 @@
+$primary-color: #6342ff;
+$primary-hover: #502eff;
+$border-color: #e5e7eb;
+$text-title: #111827;
+$text-body: #374151;
+$text-muted: #6b7280;
+$danger-color: #ef4444;
+$bg-overlay: rgba(0, 0, 0, 0.4);
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: $bg-overlay;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modal {
+  background-color: #ffffff;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 840px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 24px 32px 16px 32px;
+
+  .title {
+    font-size: 20px;
+    font-weight: 700;
+    color: $text-title;
+    margin: 0 0 4px 0;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    color: $text-muted;
+    margin: 0;
+  }
+
+  .closeBtn {
+    background: none;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: $text-muted;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: #f3f4f6;
+      color: $text-title;
+    }
+  }
+}
+
+.form {
+  padding: 16px 32px 32px 32px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 24px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 12px;
+    font-weight: 700;
+    color: $text-title;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .required {
+      color: $danger-color;
+    }
+
+    .infoIcon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: $text-muted;
+      cursor: help;
+    }
+  }
+
+  input[type='text'],
+  input[type='number'],
+  select,
+  textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    font-size: 14px;
+    color: $text-title;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: #fff;
+    box-sizing: border-box;
+
+    &::placeholder {
+      color: #9ca3af;
+    }
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba(99, 66, 255, 0.1);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 90px;
+  }
+
+  .hint {
+    font-size: 12px;
+    color: $text-muted;
+    margin-top: 6px;
+  }
+
+  .selectWrapper {
+    position: relative;
+
+    select {
+      appearance: none;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    .arrow {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: $text-muted;
+    }
+  }
+
+  .textContainer {
+    position: relative;
+
+    .charCount {
+      position: absolute;
+      bottom: 8px;
+      right: 12px;
+      font-size: 12px;
+      color: $text-muted;
+      pointer-events: none;
+    }
+  }
+}
+
+.statusBadge {
+  display: inline-block;
+  background-color: #d1fae5;
+  color: #065f46;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 2px 10px;
+  border-radius: 12px;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+
+  .btnCancel {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: 1px solid $border-color;
+    background-color: #ffffff;
+    color: $text-title;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+      background-color: #f9fafb;
+      border-color: #d1d5db;
+    }
+  }
+
+  .btnSubmit {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background-color: $primary-color;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $primary-hover;
+    }
+  }
+}

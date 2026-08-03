@@ -3,7 +3,7 @@ package com.example.vfprint.dto.system;
 import java.util.UUID;
 
 import com.example.vfprint.enums.CustomType;
-
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,6 +30,6 @@ public class CompaniesReponse {
     private Timestamp startTime;
     private Timestamp endTime;
     private Timestamp updateAt;
-    private double priceMonth;
+    private BigDecimal priceMonth;
     private CustomType sCustomType;
 }

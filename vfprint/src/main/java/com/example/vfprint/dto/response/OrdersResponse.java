@@ -1,7 +1,7 @@
 package com.example.vfprint.dto.response;
 
 import java.sql.Timestamp;
-
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,6 +16,6 @@ public class OrdersResponse {
     private String companyCode;
     private String plansName;
     private Timestamp createAt;
-    private double totalAmount;
+    private BigDecimal totalAmount;
     private boolean isPay;
 }

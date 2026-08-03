@@ -7,7 +7,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.sql.Timestamp;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.vfprint.entity.system.Plans;
@@ -22,7 +21,7 @@ import com.example.vfprint.repository.systemRepository.CompansySubscriptionsRepo
 import com.example.vfprint.repository.systemRepository.PlansRepository;
 import com.example.vfprint.repository.systemRepository.SubscriptionStatusesRepository;
 import com.example.vfprint.repository.systemRepository.SubscriptionTypesRepository;
-
+import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -97,13 +96,13 @@ public class CompansySubscriptionsService {
 
     } 
 
-    public double totalMount(Timestamp start, Timestamp end, double price){
+    public BigDecimal totalMount(Timestamp start, Timestamp end, BigDecimal price){
         LocalDateTime startDate = start.toLocalDateTime();
         LocalDateTime endDate = end.toLocalDateTime();
 
         long months = ChronoUnit.MONTHS.between(startDate, endDate);
 
-        return (months * price) * 1.1;
+        return price.multiply(BigDecimal.valueOf(months)).multiply(BigDecimal.valueOf(1.1));
     }
 
 
