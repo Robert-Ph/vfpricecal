@@ -2,25 +2,21 @@ package com.example.vfprint.service.system;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.UUID;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.example.vfprint.dto.request.PaymentRequest;
+import com.example.vfprint.dto.request.SubscriptionRequest;
 import com.example.vfprint.entity.Companies;
 import com.example.vfprint.entity.system.CompansySubscriptions;
 import com.example.vfprint.entity.system.Payment;
 import com.example.vfprint.entity.system.PaymentStatus;
 import com.example.vfprint.entity.system.Plans;
 import com.example.vfprint.entity.system.SubscriptionStatuses;
-import com.example.vfprint.enums.ActionType;
 import com.example.vfprint.repository.CompaniesRepository;
 import com.example.vfprint.repository.systemRepository.PaymentRepository;
 import com.example.vfprint.repository.systemRepository.PaymentStatusRepository;
 import com.example.vfprint.repository.systemRepository.PlansRepository;
 import com.example.vfprint.repository.systemRepository.SubscriptionStatusesRepository;
 import com.example.vfprint.service.CompaniesService;
-import com.example.vfprint.service.system.CompansySubscriptionsService;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +34,7 @@ public class PaymentService {
 
 
     @Transactional
-public void createPayment(PaymentRequest request){
+public void createPayment(SubscriptionRequest request){
 
     Companies companies;
 

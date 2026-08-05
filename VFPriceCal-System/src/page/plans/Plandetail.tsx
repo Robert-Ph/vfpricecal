@@ -3,7 +3,7 @@ import "./createPlan.scss";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import { createPlans, getPlansById } from "../../service/PlansService";
+import {  getPlansById, updatePlans } from "../../service/PlansService";
 
 export default function PlanDetail() {
     const { id } = useParams(); // Assuming you have a way to get the plan ID from the URL or props
@@ -19,6 +19,8 @@ export default function PlanDetail() {
         maxBranches: 1,
         isCustom: false,
         description: "",
+        plansType: "PERSONAL",
+        sort: 0
     });
 
     useEffect(() => {
@@ -37,6 +39,8 @@ export default function PlanDetail() {
                     maxBranches: response.data.maxBranches,  
                     isCustom: response.data.isCustom,
                     description: response.data.description,
+                    plansType: response.data.plansType,
+                    sort: response.data.sort
                 });
             }
             catch (error) {
@@ -71,10 +75,10 @@ export default function PlanDetail() {
 
         try {
             // Call the API to create the plan here
-            const response = await createPlans(formData);
+            const response = await updatePlans(formData.id ,formData);
             if (response.code === "200" || response.code === "201") {
                 console.log("Form Data Submitted:", formData);
-                toast.success("Gói dịch vụ đã được tạo thành công!");
+                toast.success("Gói dịch vụ đã được cập nhật thành công!");
             }
             window.location.href = "/plans"; // Redirect to the plans page after successful submission
         } catch (error) {
@@ -205,23 +209,23 @@ export default function PlanDetail() {
                         </select>
                     </div>
 
-                    {/* <div className="form-group">
-                        <label>Trạng thái</label>
+                    <div className="form-group">
+                        <label>Loại gói</label>
 
                         <select
-                            name="status"
-                            value={formData.status}
+                            name="plansType"
+                            value={formData.plansType}
                             onChange={handleChange}
                         >
-                            <option value="ACTIVE">
-                                Đang hoạt động
+                            <option value="PERSONAL">
+                                Cá nhân
                             </option>
 
-                            <option value="INACTIVE">
-                                Ngừng hoạt động
+                            <option value="BUSINESS">
+                                Doanh nghiệp
                             </option>
                         </select>
-                    </div> */}
+                    </div>
 
                 </div>
 

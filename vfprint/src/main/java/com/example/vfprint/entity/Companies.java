@@ -38,7 +38,6 @@ public class Companies {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     
-    @Column(unique = true)
     private String code;
     private String name;
     private String phone;

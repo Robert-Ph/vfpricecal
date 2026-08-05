@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import java.util.UUID;
+
+import com.example.vfprint.enums.PlansType;
+
 import java.math.BigDecimal;
 
 @Getter
@@ -27,5 +30,7 @@ public class PlansRequest {
     private Integer maxProducts;
     private Integer maxBranches;
     private String description;
+    private PlansType plansType;
+    private Integer sort;
 
 }

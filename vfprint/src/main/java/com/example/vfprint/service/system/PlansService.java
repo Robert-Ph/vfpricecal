@@ -3,7 +3,6 @@ package com.example.vfprint.service.system;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -39,6 +38,8 @@ public class PlansService {
                     .maxUsers(plan.getMaxUsers())
                     .durationInDays(plan.getDurationInDays())
                     .description(plan.getDescription())
+                    .plansType(plan.getPlansType())
+                    .sort(plan.getSort())
                     .build()
                 )
                 .collect(Collectors.toList());
@@ -60,6 +61,8 @@ public class PlansService {
                 .description(plans.getDescription())
                 .createdAt(plans.getCreatedAt())
                 .updatedAt(plans.getUpdatedAt())
+                .plansType(plans.getPlansType())
+                .sort(plans.getSort())
                 .build();
     } 
 
@@ -76,6 +79,8 @@ public class PlansService {
                 .maxProducts(plansRequest.getMaxProducts())
                 .maxBranches(plansRequest.getMaxBranches())
                 .description(plansRequest.getDescription())
+                .plansType(plansRequest.getPlansType())
+                .sort(plansRequest.getSort())
                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))
                 .build();
         plansRepository.save(plans);
@@ -94,6 +99,8 @@ public class PlansService {
         plans.setMaxProducts(plansRequest.getMaxProducts());
         plans.setMaxBranches(plansRequest.getMaxBranches());
         plans.setDescription(plansRequest.getDescription());
+        plans.setPlansType(plansRequest.getPlansType());
+        plans.setSort(plansRequest.getSort());
         plans.setUpdatedAt(Timestamp.valueOf(LocalDateTime.now()));
         plansRepository.save(plans);
     }

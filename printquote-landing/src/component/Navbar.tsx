@@ -2,9 +2,16 @@ import { Menu } from "lucide-react";
 import "./navbar.scss";
 import logo from "../assets/logo.png";
 import { useNavigate } from "react-router-dom";
+import type { systemConfig } from "../api/ConfigModal";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const configs: systemConfig[] = JSON.parse(
+    localStorage.getItem("systemConfig") || "[]"
+);
+const defaultPlan = configs.find(
+    config => config.configKey === "DEFAULT_PLAN"
+);
   return (
     <header className="navbar">
       <div className="container">
@@ -26,7 +33,7 @@ export default function Navbar() {
         {/* Buttons */}
         <div className="nav-actions">
           <button className="btn-login">Đăng nhập</button>
-          <button className="btn-trial" onClick={() => navigate("/dang-ky-dung-thu")}>Dùng thử</button>
+          <button className="btn-trial" onClick={() => navigate("/dang-ky-dung-thu")}>{defaultPlan?.configValue === 'BETA' ? "Đăng ký Thử nghiệm" : "Dùng thử"}</button>
         </div>
 
         {/* Mobile Menu */}

@@ -90,6 +90,8 @@ export type crePlans = {
     maxProducts: number;
     maxBranches: number;
     description: string;
+    plansType: string;
+    sort: number;
 }
 
 export type plansRegistration = {

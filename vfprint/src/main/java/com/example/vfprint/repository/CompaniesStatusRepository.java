@@ -8,5 +8,6 @@ import java.util.UUID;
 @Repository
 public interface CompaniesStatusRepository extends JpaRepository<CompaniesStatus, UUID> {
     // Bạn có thể thêm các phương thức truy vấn tùy chỉnh ở đây nếu cần
+    CompaniesStatus findByCode(String code);;
     
 }

@@ -2,14 +2,19 @@ package com.example.vfprint.service.system;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.example.vfprint.enums.ActionType;
 import com.example.vfprint.enums.InvoiceStatus;
 import com.example.vfprint.repository.systemRepository.InvoicesRepository;
 import com.example.vfprint.repository.systemRepository.PaymentStatusRepository;
 import com.example.vfprint.repository.systemRepository.PlansRepository;
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
 import lombok.RequiredArgsConstructor;
 import com.example.vfprint.service.component.InvoiceNumberService;
-import com.example.vfprint.dto.request.PaymentRequest;
+import com.example.vfprint.dto.request.SubscriptionRequest;
 import com.example.vfprint.entity.system.CompansySubscriptions;
 import com.example.vfprint.entity.system.Invoices;
 import com.example.vfprint.entity.system.PaymentStatus;
@@ -25,7 +30,7 @@ public class InvoicesService {
     private final PaymentStatusRepository paymentStatusRepository;
 
     @Transactional
-    public void createInvoice(PaymentRequest request, CompansySubscriptions cSubscriptions) {
+    public void createInvoice(SubscriptionRequest request, CompansySubscriptions cSubscriptions, ActionType actionType) {
             Plans plans = plansRepository
             .findById(request.getSub().getPlanId())
             .orElseThrow();
@@ -51,6 +56,8 @@ public class InvoicesService {
             .taxAmount(plans.getPrice().multiply(BigDecimal.valueOf(0.1)))
             .totalAmount(total)
             .status(status)
+            .actionType(actionType)
+            .createdAt(Timestamp.valueOf(LocalDateTime.now()))
             .build();
         // Set invoice properties based on request and cSubscriptions
         invoicesRepository.save(invoice);

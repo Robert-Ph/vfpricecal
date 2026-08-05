@@ -16,6 +16,8 @@ export default function CreatePlan() {
         maxBranches: 1,
         isCustom: false,
         description: "",
+        plansType: "PERSONAL",
+        sort: 0
     });
 
     const handleChange = (
@@ -175,23 +177,35 @@ export default function CreatePlan() {
                         </select>
                     </div>
 
-                    {/* <div className="form-group">
-                        <label>Trạng thái</label>
+                    <div className="form-group">
+                        <label>Loại gói</label>
 
                         <select
-                            name="status"
-                            value={formData.status}
+                            name="plansType"
+                            value={formData.plansType}
                             onChange={handleChange}
                         >
-                            <option value="ACTIVE">
-                                Đang hoạt động
+                            <option value="PERSONAL">
+                                Cá nhân
                             </option>
 
-                            <option value="INACTIVE">
-                                Ngừng hoạt động
+                            <option value="BUSINESS">
+                                Doanh nghiệp
                             </option>
                         </select>
-                    </div> */}
+                    </div>
+
+                    <div className="form-group">
+                        <label>Thứ tự <span className="li-red">*</span></label>
+
+                        <input
+                            type="number"
+                            name="sort"
+                            value={formData.sort}
+                            onChange={handleChange}
+                            placeholder="Nhập thứ tự"
+                        />
+                    </div>
 
                 </div>
 

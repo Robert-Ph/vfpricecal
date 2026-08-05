@@ -2,6 +2,8 @@ package com.example.vfprint.dto.system;
 
 import java.util.UUID;
 
+import com.example.vfprint.enums.PlansType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,4 +32,6 @@ public class PlansResponse {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     private String description;
+    private PlansType plansType;
+    private Integer sort;
 }

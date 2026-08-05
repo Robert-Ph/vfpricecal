@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.vfprint.dto.request.PaymentRequest;
+import com.example.vfprint.dto.request.SubscriptionRequest;
 import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.service.system.PaymentService;
 
@@ -21,7 +21,7 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createPayment(@RequestBody PaymentRequest request){
+    public ResponseEntity<ApiResponse> createPayment(@RequestBody SubscriptionRequest request){
         paymentService.createPayment(request);
         return ResponseEntity.status(HttpStatus.OK).body(
             ApiResponse.builder()

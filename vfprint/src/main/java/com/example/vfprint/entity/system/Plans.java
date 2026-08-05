@@ -1,6 +1,10 @@
 package com.example.vfprint.entity.system;
 
 import java.util.UUID;
+
+import com.example.vfprint.enums.PlansType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -46,6 +50,12 @@ public class Plans {
 
     @Column(name = "is_custom")
     private Boolean isCustom;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "plans_type")
+    private PlansType plansType;
+
+    private Integer sort;
 
     @Column(name = "created_at")
     private Timestamp createdAt;

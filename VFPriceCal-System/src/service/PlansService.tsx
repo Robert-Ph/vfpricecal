@@ -30,3 +30,13 @@ export const createPlans = async (planData: crePlans): Promise<crePlans> => {
         throw error;
     }
 }
+
+export const updatePlans = async (id: string,planData: crePlans): Promise<crePlans> => {
+    try{
+        const response = await apiClient.put(`/system/plans/${id}`, planData);
+        return response.data;
+    }catch(error){
+        console.error('Error creating plan:', error);
+        throw error;
+    }
+}

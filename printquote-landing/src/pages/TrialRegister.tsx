@@ -16,6 +16,9 @@ import {
   type ReactNode,
 } from "react";
 import Navbar from "../component/Navbar";
+import { createTrail } from "../service/SystemConfigService";
+import type { SubscriTrailOrBetaRequest } from "../api/ConfigModal";
+import { toast } from "react-toastify";
 
 interface FormData {
 customerType: "PERSONAL" | "BUSINESS";
@@ -97,13 +100,14 @@ function Input({
 }
 
 export default function TrialRegister() {
-  const [form, setForm] = useState<FormData>({
-    customerType: "PERSONAL",
+  const [form, setForm] = useState<SubscriTrailOrBetaRequest>({
+    customType: "PERSONAL",
     fullName: "",
     email: "",
     phone: "",
     company: "",
     tradeName: "",
+    statusId: "5c7a3b1e-92fd-4a6c-bc84-1d2e3f4a5b6c",
     agree: false,
   });
 
@@ -131,10 +135,16 @@ export default function TrialRegister() {
   const validate = () => {
     const newErrors: FormErrors = {};
     if (
-  form.customerType === "BUSINESS" &&
+  form.customType === "BUSINESS" &&
   !form.company.trim()
 ) {
   newErrors.company = "Vui lòng nhập tên công ty";
+}
+if (
+  form.customType=== "BUSINESS" &&
+  !form.tradeName.trim()
+) {
+  newErrors.tradeName = "Vui lòng nhập tên thương mại(tên vắn tắt)";
 }
 
     if (!form.fullName.trim()) {
@@ -167,10 +177,26 @@ export default function TrialRegister() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (
+  const handleSubmit = async(
     e: FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
+    if(form.customType === 'PERSONAL'){
+    setForm({
+        ...form,
+        tradeName: form.fullName,
+        company: form.fullName
+    });
+}
+
+    try {
+      const response = await createTrail(form)
+      if(response.code === 200 || response.code === 201){
+        toast.success("Đăng ký thành công!")
+      }
+    } catch (error) {
+      console.error("Lỗi khi thêm công ty:", error);
+    }
 
     if (!validate()) return;
 
@@ -186,15 +212,15 @@ export default function TrialRegister() {
       <main className={styles.main}>
         <section className={styles.left}>
           <h1>
-            Dùng thử <span>PrintQuote</span>
+            Thử nghiệm <span>PrintQuote</span>
             <br />
             hoàn toàn miễn phí
           </h1>
 
           <p>
-            Trải nghiệm đầy đủ tính năng trong 7 ngày.
+            Thử nghiệm đầy đủ tính năng hiện có và các tính năng được cập nhật mới trong giai đoạn này.
             <br />
-            Không cần thẻ tín dụng.
+            {/* Không cần thẻ tín dụng. */}
           </p>
 
           <div className={styles.features}>
@@ -242,18 +268,18 @@ export default function TrialRegister() {
 
         <section className={styles.right}>
           <div className={styles.card}>
-            <h2>Đăng ký dùng thử</h2>
+            <h2>Đăng ký thử nghiệm</h2>
 
             <p>
-              Bắt đầu trải nghiệm PrintQuote ngay hôm nay.
+              Bắt đầu thử nghiệm PrintQuote ngay hôm nay.
             </p>
             <div className={styles.customerType}>
                 <label>
                     <input
                         type="radio"
-                        name="customerType"
+                        name="customType"
                         value="PERSONAL"
-                        checked={form.customerType === "PERSONAL"}
+                        checked={form.customType === "PERSONAL"}
                         onChange={handleChange}
                     />
                     <span>Cá nhân</span>
@@ -262,9 +288,9 @@ export default function TrialRegister() {
                 <label>
                     <input
                         type="radio"
-                        name="customerType"
+                        name="customType"
                         value="BUSINESS"
-                        checked={form.customerType === "BUSINESS"}
+                        checked={form.customType === "BUSINESS"}
                         onChange={handleChange}
                     />
                     <span>Doanh nghiệp</span>
@@ -301,7 +327,7 @@ export default function TrialRegister() {
                 error={errors.phone}
               />
 
-             {form.customerType === "BUSINESS" && (
+             {form.customType === "BUSINESS" && (
                 <>
                 <Input
                     icon={<Building2 size={18} />}
@@ -309,6 +335,7 @@ export default function TrialRegister() {
                     placeholder="Tên công ty"
                     value={form.company}
                     onChange={handleChange}
+                    error={errors.company}
                 />
 
                 <Input
@@ -317,6 +344,7 @@ export default function TrialRegister() {
                     placeholder="Tên thương mại"
                     value={form.tradeName}
                     onChange={handleChange}
+                    error={errors.tradeName}
                 />
                 </>
             )}
