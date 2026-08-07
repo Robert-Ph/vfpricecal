@@ -12,6 +12,8 @@ import Navbar from "../component/Navbar";
 import styles from "./Contact.module.scss";
 import anh from "../assets/backgound_Email.png";
 import Footer from "../component/Footer";
+import { sendFeedback } from "../service/FeedbacksService";
+import { toast } from "react-toastify";
 
 interface ContactForm {
   fullName: string;
@@ -82,12 +84,30 @@ export default function Contact() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (!validate()) return;
+    const formSend = {
+      fullName: form.fullName,
+      email: form.email,
+      phone: form.phone,
+      subject: form.subject,
+      content: form.message,
+    }
 
-    console.log(form);
+    try {
+      const response = await sendFeedback(formSend);
+      if(response.code === 200 || response.code === 201){
+        toast.success(response.message)
+        setTimeout(() => {
+          window.location.reload();
+        }, 1500);
+      }
+    } catch (error) {
+      toast.error("Thất bại!")
+      console.log(error)
+    }
 
     // TODO: Call API
   };

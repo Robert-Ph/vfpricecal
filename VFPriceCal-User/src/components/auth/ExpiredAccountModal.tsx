@@ -55,9 +55,9 @@ export default function ExpiredAccountModal({
         <p>{content.message}</p>
 
         <div className="expired-contact">
-          Email: vfpricecal.service@gmail.com
+          Email: vfprintquote@gmail.com
           <br />
-          Hotline: 0368 757 921
+          {/* Hotline: 0368 757 921 */}
         </div>
 
         <button

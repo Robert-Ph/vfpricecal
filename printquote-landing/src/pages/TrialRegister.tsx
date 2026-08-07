@@ -358,10 +358,12 @@ if (
                 />
 
                 <span>
-                  Tôi đồng ý với Điều khoản sử dụng và
-                  Chính sách bảo mật
+                  Tôi đồng ý với <a href="/dieu-khoan-su-dung">Điều khoản sử dụng</a> và
+                  <a href="/chinh-sach-bao-mat">Chính sách bảo mật</a>
                 </span>
               </label>
+
+              
 
               {errors.agree && (
                 <p className={styles.error}>

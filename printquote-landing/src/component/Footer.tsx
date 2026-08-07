@@ -12,13 +12,15 @@ export default function Footer() {
 
         <div>
           <h4>Sản phẩm</h4>
-          <a href="#">Tính năng</a>
-          <a href="#">Bảng giá</a>
+          <a href="#features">Tính năng</a>
+          <a href="#pricing">Bảng giá</a>
         </div>
 
         <div>
           <h4>Hỗ trợ</h4>
           <a href="/lien-he">Liên hệ</a>
+          <a href="/dieu-khoan-su-dung">Điều khoản sử dụng</a>
+          <a href="/chinh-sach-bao-mat">Chính sách bảo mật</a>
           <a href="#">Email</a>
         </div>
 

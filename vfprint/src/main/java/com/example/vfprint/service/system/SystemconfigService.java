@@ -76,4 +76,21 @@ public class SystemconfigService {
                 .data(response)
                 .build();
     }
+
+    @Transactional
+    public String getValue(String key){
+         return systemConfigRepository.findByConfigKey(key).getConfigValue();
+    }
+    @Transactional
+    public Integer getInteger(String key){
+         return Integer.valueOf(systemConfigRepository.findByConfigKey(key).getConfigValue());
+    }
+
+    @Transactional
+    public boolean getBoolean(String key){
+        if(systemConfigRepository.findByConfigKey(key).getConfigValue().equals("true")){
+            return true;
+        }
+        return false;
+    }
 }

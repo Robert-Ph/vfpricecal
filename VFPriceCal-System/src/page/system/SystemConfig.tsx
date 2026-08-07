@@ -261,9 +261,9 @@ export default function SystemConfig() {
                 {/* <td>{item.order}</td> */}
 
                 <td>
-                  Nguyễn Văn A
+                  {item.updatedBy}
                   <br />
-                  01/08/2025
+                  {item.updateAt}
                 </td>
 
                 <td className="action">

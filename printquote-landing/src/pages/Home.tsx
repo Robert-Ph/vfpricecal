@@ -6,8 +6,8 @@ import Footer from "../component/Footer";
 import Hero from "../component/Hero";
 import Navbar from "../component/Navbar";
 import Pricing from "../component/Pricing";
-import Statistics from "../component/Statistics";
-import Testimonials from "../component/Testimonials";
+// import Statistics from "../component/Statistics";
+// import Testimonials from "../component/Testimonials";
 import Workflow from "../component/Workflow";
 import { getAllPlan, getAllSystemConfig } from "../service/SystemConfigService";
 import type { plansResponse, systemConfig } from "../api/ConfigModal";
@@ -39,13 +39,13 @@ export default function Home() {
       <Navbar />
       <Hero/>
       <Features/>
-        <Workflow/>
-        <Pricing/>
-        <Statistics/>
-        <Testimonials/>
-        <FAQ/>
-        <CTA/>
-        <Footer/>
+      <Workflow/>
+      <Pricing/>
+  {/* <Statistics/>
+      <Testimonials/> */}
+      <FAQ/>
+      <CTA/>
+      <Footer/>
     </>
   );
 }

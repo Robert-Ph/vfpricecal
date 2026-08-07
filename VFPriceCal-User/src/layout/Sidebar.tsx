@@ -82,7 +82,7 @@ const Sidebar = () => {
                 {/* Khối chứa thông tin chữ bên phải */}
                 <div className="brand__text-wrapper">
                     <h3 title="version 1.0" className="brand__title--horizontal">
-                        VF<span className="text-cyan">print</span> ECOSYSTEM
+                        Print<span className="text-cyan">Quote</span>
                     </h3>
                     <p className="brand__subtitle--horizontal">Hệ thống báo giá in ấn</p>
                      <p className="brand__subtitle--horizontal">Version: 0.2.0-beta.04072026</p>
@@ -96,10 +96,10 @@ const Sidebar = () => {
                     <span>Báo giá nhanh</span>
                 </NavLink>
 
-                <NavLink className="menu-item" to="/quotation-list" onClick={closeAllSubMenus}>
+                {/* <NavLink className="menu-item" to="/quotation-list" onClick={closeAllSubMenus}>
                     <FaFileAlt className="menu-icon" />
                     <span>Đơn báo giá</span>
-                </NavLink>
+                </NavLink> */}
 
                 {/* <NavLink className="menu-item" to="/product">
                     <FaBox className="menu-icon" />

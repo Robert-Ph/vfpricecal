@@ -72,7 +72,6 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/public/**",
-                                "/api/companies/**",
                                 "/api/accounts/**",
                                 "/api/system/authen/**",
                                 "/api/bao-gia/**",
@@ -85,6 +84,7 @@ public class SecurityConfig {
                         * 2. API phân quyền nội bộ công ty (Cần đăng nhập)
                         */
                         .requestMatchers("/api/system/**").hasAnyRole("ROOT", "MANAGER", "ADMIN","USER")
+                        .requestMatchers("/api/companies/**").hasAnyRole("ROOT", "MANAGER", "ADMIN","USER")
                         // Bảng giá in ấn và Giảm giá: Cả Admin và User của công ty đều xem được
                         .requestMatchers("/api/print-prices/**").hasAnyRole("OWNER", "STAFF", "ADMIN")
                         .requestMatchers("/api/discount/**").hasAnyRole("OWNER", "STAFF", "ADMIN")
@@ -124,8 +124,10 @@ public CorsConfigurationSource corsConfigurationSource() {
         "http://localhost:5174",
         "http://localhost:5173",
         "http://localhost:5172",
-        "https://vfprice.vfltprinteco.com",
-        "http://vfprice.vfltprinteco.com"
+        "https://printquote.vfltprinteco.com",
+        "http://printquote.vfltprinteco.com",
+        "https://account.printquote.vfltprinteco.com",
+        "http://account.printquote.vfltprinteco.com"
     ));
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Cache-Control"));

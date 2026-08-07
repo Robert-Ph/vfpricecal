@@ -24,15 +24,15 @@ const defaultPlan = configs.find(
         {/* Menu */}
         <nav className="nav-menu">
           <a href="/">Trang chủ</a>
-          {/* <a href="#">Tính năng</a> */}
-          {/* <a href="#">Bảng giá</a> */}
+          <a href="#features">Tính năng</a>
+          <a href="#pricing">Bảng giá</a>
           <a href="#">Hướng dẫn</a>
           <a href="/lien-he">Liên hệ</a>
         </nav>
 
         {/* Buttons */}
         <div className="nav-actions">
-          <button className="btn-login">Đăng nhập</button>
+          <button className="btn-login" onClick={() => window.location.href = "https://account.printquote.vfltprinteco.com"}>Đăng nhập</button>
           <button className="btn-trial" onClick={() => navigate("/dang-ky-dung-thu")}>{defaultPlan?.configValue === 'BETA' ? "Đăng ký Thử nghiệm" : "Dùng thử"}</button>
         </div>
 

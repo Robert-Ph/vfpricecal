@@ -43,7 +43,7 @@ const features = [
 
 export default function Features() {
   return (
-    <section className="features">
+    <section id="features" className="features">
       <div className="container">
         <div className="heading">
           <span className="badge">TÍNH NĂNG</span>

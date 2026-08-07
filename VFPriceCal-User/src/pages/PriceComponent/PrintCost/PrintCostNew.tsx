@@ -120,7 +120,7 @@ const PrintCostNew = () => {
                                                 <FiTag />
                                             </div>
                 
-                                            <div className="field-content">
+                                            <div className="field-content-unit">
                                                 <span>Đơn vị</span>
                                                 <select name="" id="" value={unit} onChange={(e) => setUnit(e.target.value)}>
                                                     <option value="click">Lượt in</option>

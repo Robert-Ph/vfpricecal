@@ -129,8 +129,8 @@ const Login = () => {
                     alt="VFprint Logo" 
                     className="brand__logo" 
                     />
-                    <h1>VF PRINT</h1>
-                    <h1>ECOSYSTEM</h1>
+                    <h1>PRINTQUOTE</h1>
+                    <h1>VFRINT ECOSYSTEM</h1>
                     <p>Management Platform</p>
                 </div>
             </div>

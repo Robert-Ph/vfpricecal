@@ -229,7 +229,7 @@ $primary: #2563eb;
 
 .field-content {
   flex: 1;
-
+  
   span {
     display: block;
     font-size: 13px;
@@ -244,6 +244,11 @@ $primary: #2563eb;
     font-weight: 700;
     color: #1e293b;
     line-height: 1.2;
+  }
+}
+.field-content-unit{
+  select{
+    height: 50px;
   }
 }
 

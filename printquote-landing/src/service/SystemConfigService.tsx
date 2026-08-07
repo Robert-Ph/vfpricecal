@@ -1,5 +1,5 @@
 import { apiClient } from "../api/APIConfig";
-import type { subscritionRequest, SubscriTrailOrBetaRequest } from "../api/ConfigModal";
+import type {  SubscriTrailOrBetaRequest } from "../api/ConfigModal";
 
 export const getAllSystemConfig = async () => {
     try{

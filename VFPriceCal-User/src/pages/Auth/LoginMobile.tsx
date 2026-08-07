@@ -24,7 +24,7 @@ export default function LoginPage() {
           if (response && response.username) {
   
               // Kiểm tra hết hạn
-              if (response.endTime) {
+              if (response.plan !== "BETA" && response.endTime) {
                   const isExpired =
                       new Date(response.endTime).getTime() <
                       new Date().getTime();

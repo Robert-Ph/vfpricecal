@@ -101,7 +101,7 @@ export default function Pricing() {
      .sort((a, b) => a.sort - b.sort);
 
   return (
-    <section className="pricing">
+    <section id="pricing" className="pricing">
       <div className="container">
         <h2>Gói dịch vụ</h2>
 

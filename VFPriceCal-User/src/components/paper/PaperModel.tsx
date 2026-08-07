@@ -13,9 +13,9 @@ interface Props {
 
 const PaperModal = ({ open, setOpen, onAdd }: Props) => {
 
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
-  const [price, setPrice] = useState(0);
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+  const [price, setPrice] = useState("");
   const [error, setError] = useState(""); // Lưu thông báo lỗi chung hoặc riêng
 
   if (!open) return null;
@@ -30,15 +30,15 @@ const PaperModal = ({ open, setOpen, onAdd }: Props) => {
 
     const newData = {
       id: String(uuidv4()), // Tạo chuỗi ID duy nhất như: "9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d"
-      width,
-      height,
-      price
+      width: Number(width),
+      height: Number(height),
+      price: Number(price)
     };
     
     onAdd(newData);
     setOpen(false);
     // Reset fields
-    setWidth(0); setHeight(0); setPrice(0);
+    setWidth(""); setHeight(""); setPrice("");
     setError(""); // Reset error message
   };
 
@@ -59,7 +59,7 @@ const PaperModal = ({ open, setOpen, onAdd }: Props) => {
               type="number"
               placeholder="Nhập chiều rộng..."
               value={width}
-              onChange={(e) => {setWidth(Number(e.target.value))
+              onChange={(e) => {setWidth(e.target.value)
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />
@@ -72,7 +72,7 @@ const PaperModal = ({ open, setOpen, onAdd }: Props) => {
               type="number"
               placeholder="Nhập chiều cao..."
               value={height}
-              onChange={(e) => {setHeight(Number(e.target.value))
+              onChange={(e) => {setHeight(e.target.value)
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />
@@ -85,7 +85,7 @@ const PaperModal = ({ open, setOpen, onAdd }: Props) => {
               type="number"
               placeholder="Nhập giá..."
               value={price}
-              onChange={(e) => {setPrice(Number(e.target.value))
+              onChange={(e) => {setPrice(e.target.value)
                 if(error) setError(""); // Xóa thông báo khi người dùng bắt đầu gõ lại
               }}
             />

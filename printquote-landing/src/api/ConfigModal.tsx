@@ -88,3 +88,11 @@ export type SubscriTrailOrBetaRequest = {
     statusId: string;
     agree: boolean;
 }
+
+export type feedbackRequest = {
+    fullName: string;
+    email: string;
+    phone: string;
+    subject: string;
+    content: string;
+}

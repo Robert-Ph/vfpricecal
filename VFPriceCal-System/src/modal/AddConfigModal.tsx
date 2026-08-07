@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './AddConfigModal.module.scss';
 import { createSystemConfig } from '../service/SystemConfigService';
 
@@ -99,7 +99,7 @@ export default function AddConfigModal({ isOpen = true, onClose }) {
                     Chọn kiểu dữ liệu
                   </option>
                   <option value="STRING">String</option>
-                  <option value="NUMBER">Number</option>
+                  <option value="INTEGER">Integer</option>
                   <option value="ENUM">ENUM</option>
                   <option value="BOOLEAN">Boolean</option>
                   <option value="JSON">JSON</option>
@@ -131,6 +131,7 @@ export default function AddConfigModal({ isOpen = true, onClose }) {
                   <option value="SECURITY">Bảo mật</option>
                   <option value="REGISTRATION">Đăng ký tài khoản</option>
                   <option value="PAYMENT">Thanh toán</option>
+                  <option value="EMAIL">Email</option>
                   <option value="NOTIFICATION">Thông báo</option>
                 </select>
                 <span className={styles.arrow}>
