@@ -6,7 +6,7 @@ import {
   Building2,
   FileText,
   Shield,
-  Headphones,
+  // Headphones,
   Printer,
 } from "lucide-react";
 import {
@@ -19,6 +19,7 @@ import Navbar from "../component/Navbar";
 import { createTrail } from "../service/SystemConfigService";
 import type { SubscriTrailOrBetaRequest } from "../api/ConfigModal";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 interface FormData {
 customerType: "PERSONAL" | "BUSINESS";
@@ -218,7 +219,7 @@ if (
           </h1>
 
           <p>
-            Thử nghiệm đầy đủ tính năng hiện có và các tính năng được cập nhật mới trong giai đoạn này.
+            Thử nghiệm đầy đủ tính năng hiện có và các tính năng được cập nhật mới liên tục trong giai đoạn thử nghiệm.
             <br />
             {/* Không cần thẻ tín dụng. */}
           </p>
@@ -254,7 +255,7 @@ if (
               }}
             />
 
-            <Feature
+            {/* <Feature
               icon={<Headphones />}
               title="Hỗ trợ 24/7"
               desc="Đội ngũ luôn sẵn sàng."
@@ -262,7 +263,7 @@ if (
                 bg: "#f4e8ff",
                 color: "#9333ea",
               }}
-            />
+            /> */}
           </div>
         </section>
 
@@ -358,9 +359,15 @@ if (
                 />
 
                 <span>
-                  Tôi đồng ý với <a href="/dieu-khoan-su-dung">Điều khoản sử dụng</a> và
-                  <a href="/chinh-sach-bao-mat">Chính sách bảo mật</a>
-                </span>
+  Tôi đồng ý với{" "}
+  <Link to="/dieu-khoan-su-dung">
+    Điều khoản sử dụng
+  </Link>{" "}
+  và{" "}
+  <Link to="/chinh-sach-bao-mat">
+    Chính sách bảo mật
+  </Link>
+</span>
               </label>
 
               

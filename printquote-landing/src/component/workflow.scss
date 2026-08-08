@@ -1,107 +1,403 @@
 .workflow {
+  width: 100%;
+  max-width: 100%;
+  padding: 100px 0;
 
-  padding:100px 0;
+  background: #fff;
 
-  background:white;
+  overflow: hidden;
 
-  .container{
+  // ==========================================
+  // CONTAINER
+  // ==========================================
 
-    max-width:1280px;
+  .container {
+    width: 100%;
+    max-width: 1280px;
+    min-width: 0;
 
-    margin:auto;
+    margin: 0 auto;
+    padding: 0 30px;
 
-    padding:0 30px;
-
+    box-sizing: border-box;
   }
 
-  .title{
+  // ==========================================
+  // TITLE
+  // ==========================================
 
-    text-align:center;
+  .title {
+    text-align: center;
+    margin-bottom: 70px;
 
-    margin-bottom:70px;
+    h2 {
+      margin: 0;
 
-    h2{
+      color: #0f172a;
 
-      font-size:46px;
-
+      font-size: 46px;
+      line-height: 1.2;
+      font-weight: 700;
     }
 
-    p{
+    p {
+      margin: 15px 0 0;
 
-      margin-top:15px;
+      color: #64748b;
 
-      color:#64748b;
-
+      font-size: 17px;
+      line-height: 1.6;
     }
-
   }
 
-  .steps{
+  // ==========================================
+  // STEPS
+  // ==========================================
 
-    display:grid;
+  .steps {
+    width: 100%;
+    min-width: 0;
 
-    grid-template-columns:repeat(4,1fr);
+    display: grid;
 
-    gap:30px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 
+    gap: 30px;
   }
 
-  .step{
+  // ==========================================
+  // STEP CARD
+  // ==========================================
 
-    text-align:center;
+  .step {
+    position: relative;
 
-    padding:40px;
+    min-width: 0;
 
-    border-radius:20px;
+    padding: 40px 25px;
 
-    border:1px solid #eee;
+    text-align: center;
 
-    transition:.3s;
+    background: #fff;
 
-    position:relative;
+    border: 1px solid #e5e7eb;
 
-    &:hover{
+    border-radius: 20px;
 
-      transform:translateY(-8px);
+    transition:
+      transform 0.3s ease,
+      box-shadow 0.3s ease,
+      border-color 0.3s ease;
 
-      box-shadow:0 20px 40px rgba(0,0,0,.08);
+    &:hover {
+      transform: translateY(-8px);
 
+      border-color: #dbe5ff;
+
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
     }
 
-    .number{
+    // ========================================
+    // NUMBER
+    // ========================================
 
-      width:36px;
+    .number {
+      position: absolute;
 
-      height:36px;
+      top: 18px;
+      right: 18px;
 
-      border-radius:50%;
+      width: 36px;
+      height: 36px;
 
-      background:#2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-      color:white;
+      border-radius: 50%;
 
-      display:flex;
+      background: #2563eb;
 
-      justify-content:center;
+      color: #fff;
 
-      align-items:center;
-
-      position:absolute;
-
-      top:20px;
-
-      right:20px;
-
+      font-size: 14px;
+      font-weight: 600;
     }
 
-    svg{
+    // ========================================
+    // ICON
+    // ========================================
 
-      color:#2563eb;
+    svg {
+      display: block;
 
-      margin-bottom:25px;
+      width: 42px;
+      height: 42px;
 
+      margin: 0 auto 25px;
+
+      color: #2563eb;
     }
 
+    // ========================================
+    // TITLE
+    // ========================================
+
+    h3 {
+      margin: 0 0 10px;
+
+      color: #1e293b;
+
+      font-size: 20px;
+      line-height: 1.4;
+      font-weight: 700;
+    }
+
+    // ========================================
+    // DESCRIPTION
+    // ========================================
+
+    p {
+      margin: 0;
+
+      color: #64748b;
+
+      font-size: 15px;
+      line-height: 1.6;
+    }
   }
+}
 
+
+// ======================================================
+// LAPTOP
+// ======================================================
+
+@media (max-width: 1200px) {
+  .workflow {
+    padding: 90px 0;
+
+    .container {
+      max-width: 1100px;
+      padding: 0 28px;
+    }
+
+    .title {
+      margin-bottom: 55px;
+
+      h2 {
+        font-size: 40px;
+      }
+    }
+
+    .steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+
+      gap: 24px;
+    }
+
+    .step {
+      padding: 35px 25px;
+    }
+  }
+}
+
+
+// ======================================================
+// TABLET
+// ======================================================
+
+@media (max-width: 768px) {
+  .workflow {
+    padding: 75px 0;
+
+    .container {
+      width: 100%;
+      max-width: 100%;
+      padding: 0 24px;
+    }
+
+    .title {
+      margin-bottom: 45px;
+
+      h2 {
+        font-size: 36px;
+      }
+
+      p {
+        font-size: 16px;
+      }
+    }
+
+    .steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+
+      gap: 18px;
+    }
+
+    .step {
+      padding: 32px 20px;
+
+      .number {
+        width: 32px;
+        height: 32px;
+
+        top: 15px;
+        right: 15px;
+
+        font-size: 13px;
+      }
+
+      svg {
+        width: 38px;
+        height: 38px;
+
+        margin-bottom: 20px;
+      }
+
+      h3 {
+        font-size: 18px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+
+// ======================================================
+// MOBILE
+// ======================================================
+
+@media (max-width: 576px) {
+  .workflow {
+    padding: 60px 0;
+
+    .container {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+
+      padding: 0 16px;
+    }
+
+    .title {
+      margin-bottom: 35px;
+
+      h2 {
+        font-size: 30px;
+        line-height: 1.25;
+      }
+
+      p {
+        max-width: 330px;
+
+        margin: 12px auto 0;
+
+        font-size: 15px;
+        line-height: 1.6;
+      }
+    }
+
+    .steps {
+      width: 100%;
+
+      grid-template-columns: minmax(0, 1fr);
+
+      gap: 16px;
+    }
+
+    .step {
+      width: 100%;
+      min-width: 0;
+
+      padding: 32px 20px;
+
+      border-radius: 16px;
+
+      &:hover {
+        transform: translateY(-3px);
+      }
+
+      .number {
+        top: 14px;
+        right: 14px;
+
+        width: 32px;
+        height: 32px;
+      }
+
+      svg {
+        width: 38px;
+        height: 38px;
+
+        margin-bottom: 18px;
+      }
+
+      h3 {
+        font-size: 18px;
+      }
+
+      p {
+        font-size: 14px;
+        line-height: 1.6;
+      }
+    }
+  }
+}
+
+
+// ======================================================
+// SMALL PHONE
+// ======================================================
+
+@media (max-width: 380px) {
+  .workflow {
+    padding: 50px 0;
+
+    .container {
+      padding: 0 12px;
+    }
+
+    .title {
+      margin-bottom: 30px;
+
+      h2 {
+        font-size: 27px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+    }
+
+    .step {
+      padding: 28px 18px;
+
+      .number {
+        width: 30px;
+        height: 30px;
+
+        top: 12px;
+        right: 12px;
+
+        font-size: 12px;
+      }
+
+      svg {
+        width: 36px;
+        height: 36px;
+      }
+
+      h3 {
+        font-size: 17px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+    }
+  }
 }

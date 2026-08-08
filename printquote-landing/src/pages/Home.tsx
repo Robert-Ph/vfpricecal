@@ -18,7 +18,7 @@ export default function Home() {
         const fetchDataConfig = async () => {
             const response = await getAllSystemConfig();
             const config: systemConfig[] = response.data;
-
+            console.log(response)
             localStorage.setItem("systemConfig", JSON.stringify(config));
             
         }
@@ -26,10 +26,29 @@ export default function Home() {
         const fetchDataCPlans = async () => {
             const response = await getAllPlan();
             const config: plansResponse[] = response.data;
-
             localStorage.setItem("plans", JSON.stringify(config));
             
         }
+
+ const hash = window.location.hash;
+
+  setTimeout(() => {
+    if (hash) {
+      const element = document.querySelector(hash);
+
+      if (element) {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    } else {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }
+  }, 100);
 
         void fetchDataConfig();
         void fetchDataCPlans();
@@ -38,9 +57,13 @@ export default function Home() {
     <>
       <Navbar />
       <Hero/>
-      <Features/>
+      <section id="features">
+          <Features />
+      </section>
       <Workflow/>
-      <Pricing/>
+      <section id="pricing">
+        <Pricing />
+      </section>
   {/* <Statistics/>
       <Testimonials/> */}
       <FAQ/>

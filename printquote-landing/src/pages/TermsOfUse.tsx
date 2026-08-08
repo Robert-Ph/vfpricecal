@@ -12,7 +12,7 @@ export default function TermsOfUser() {
       <Navbar />
     
              <main className={styles.content}>
-                <PdfViewer file="pdf/Điều khoản sử dụng PrintQuote.pdf"/>
+                <PdfViewer file="/pdf/dieu-khoan-su-dung.pdf"/>
             </main>
 
 

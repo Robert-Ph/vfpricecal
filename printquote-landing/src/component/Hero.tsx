@@ -1,8 +1,10 @@
 import { ArrowRight, PlayCircle, CheckCircle2 } from "lucide-react";
 import "./hero.scss";
 import anh from "../assets/anh nèn.png";
+import { useNavigate } from "react-router-dom";
 
 export default function Hero() {
+  const navigate = useNavigate();
   return (
     <section className="hero">
       <div className="container">
@@ -24,7 +26,8 @@ export default function Hero() {
           </p>
 
           <div className="hero-buttons">
-            <button className="btn-primary">
+            <button className="btn-primary"
+            onClick={() => navigate("/dang-ky-dung-thu")}>
               Dùng thử miễn phí
               <ArrowRight size={20} />
             </button>

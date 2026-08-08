@@ -12,7 +12,7 @@ export default function PrivacyPolicy() {
       <Navbar />
     
              <main className={styles.content}>
-                <PdfViewer file="pdf/Chính sách bảo mật PrintQuote.pdf"/>
+                <PdfViewer file="/pdf/chinh-sach-bao-mat.pdf"/>
             </main>
 
 
