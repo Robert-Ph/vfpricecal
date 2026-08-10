@@ -1,8 +1,8 @@
 package com.example.vfprint.service;
 
+
 import java.util.List;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.vfprint.dto.PaperDTO;
@@ -14,24 +14,22 @@ import com.example.vfprint.dto.request.PaperSizeRequest;
 import com.example.vfprint.dto.response.PaperResponse;
 import com.example.vfprint.repository.PaperRepository;
 import com.example.vfprint.repository.PaperSizeRepository;
+
+import lombok.RequiredArgsConstructor;
+
 import com.example.vfprint.repository.CompaniesRepository;
 import com.example.vfprint.entity.Companies;
 
 @Service
+@RequiredArgsConstructor
 public class PaperService {
     
-    @Autowired
-    private PaperRepository paperRepository;
+    
+    private final PaperRepository paperRepository;
+    private final PaperSizeRepository paperSizeRepository;
+    private final CompaniesRepository companyRepository;
 
-    @Autowired
-    private PaperSizeRepository paperSizeRepository;
-
-    @Autowired
-    private CompaniesRepository companyRepository;
-
-
-
- @Transactional
+    @Transactional
     public void createPaperRequest(PaperRequest paperRequest) {
         // 1. KIỂM TRA CÔNG TY CÓ TỒN TẠI KHÔNG
         // Nếu KHÔNG tồn tại (!) thì bắn lỗi ngay lập tức
@@ -56,7 +54,7 @@ public class PaperService {
 
         // Lưu PaperSize và PaperPrice... (giữ nguyên logic vòng lặp cũ của bạn)
         for (PaperSizeRequest sizeRequest : paperRequest.getPaperSizes()) {
-            PaperSize savedSize = paperSizeRepository.save(PaperSize.builder()
+            paperSizeRepository.save(PaperSize.builder()
                     .paper(savedPaper)
                     .width(sizeRequest.getWidth())
                     .height(sizeRequest.getHeight())

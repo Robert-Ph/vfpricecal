@@ -1,7 +1,7 @@
 package com.example.vfprint.dto;
 
 import java.util.UUID;
-
+import java.math.BigDecimal;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
@@ -17,6 +17,6 @@ public class PaperSizeDTO {
     private UUID paperId;
     private int width;
     private int height;
-    private double price; // Giá của size này
+    private BigDecimal price; // Giá của size này
 
 }

@@ -29,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import com.example.vfprint.entity.ProcessingTier;
 import java.util.Comparator;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.UUID;
 @Service
@@ -57,99 +58,307 @@ public class CalculatorService {
 
 
 
-    // Ham tinh gia in an theo kich thuoc san pham va loai giay
-    public CalculateResponse calculatePrintingCost(InfoPriceDTO infoPriceDTO) {
+public CalculateResponse calculatePrintingCost(InfoPriceDTO infoPriceDTO) {
 
-        try{
+    try {
+        // =========================================================
+        // 1. Kiểm tra dữ liệu đầu vào
+        // =========================================================
+        if (infoPriceDTO == null) {
+            throw new IllegalArgumentException("Thông tin báo giá không được null");
+        }
 
-            // Kiem tra xem paper size va paper co ton tai hay khong
-        PaperSizeDTO paperSizeDTO = selectOptimalPaperSize(infoPriceDTO.getWidthProduct(), infoPriceDTO.getHeightProduct(), infoPriceDTO.getQuantity(), infoPriceDTO.getPaperId());
+        if (infoPriceDTO.getPaperId() == null) {
+            throw new IllegalArgumentException("Paper ID không được null");
+        }
+
+        if (infoPriceDTO.getQuantity() <= 0) {
+            throw new IllegalArgumentException("Số lượng sản phẩm phải lớn hơn 0");
+        }
+
+        // =========================================================
+        // 2. Tìm khổ giấy phù hợp
+        // =========================================================
+        PaperSizeDTO paperSizeDTO = selectOptimalPaperSize(
+                infoPriceDTO.getWidthProduct(),
+                infoPriceDTO.getHeightProduct(),
+                infoPriceDTO.getQuantity(),
+                infoPriceDTO.getPaperId()
+        );
+
         if (paperSizeDTO == null) {
-            throw new RuntimeException("Paper size không tồn tại với ID: " + infoPriceDTO.getPaperId());
-            
+            throw new RuntimeException(
+                    "Không tìm thấy khổ giấy phù hợp với Paper ID: "
+                            + infoPriceDTO.getPaperId()
+            );
         }
 
-        Profit profit = profitRepository.findById(infoPriceDTO.getProfit()).orElseThrow();
-        
-        if (infoPriceDTO.getProfit() == null ){
+        // =========================================================
+        // 3. Lấy Profit
+        // =========================================================
+        Profit profit;
+
+        if (infoPriceDTO.getProfit() != null) {
+            profit = profitRepository.findById(infoPriceDTO.getProfit())
+                    .orElseThrow(() -> new RuntimeException(
+                            "Không tìm thấy Profit với ID: "
+                                    + infoPriceDTO.getProfit()
+                    ));
+        } else {
             profit = profitRepository.findByPriority(Priority.HIGH);
+
+            if (profit == null) {
+                throw new RuntimeException(
+                        "Không tìm thấy Profit mặc định với Priority.HIGH"
+                );
+            }
         }
+
+        // =========================================================
+        // 4. Lấy phần trăm lợi nhuận
+        // =========================================================
+        BigDecimal profitMaterial = BigDecimal.ZERO;
+        BigDecimal profitPrint = BigDecimal.ZERO;
+        BigDecimal profitProcessing = BigDecimal.ZERO;
 
         List<ProfitItem> profitItems = profitItemRepository.findByProfit(profit);
-        double profitMaterial = 0;
-        double profitPrint = 0;
-        double profitProcessing = 0;
 
-        for(ProfitItem item: profitItems){
-            if (item.getName().equals("Giấy in")) {
-                profitMaterial = item.getPercent();
-            }
-            if (item.getName().equals("Gia công")) {
-                profitProcessing = item.getPercent();
-            }
-            if (item.getName().equals("In ấn")) {
-                profitPrint = item.getPercent();
-            }
+        if (profitItems != null) {
+            for (ProfitItem item : profitItems) {
 
+                if (item == null || item.getName() == null) {
+                    continue;
+                }
+
+                BigDecimal percent = BigDecimal.valueOf(item.getPercent());
+
+                switch (item.getName()) {
+                    case "Giấy in":
+                        profitMaterial = percent;
+                        break;
+
+                    case "Gia công":
+                        profitProcessing = percent;
+                        break;
+
+                    case "In ấn":
+                        profitPrint = percent;
+                        break;
+
+                    default:
+                        break;
+                }
+            }
         }
-                // Tinh so luong to giay can thiet de in an san pham
-        int sheetsNeeded = calculatePaperSheets(infoPriceDTO.getWidthProduct() + 3, infoPriceDTO.getHeightProduct() + 3,
-                paperSizeDTO.getWidth() - 10, paperSizeDTO.getHeight() - 10, infoPriceDTO.getQuantity());
 
-        //Giá giấy
-        double materialPrice = (sheetsNeeded * paperSizeDTO.getPrice()) ;
-        
-        // Giá in ấn
-        double prinPrice = sheetsNeeded * getPrintPrice(infoPriceDTO.getPrintPrice(), paperSizeDTO.getWidth(), paperSizeDTO.getHeight(), sheetsNeeded);
+        // =========================================================
+        // 5. Tính số lượng tờ giấy cần sử dụng
+        // =========================================================
+        int productWidth = infoPriceDTO.getWidthProduct() + 2;
+        int productHeight = infoPriceDTO.getHeightProduct() + 2;
 
-        // Giá gia công
-        double totalProcessingCost = calculateTotalProcessingCost(infoPriceDTO.getProcessingIds(), sheetsNeeded, paperSizeDTO.getWidth(), paperSizeDTO.getHeight());
+        int usablePaperWidth = paperSizeDTO.getWidth() - 10;
+        int usablePaperHeight = paperSizeDTO.getHeight() - 10;
 
-        //Kết quả báo giá in ấn
-        double price = (materialPrice  * (100 + profitMaterial)/100 ) + (prinPrice * (100 + profitPrint)/100) + (totalProcessingCost * (100 + profitProcessing)/100);
-        UUID discountId = null;
-        if (infoPriceDTO.getDiscount() == null) {
-            List<Discount> dList = discountRepository.findByPriority(Priority.HIGH);
-            System.out.println(dList.size());
-            discountId = dList.get(0).getId();
-        }else{
+        if (usablePaperWidth <= 0 || usablePaperHeight <= 0) {
+            throw new RuntimeException(
+                    "Kích thước khổ giấy không hợp lệ: "
+                            + paperSizeDTO.getWidth()
+                            + " x "
+                            + paperSizeDTO.getHeight()
+            );
+        }
+
+        int sheetsNeeded = calculatePaperSheets(
+                productWidth,
+                productHeight,
+                usablePaperWidth,
+                usablePaperHeight,
+                infoPriceDTO.getQuantity()
+        );
+
+        if (sheetsNeeded <= 0) {
+            throw new RuntimeException(
+                    "Số lượng tờ giấy cần thiết phải lớn hơn 0"
+            );
+        }
+
+        // =========================================================
+        // 6. Tính giá giấy
+        // =========================================================
+        BigDecimal sheets = BigDecimal.valueOf(sheetsNeeded);
+
+        BigDecimal materialPrice = sheets
+                .multiply(paperSizeDTO.getPrice());
+
+        // =========================================================
+        // 7. Tính giá in
+        // =========================================================
+        BigDecimal printUnitPrice = BigDecimal.valueOf(
+                getPrintPrice(
+                        infoPriceDTO.getPrintPrice(),
+                        paperSizeDTO.getWidth(),
+                        paperSizeDTO.getHeight(),
+                        sheetsNeeded
+                )
+        );
+
+        BigDecimal printPrice = sheets.multiply(printUnitPrice);
+
+        // =========================================================
+        // 8. Tính giá gia công
+        // =========================================================
+        BigDecimal processingCost = BigDecimal.valueOf(
+                calculateTotalProcessingCost(
+                        infoPriceDTO.getProcessingIds(),
+                        sheetsNeeded,
+                        paperSizeDTO.getWidth(),
+                        paperSizeDTO.getHeight()
+                )
+        );
+
+        // =========================================================
+        // 9. Tính giá sau lợi nhuận
+        // =========================================================
+        BigDecimal hundred = BigDecimal.valueOf(100);
+
+        BigDecimal materialPriceWithProfit = materialPrice
+                .multiply(hundred.add(profitMaterial))
+                .divide(hundred, 2, RoundingMode.HALF_UP);
+
+        BigDecimal printPriceWithProfit = printPrice
+                .multiply(hundred.add(profitPrint))
+                .divide(hundred, 2, RoundingMode.HALF_UP);
+
+        BigDecimal processingPriceWithProfit = processingCost
+                .multiply(hundred.add(profitProcessing))
+                .divide(hundred, 2, RoundingMode.HALF_UP);
+
+        BigDecimal price = materialPriceWithProfit
+                .add(printPriceWithProfit)
+                .add(processingPriceWithProfit);
+
+        // =========================================================
+        // 10. Lấy Discount
+        // =========================================================
+        UUID discountId;
+
+        if (infoPriceDTO.getDiscount() != null) {
+
             discountId = infoPriceDTO.getDiscount();
-        }
-        //Lấy chiết khấu cho khách hàng
-        double discount = getDiscount(discountId, BigDecimal.valueOf(price));
 
-        logUserService.createLogUser(infoPriceDTO.getCompanyId(), 
-                                        LevelLog.INFO, ActionLog.QUOTATION, 
-                                        infoPriceDTO.getAccoutId() , 
-                                        "Tính báo giá", 
-                                        StatusLog.Success);
-       
-       
-        // Tinh tong chi phi in an
+        } else {
+
+            List<Discount> discountList =
+                    discountRepository.findByPriority(Priority.HIGH);
+
+            if (discountList == null || discountList.isEmpty()) {
+                throw new RuntimeException(
+                        "Không tìm thấy Discount mặc định"
+                );
+            }
+
+            discountId = discountList.get(0).getId();
+        }
+
+        // =========================================================
+        // 11. Tính chiết khấu
+        // =========================================================
+        double discountValue = getDiscount(discountId, price);
+
+        BigDecimal discountPercent =
+                BigDecimal.valueOf(discountValue);
+
+        BigDecimal discountAmount = price
+                .multiply(discountPercent)
+                .divide(hundred, 2, RoundingMode.HALF_UP);
+
+        // Giá sau khi giảm
+        BigDecimal finalPrice = price.subtract(discountAmount);
+
+        // =========================================================
+        // 12. Tính giá giấy / tờ
+        // =========================================================
+        BigDecimal paperCost = price.divide(
+                sheets,
+                2,
+                RoundingMode.HALF_UP
+        );
+
+        // =========================================================
+        // 13. Tổng chi phí thực tế
+        // =========================================================
+        BigDecimal totalCost = materialPrice
+                .add(printPrice)
+                .add(processingCost);
+
+        // =========================================================
+        // 14. Ghi log thành công
+        // =========================================================
+        logUserService.createLogUser(
+                infoPriceDTO.getCompanyId(),
+                LevelLog.INFO,
+                ActionLog.QUOTATION,
+                infoPriceDTO.getAccoutId(),
+                "Tính báo giá",
+                StatusLog.Success
+        );
+
+        // =========================================================
+        // 15. Tạo response
+        // =========================================================
         CalculateResponse result = CalculateResponse.builder()
-                .price(Math.round(price))
+                // Giá trước chiết khấu
+                .price(price)
+
+                // Số tờ giấy cần dùng
                 .quantityPaper(sheetsNeeded)
-                .productSheet(infoPriceDTO.getQuantity()/sheetsNeeded)
-                .paperSize(paperSizeDTO.getWidth() + " x " + paperSizeDTO.getHeight())
-                .processingCost(totalProcessingCost)
-                .discount(price - (price*(1-discount/100)))
-                .paperCost(price / sheetsNeeded)
-                .cost(materialPrice + prinPrice + totalProcessingCost)
+
+                // Số sản phẩm / tờ
+                .productSheet(
+                        infoPriceDTO.getQuantity() / sheetsNeeded
+                )
+
+                // Khổ giấy
+                .paperSize(
+                        paperSizeDTO.getWidth()
+                                + " x "
+                                + paperSizeDTO.getHeight()
+                )
+
+                // Chi phí gia công
+                .processingCost(processingCost)
+
+                // Số tiền được giảm
+                .discount(discountAmount)
+
+                // Giá / tờ
+                .paperCost(paperCost)
+
+                // Tổng chi phí thực tế
+                .cost(totalCost)
+
                 .build();
+
         return result;
-        }catch(Exception e){
-             logUserService.createLogUser(infoPriceDTO.getCompanyId(), 
-                                        LevelLog.INFO, ActionLog.QUOTATION, 
-                                        infoPriceDTO.getAccoutId() , 
-                                        "Tính báo giá", 
-                                        StatusLog.Error);
-            
-            throw e;
 
-        }
+    } catch (Exception e) {
 
-        
+        // =========================================================
+        // Ghi log lỗi
+        // =========================================================
+        logUserService.createLogUser(
+                infoPriceDTO != null ? infoPriceDTO.getCompanyId() : null,
+                LevelLog.INFO,
+                ActionLog.QUOTATION,
+                infoPriceDTO != null ? infoPriceDTO.getAccoutId() : null,
+                "Tính báo giá",
+                StatusLog.Error
+        );
+
+        throw e;
     }
+}
 
 
     // Ham tinh so luong to giay can thiet de in an san pham
@@ -388,16 +597,5 @@ public class CalculatorService {
 
         return Math.max(normal, rotated);
     }
-
-    // // hàm kiểm tra xem có sử dụng gia công bế không. nếu có trả về true. mục đích tràn viền tem nếu có gia công bế
-    // public boolean isProcessingCutting(List<CalculateRequest> processingIds){
-    //     for(CalculateRequest request: processingIds){
-    //         Category category = categoryRepository.findById(request.getId()).orElseThrow();
-    //         if ("Bế tem".equals(category.getName())) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
 
 }

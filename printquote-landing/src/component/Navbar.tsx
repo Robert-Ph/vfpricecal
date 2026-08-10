@@ -2,7 +2,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import "./navbar.scss";
 import logo from "../assets/logo.png";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import type { systemConfig } from "../api/ConfigModal";
 
 export default function Navbar() {
@@ -83,25 +83,25 @@ export default function Navbar() {
           isMobileMenuOpen ? "open" : ""
         }`}
       >
-        <Link to="/" onClick={closeMenu}>
+        <a href="/" onClick={closeMenu}>
           Trang chủ
-        </Link>
+        </a>
 
-        <Link to="/#features" onClick={closeMenu}>
+        <a href="/#features" onClick={closeMenu}>
           Tính năng
-        </Link>
+        </a>
 
-        <Link to="/#pricing" onClick={closeMenu}>
+        <a href="/#pricing" onClick={closeMenu}>
           Bảng giá
-        </Link>
+        </a>
 
-        <Link to="/#guide" onClick={closeMenu}>
+        <a href="/" onClick={closeMenu}>
           Hướng dẫn
-        </Link>
+        </a>
 
-        <Link to="/lien-he" onClick={closeMenu}>
+        <a href="/lien-he" onClick={closeMenu}>
           Liên hệ
-        </Link>
+        </a>
 
         <div className="mobile-actions">
           <button

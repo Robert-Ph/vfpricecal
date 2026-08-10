@@ -1,34 +1,80 @@
+/* =========================================================
+   ROOT - LIGHT MODE
+========================================================= */
+
+:root {
+  --text: #64748b;
+  --text-dark: #0f172a;
+
+  --pricing-bg: #f8fafc;
+  --card-bg: #ffffff;
+
+  --border: #e5e7eb;
+
+  --blue: #2563eb;
+  --blue-hover: #1d4ed8;
+  --blue-light: #dbeafe;
+
+  --purple: #7c3aed;
+  --purple-hover: #6d28d9;
+  --purple-light: #ede9fe;
+
+  --green: #22c55e;
+
+  --group-blue-start: #eef5ff;
+  --group-blue-end: #ffffff;
+
+  --group-purple-start: #f4f0ff;
+  --group-purple-end: #ffffff;
+
+  --shadow:
+    0 18px 45px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   PRICING
+========================================================= */
+
 .pricing {
   padding: 90px 0;
-  background: #f8fafc;
+  background: var(--pricing-bg);
+  color: var(--text);
+
+  /* Không cho nội dung làm trang bị scroll ngang */
+  overflow-x: hidden;
 
   .container {
+    width: 100%;
     max-width: 1320px;
     margin: 0 auto;
     padding: 0 24px;
+    box-sizing: border-box;
   }
 
   h2 {
     text-align: center;
     font-size: 48px;
     font-weight: 700;
-    color: #0f172a;
+    color: var(--text-dark);
     margin-bottom: 12px;
   }
 
   .sub-title {
     text-align: center;
-    color: #64748b;
+    color: var(--text);
     font-size: 18px;
     margin-bottom: 60px;
   }
 
-  /* =======================
-        Group
-  ======================== */
+
+  /* =======================================================
+     GROUP
+  ======================================================= */
 
   .pricing-group {
     margin-bottom: 80px;
+    min-width: 0;
   }
 
   .group-header {
@@ -39,9 +85,15 @@
     padding: 20px 28px;
     border-radius: 18px;
 
-    background: linear-gradient(90deg, #eef5ff, #ffffff);
+    background: linear-gradient(
+      90deg,
+      var(--group-blue-start),
+      var(--group-blue-end)
+    );
 
     margin-bottom: 32px;
+
+    box-sizing: border-box;
 
     .icon {
       width: 58px;
@@ -51,63 +103,79 @@
       align-items: center;
       justify-content: center;
 
+      flex-shrink: 0;
+
       border-radius: 14px;
 
-      background: #dbeafe;
-      color: #2563eb;
+      background: var(--blue-light);
+      color: var(--blue);
 
       font-size: 26px;
     }
 
     .title {
+      min-width: 0;
+
       h3 {
         margin: 0;
+
         font-size: 32px;
         font-weight: 700;
-        color: #2563eb;
+
+        color: var(--blue);
       }
 
       p {
         margin: 5px 0 0;
-        color: #64748b;
+
+        color: var(--text);
         font-size: 17px;
       }
     }
 
     &.business {
-      background: linear-gradient(90deg, #f4f0ff, #ffffff);
+      background: linear-gradient(
+        90deg,
+        var(--group-purple-start),
+        var(--group-purple-end)
+      );
 
       .icon {
-        background: #ede9fe;
-        color: #7c3aed;
+        background: var(--purple-light);
+        color: var(--purple);
       }
 
       .title h3 {
-        color: #7c3aed;
+        color: var(--purple);
       }
     }
   }
 
-  /* =======================
-        Grid
-  ======================== */
+
+  /* =======================================================
+     GRID
+  ======================================================= */
 
   .cards {
     display: grid;
     gap: 30px;
+
+    width: 100%;
+    min-width: 0;
   }
 
   .two-columns {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .three-columns {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  /* =======================
-        Card
-  ======================== */
+
+  /* =======================================================
+     CARD
+  ======================================================= */
 
   .card {
     position: relative;
@@ -115,65 +183,102 @@
     display: flex;
     flex-direction: column;
 
-    background: white;
+    width: 100%;
+    min-width: 0;
 
-    border: 1px solid #e5e7eb;
+    box-sizing: border-box;
+
+    background: var(--card-bg);
+
+    border: 1px solid var(--border);
     border-radius: 22px;
 
     padding: 40px 32px;
 
-    transition: all .3s ease;
+    transition:
+      transform 0.3s ease,
+      border 0.3s ease,
+      box-shadow 0.3s ease;
 
     &:hover {
       transform: translateY(-8px);
-      border: 3px solid #1d4ed8;
-      box-shadow: 0 18px 45px rgba(0, 0, 0, .08);
+
+      border: 2px solid var(--blue);
+
+      box-shadow: var(--shadow);
     }
 
     h3 {
       text-align: center;
+
       margin: 0;
 
       font-size: 30px;
       font-weight: 700;
 
-      color: #0f172a;
+      color: var(--text-dark);
     }
+
+
+    /* =====================================================
+       PRICE
+    ===================================================== */
 
     .price {
       margin-top: 20px;
 
+      width: 100%;
+      min-width: 0;
+
       text-align: center;
 
-      font-size: 54px;
+      /*
+        clamp giúp giá tự giảm kích thước
+        trên màn hình nhỏ
+      */
+      font-size: clamp(32px, 5vw, 54px);
+
       font-weight: 700;
 
-      color: #2563eb;
+      color: var(--blue);
 
       line-height: 1;
 
+      white-space: nowrap;
+
       span {
         display: block;
+
         margin-top: 8px;
 
         font-size: 18px;
         font-weight: 400;
 
-        color: #64748b;
+        color: var(--text);
       }
     }
+
+
+    /* =====================================================
+       DESCRIPTION
+    ===================================================== */
 
     .description {
       margin: 24px 0 10px;
 
       text-align: center;
 
-      color: #64748b;
+      color: var(--text);
 
       line-height: 1.6;
 
       min-height: 52px;
     }
+
+
+    /* =====================================================
+       FEATURE LIST
+    ===================================================== */
 
     ul {
       list-style: none;
@@ -183,27 +288,40 @@
 
       flex: 1;
 
+      min-width: 0;
+
       li {
         position: relative;
 
         margin-bottom: 16px;
+
         padding-left: 28px;
 
-        color: #475569;
+        color: var(--text);
 
         line-height: 1.6;
 
+        overflow-wrap: break-word;
+
         &::before {
           content: "✓";
+
           position: absolute;
+
           left: 0;
           top: 0;
 
-          color: #22c55e;
+          color: var(--green);
+
           font-weight: bold;
         }
       }
     }
+
+
+    /* =====================================================
+       BUTTON
+    ===================================================== */
 
     button {
       margin-top: auto;
@@ -214,7 +332,7 @@
       border: none;
       border-radius: 12px;
 
-      background: #2563eb;
+      background: var(--blue);
 
       color: white;
 
@@ -223,24 +341,26 @@
 
       cursor: pointer;
 
-      transition: .25s;
+      transition: 0.25s;
 
       &:hover {
-        background: #1d4ed8;
+        background: var(--blue-hover);
       }
     }
   }
 
-  /* =======================
-      Popular Card
-  ======================== */
+
+  /* =======================================================
+     POPULAR CARD
+  ======================================================= */
 
   .card.active {
-    border: 2px solid #7c3aed;
+    border: 2px solid var(--purple);
 
     transform: translateY(-6px);
 
-    box-shadow: 0 20px 50px rgba(124, 58, 237, .15);
+    box-shadow:
+      0 20px 50px rgba(124, 58, 237, 0.15);
 
     .badge {
       position: absolute;
@@ -250,7 +370,7 @@
 
       transform: translateX(-50%);
 
-      background: #7c3aed;
+      background: var(--purple);
 
       color: white;
 
@@ -260,21 +380,59 @@
 
       font-size: 13px;
       font-weight: 600;
+
+      white-space: nowrap;
     }
 
     button {
-      background: #7c3aed;
+      background: var(--purple);
 
       &:hover {
-        background: #6d28d9;
+        background: var(--purple-hover);
       }
     }
   }
 }
 
-/* =======================
-      Tablet
-======================= */
+
+/* =========================================================
+   DESCRIPTION LIST
+========================================================= */
+
+.description-list {
+  list-style: none;
+
+  padding: 0;
+  margin: 20px 0;
+
+  li {
+    position: relative;
+
+    padding-left: 24px;
+    margin-bottom: 12px;
+
+    color: var(--text);
+
+    line-height: 1.6;
+
+    &::before {
+      content: "✓";
+
+      position: absolute;
+
+      left: 0;
+
+      color: var(--green);
+
+      font-weight: bold;
+    }
+  }
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
 
 @media (max-width: 992px) {
 
@@ -286,7 +444,7 @@
 
     .two-columns,
     .three-columns {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .group-header {
@@ -306,87 +464,251 @@
   }
 }
 
-/* =======================
-      Mobile
-======================= */
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 768px) {
 
   .pricing {
-
     padding: 70px 0;
 
     .container {
-      padding: 0 18px;
+       width: 100%;
+      max-width: 100%;
+      padding: 0 24px;
+      box-sizing: border-box;
     }
+
 
     h2 {
       font-size: 34px;
     }
 
+
     .sub-title {
       font-size: 16px;
+
       margin-bottom: 40px;
     }
 
+
+    /* ===============================
+       GROUP HEADER
+    =============================== */
+
     .group-header {
       flex-direction: column;
+
       align-items: flex-start;
+
+      padding: 18px;
 
       .icon {
         width: 50px;
         height: 50px;
+
         font-size: 22px;
       }
 
       .title {
+        width: 100%;
 
         h3 {
           font-size: 24px;
+
+          /*
+             Nếu tên group quá dài
+             thì tự xuống dòng
+          */
+          overflow-wrap: break-word;
         }
 
         p {
           font-size: 15px;
+
+          overflow-wrap: break-word;
         }
       }
     }
 
+
+    /* ===============================
+       CARDS
+    =============================== */
+
+    .cards {
+      width: 100%;
+
+      grid-template-columns: minmax(0, 1fr);
+
+      gap: 20px;
+    }
+
+
+    /* ===============================
+       CARD
+    =============================== */
+
     .card {
-      padding: 30px 22px;
+      width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+
 
       h3 {
         font-size: 26px;
       }
 
+
       .price {
-        font-size: 44px;
+        /*
+          9vw = 9% chiều rộng viewport
+
+          Ví dụ:
+          375px -> ~34px
+          430px -> ~39px
+
+          Nhờ vậy 1.299.000đ có thể
+          nằm vừa card.
+        */
+        font-size: clamp(30px, 9vw, 44px);
+
+        width: 100%;
+
+        white-space: nowrap;
       }
+
+
+      .price span {
+        font-size: 16px;
+      }
+
 
       .description {
         min-height: auto;
+      }
+
+
+      ul {
+        min-width: 0;
+
+        li {
+          padding-left: 26px;
+
+          overflow-wrap: break-word;
+        }
+      }
+
+
+      button {
+        width: 100%;
+
+        max-width: 100%;
+      }
+    }
+
+
+    /* ===============================
+       ACTIVE CARD
+    =============================== */
+
+    .card.active {
+      transform: translateY(-3px);
+
+      .badge {
+        top: -12px;
+
+        padding: 7px 16px;
+
+        font-size: 12px;
       }
     }
   }
 }
 
-.description-list {
-  list-style: none;
-  padding: 0;
-  margin: 20px 0;
 
-  li {
-    position: relative;
-    padding-left: 24px;
-    margin-bottom: 12px;
-    color: #475569;
-    line-height: 1.6;
+/* =========================================================
+   SMALL MOBILE
+   Ví dụ: 320px - 375px
+========================================================= */
 
-    &::before {
-      content: "✓";
-      position: absolute;
-      left: 0;
-      color: #22c55e;
-      font-weight: bold;
+@media (max-width: 375px) {
+
+  .pricing {
+
+    .container {
+      padding: 0 14px;
+    }
+
+    h2 {
+      font-size: 30px;
+    }
+
+    .card {
+      padding: 26px 18px;
+
+      .price {
+        font-size: clamp(27px, 8.5vw, 36px);
+      }
+
+      h3 {
+        font-size: 24px;
+      }
+
+      ul li {
+        font-size: 14px;
+      }
+
+      button {
+        font-size: 15px;
+      }
+    }
+  }
+}
+
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+@media (prefers-color-scheme: dark) {
+
+  :root {
+    --text: #9ca3af;
+    --text-dark: #f3f4f6;
+
+    --pricing-bg: #16171d;
+    --card-bg: #1f2028;
+
+    --border: #2e303a;
+
+    --blue: #60a5fa;
+    --blue-hover: #3b82f6;
+    --blue-light: rgba(96, 165, 250, 0.15);
+
+    --purple: #a78bfa;
+    --purple-hover: #8b5cf6;
+    --purple-light: rgba(139, 92, 246, 0.18);
+
+    --group-blue-start: #17243a;
+    --group-blue-end: #1f2028;
+
+    --group-purple-start: #241d38;
+    --group-purple-end: #1f2028;
+
+    --shadow:
+      0 18px 45px rgba(0, 0, 0, 0.4);
+  }
+
+  .pricing {
+
+    .card {
+
+      &:hover {
+        border-color: var(--blue);
+      }
     }
   }
 }

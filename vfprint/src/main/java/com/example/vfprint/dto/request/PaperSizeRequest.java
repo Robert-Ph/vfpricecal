@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
@@ -12,5 +13,5 @@ import lombok.NoArgsConstructor;
 public class PaperSizeRequest {
     private int width;
     private int height;
-    private Float price;
+    private BigDecimal price;
 }

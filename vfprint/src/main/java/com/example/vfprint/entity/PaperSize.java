@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import jakarta.persistence.ForeignKey;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -39,5 +40,5 @@ public class PaperSize {
 
     @Column(name = "is_active")
     private Boolean isActive;
-    private double price; // Giá của size này
+    private BigDecimal price; // Giá của size này
 }

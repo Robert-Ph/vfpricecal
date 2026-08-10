@@ -3,13 +3,10 @@
   max-width: 100%;
   padding: 100px 0;
 
-  background: #fff;
+  background: var(--bg);
+  color: var(--text);
 
   overflow: hidden;
-
-  // ==========================================
-  // CONTAINER
-  // ==========================================
 
   .container {
     width: 100%;
@@ -33,7 +30,7 @@
     h2 {
       margin: 0;
 
-      color: #0f172a;
+      color: var(--text-h);
 
       font-size: 46px;
       line-height: 1.2;
@@ -43,7 +40,7 @@
     p {
       margin: 15px 0 0;
 
-      color: #64748b;
+      color: var(--text);
 
       font-size: 17px;
       line-height: 1.6;
@@ -78,9 +75,9 @@
 
     text-align: center;
 
-    background: #fff;
+    background: var(--card-bg);
 
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--border);
 
     border-radius: 20px;
 
@@ -92,9 +89,9 @@
     &:hover {
       transform: translateY(-8px);
 
-      border-color: #dbe5ff;
+      border-color: #2563eb;
 
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      box-shadow: var(--shadow);
     }
 
     // ========================================
@@ -146,7 +143,7 @@
     h3 {
       margin: 0 0 10px;
 
-      color: #1e293b;
+      color: var(--text-h);
 
       font-size: 20px;
       line-height: 1.4;
@@ -160,14 +157,13 @@
     p {
       margin: 0;
 
-      color: #64748b;
+      color: var(--text);
 
       font-size: 15px;
       line-height: 1.6;
     }
   }
 }
-
 
 // ======================================================
 // LAPTOP
