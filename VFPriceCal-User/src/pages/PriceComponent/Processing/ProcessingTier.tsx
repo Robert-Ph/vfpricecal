@@ -1,7 +1,9 @@
 import "./processingDetail.scss";
 import { 
     FiEdit, 
-    FiTrash2,  FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
+    FiTrash2, 
+    //  FiImage, 
+    FiTag, FiGrid, FiPlus   } from "react-icons/fi";
 import {  FaSave } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -116,14 +118,14 @@ const ProcessingTier = () => {
             <div className="content-area">
                 {/* LEFT SIDE: Thông tin chi tiết giấy/vật liệu sẽ hiển thị ở đây. Bạn có thể chỉnh sửa thông tin như tên, gsm, trạng thái, và xem trước hình ảnh của giấy/vật liệu. */}
                                 <div className="sidebar-material">
-                                    <div className="preview-card">
+                                    {/* <div className="preview-card">
                                         <div className="paper-preview" />
                 
                                         <button className="preview-btn">
                                             <FiImage />
                                             Xem ảnh
                                         </button>
-                                    </div>
+                                    </div> */}
                 
                                     <div className="info-card">
                                         <div className="field">

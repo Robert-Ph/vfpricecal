@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Repository
 public interface PrintPriceRepository extends JpaRepository<PrintPrice, UUID>{
-    boolean existsByName(String name);
+    boolean existsByCompanyIdAndName(UUID id,String name);
     List<PrintPrice> findByCompanyId(UUID companyId);
     Optional<PrintPrice> findById(UUID id);
     Optional<PrintPrice> findByIdAndCompanyId(UUID id, UUID companyId);

@@ -28,7 +28,7 @@ public class PrintPriceService {
 
     @Transactional
     public void createPrintPrice(PrintPriceDTO priceDTO){
-        if (priceRepository.existsByName(priceDTO.getName())) {
+        if (priceRepository.existsByCompanyIdAndName(priceDTO.getCompanyId() ,priceDTO.getName())) {
             throw new RuntimeException("Print price with the given name already exists");
         }
 

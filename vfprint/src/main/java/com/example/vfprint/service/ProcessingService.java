@@ -5,12 +5,19 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import com.example.vfprint.repository.ProcessingRepository;
 import lombok.RequiredArgsConstructor;
+
+import com.example.vfprint.config.Code;
 import com.example.vfprint.dto.ProcessingDTO;
 import com.example.vfprint.dto.request.ProcessingRequest;
+import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.dto.response.ProcessingAndTierReponse;
 import com.example.vfprint.dto.response.ProcessingTierReponse;
 import com.example.vfprint.entity.Processing;
 import com.example.vfprint.entity.ProcessingTier;
+import com.example.vfprint.enums.ActionLog;
+import com.example.vfprint.enums.LevelLog;
+import com.example.vfprint.enums.StatusLog;
+
 import java.util.List;
 import java.util.UUID;
 import com.example.vfprint.entity.Category;
@@ -22,56 +29,156 @@ public class ProcessingService {
     private final CategoryRepository categoryRepository;
     private final ProcessingRepository processingRepository;
     private final ProcessingTierService processingTierService;
+    private final LogUserService logUserService;
 
     @Transactional
     public void deleteProcessingByName(String name){
         processingRepository.deleteByName(name);
     }
 
-     @Transactional
-    public boolean existsByName(String name){
-        return processingRepository.existsByName(name);
-    }
-
 
     // tạo mới processing, nếu categoryId không tồn tại thì throw exception, nếu name đã tồn tại thì throw exception
     @Transactional
-    public void createProcessing(ProcessingRequest processingDTO){
-        if (categoryRepository.findById(processingDTO.getCategoryId()).isEmpty()) {
-            throw new RuntimeException("Category with the given ID does not exist");
-        }
-        // if (processingRepository.existsByName(processingDTO.getName())) {
-        //     throw new RuntimeException("Processing with the given name already exists");
-        // }
-        Processing processing = processingRepository.save(Processing.builder()
+    public ApiResponse createProcessing(ProcessingRequest processingDTO){
+           
+        try {
+            Category category = categoryRepository.findById(processingDTO.getCategoryId()).orElse(null);
+            if (category == null) {
+                throw new RuntimeException("Category with the given ID does not exist");
+            }
+
+            if (processingRepository.existsByNameAndCategory(processingDTO.getName(), category)) {
+                throw new RuntimeException("Processing with the given name already exists");
+            }
+
+            Processing processing = processingRepository.save(Processing.builder()
                 .category(Category.builder().id(processingDTO.getCategoryId()).build())
                 .name(processingDTO.getName())
                 .unit(processingDTO.getUnit())
                 .is_active(true)
                 .build());
         
-        processingTierService.createProcessingTierList(processingDTO.getPTierRequests(), processing);
+            processingTierService.createProcessingTierList(processingDTO.getPTierRequests(), processing);
+
+            logUserService.createLogUser(
+                category.getCompany().getId(),
+                LevelLog.INFO,
+                ActionLog.CREATE,
+                processingDTO.getAccountId(),
+                "Tạo gia công mới thành công: " + processingDTO.getName(),
+                StatusLog.Success
+            );
+
+            return ApiResponse.builder()
+                    .code(Code.SUCCESS)
+                    .message("Tạo gia công thành công!")
+                    .build();
+
+        } catch (RuntimeException e) {
+            // TODO: handle exception
+            logUserService.createLogUser(
+                processingDTO.getCompanyId(),
+                LevelLog.INFO,
+                ActionLog.CREATE,
+                processingDTO.getAccountId(),
+                "Tạo gia công mới thất bại: " + processingDTO.getName(),
+                StatusLog.Failed
+            );
+            
+            return ApiResponse.builder()
+                    .code(Code.CONFLICT)
+                    .message("Tạo gia công thất bại!")
+                    .build();
+            
+        } catch(Exception e){
+            logUserService.createLogUser(
+                processingDTO.getCompanyId(),
+                LevelLog.INFO,
+                ActionLog.CREATE,
+                processingDTO.getAccountId(),
+                "Tạo gia công mới thất bại: " + processingDTO.getName(),
+                StatusLog.Failed
+            );
+            
+            return ApiResponse.builder()
+                    .code(Code.CONFLICT)
+                    .message("Tạo gia công thất bại!")
+                    .build();
+        }
+        
         
     }
 
     //tạo mới processing theo categoryId, với đầu vào là 1 danh sách các processingDTO, nếu categoryId không tồn tại thì throw exception, nếu name đã tồn tại thì throw exception
     @Transactional
-    public void createProcessingByCategoryId( List<ProcessingRequest> processingDTOList){
-        for (ProcessingRequest processingDTO : processingDTOList) {
-            if (categoryRepository.findById(processingDTO.getCategoryId()).isEmpty()) {
-                throw new RuntimeException("Category with the given ID does not exist");
-            }
-            if (processingRepository.existsByName(processingDTO.getName())) {
-                throw new RuntimeException("Processing with the given name already exists");
-            }
-            Processing processing = processingRepository.save(Processing.builder()
+    public ApiResponse createProcessingByCategoryId( List<ProcessingRequest> processingDTOList){
+        UUID compUuid = processingDTOList.get(0).getCompanyId();
+        UUID accountUuid = processingDTOList.get(0).getAccountId();
+        try {
+            for (ProcessingRequest processingDTO : processingDTOList) {
+                Category category = categoryRepository.findById(processingDTO.getCategoryId()).orElse(null);
+                
+                if (category == null) {
+                    throw new RuntimeException("Category with the given ID does not exist");
+                }
+                
+                if (processingRepository.existsByNameAndCategory(processingDTO.getName(), category)) {
+                    throw new RuntimeException("Processing with the given name already exists");
+                }
+            
+                Processing processing = processingRepository.save(Processing.builder()
                     .category(Category.builder().id(processingDTO.getCategoryId()).build())
                     .name(processingDTO.getName())
                     .is_active(true)
                     .build());
 
-            processingTierService.createProcessingTierList(processingDTO.getPTierRequests(), processing);
+                processingTierService.createProcessingTierList(processingDTO.getPTierRequests(), processing);
+            }
+
+            
+            logUserService.createLogUser(
+                compUuid,
+                LevelLog.INFO,
+                ActionLog.CREATE,
+                accountUuid,
+                "Tạo danh sách gia công mới thành công: ",
+                StatusLog.Success
+            );
+
+            return ApiResponse.builder()
+                    .code(Code.SUCCESS)
+                    .message("Tạo gia công thành công!")
+                    .build();
+        }catch(RuntimeException e){
+            logUserService.createLogUser(
+                compUuid,
+                LevelLog.INFO,
+                ActionLog.CREATE,
+                accountUuid,
+                "Tạo danh sách gia công mới thất bại: ",
+                StatusLog.Failed
+            );
+            
+            return ApiResponse.builder()
+                    .code(Code.CONFLICT)
+                    .message("Tạo gia công thất bại!")
+                    .build();
+        } catch (Exception e) {
+            logUserService.createLogUser(
+                compUuid,
+                LevelLog.INFO,
+                ActionLog.CREATE,
+                accountUuid,
+                "Tạo danh sách gia công mới thất bại: ",
+                StatusLog.Failed
+            );
+            
+            return ApiResponse.builder()
+                    .code(Code.CONFLICT)
+                    .message("Tạo gia công thất bại!")
+                    .build();
         }
+        
     }
 
     // get thông tin processing theo name, trả về DTO

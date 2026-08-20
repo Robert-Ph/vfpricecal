@@ -9,6 +9,7 @@ export type account = {
 
 export type accountInfo = {
     companyId: string;
+    accountId: string;
     email: string;
     username: string;
     password: string;
@@ -34,6 +35,7 @@ export type paperList = {
 export type category = {
     id:  string;
     companyId: string;
+    accountId: string;
     name: string;
     canDelete: boolean;
     processings: processing[] | null
@@ -50,6 +52,8 @@ export type processing = {
 export type processingCreate = {
     id: string | null;
     categoryId: string;
+    companyId: string;
+    accountId: string;
     name: string;
     unit: string;
     pTierRequests: processingTier[] | null;
@@ -117,9 +121,11 @@ export type calculate = {
     accoutId: string;
     widthProduct: number | null;
     heightProduct: number | null;
+    productInPage: number | null;
     quantity: number | null;
     processingIds: proCal[];
     paperId: string | null;
+    paperSizeId: string | null;
     companyId: string | null;
     printPrice: string | null;
     profit: string | null;

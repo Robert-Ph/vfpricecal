@@ -8,9 +8,10 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import com.example.vfprint.entity.Category;
+import com.example.vfprint.entity.Companies;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, UUID>  {
-    boolean existsByName(String name);
+    boolean existsByNameAndCompany(String name, Companies companies);
     void deleteByName(String name);
     Category findByName(String name);
     List<Category> findByCompanyId(UUID companyId);

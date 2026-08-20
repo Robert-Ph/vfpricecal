@@ -18,11 +18,14 @@ import java.util.List;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import com.example.vfprint.dto.request.LoginRequest;
+import com.example.vfprint.dto.response.ApiResponse;
 import com.example.vfprint.dto.response.AuthenticationResponse;
 import java.util.NoSuchElementException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.example.vfprint.config.Code;
 import com.example.vfprint.config.EmailService;
 import com.example.vfprint.config.UltiService;
 import com.example.vfprint.entity.Companies;
@@ -57,10 +60,11 @@ public class AuthencaitonService {
         // Thực hiện xác thực người dùng (ví dụ: kiểm tra email và password trong cơ sở dữ liệu)
         // Trả về true nếu xác thực thành công, ngược lại trả về false
         Account account = accountRepository.findByEmail(loginRequest.getEmail().toLowerCase())
-                        .orElseThrow(() -> 
-                        new NoSuchElementException("Email not found")    
-                    );
+                        .orElse(null);
     
+        if (account == null) {
+            return false;
+        }
 
         return passwordEncoder.matches(loginRequest.getPassword(), account.getPassword());
     }
@@ -68,12 +72,15 @@ public class AuthencaitonService {
     /*
         login
      */
-    public AuthenticationResponse authenticateResponse(LoginRequest request, HttpServletRequest httpRequest) {
+    public ApiResponse authenticateResponse(LoginRequest request, HttpServletRequest httpRequest) {
 
         boolean isAuthenticate = authenticate(request);
 
         if (!isAuthenticate) {
-            throw new RuntimeException("Invalid credentials");
+            return ApiResponse.builder()
+                    .code(Code.CONFLICT)
+                    .message("Thông tin đăng nhập không chính xác!")
+                    .build();
         }
 
         String mobileHeader = httpRequest.getHeader("sec-ch-ua-mobile");
@@ -134,11 +141,12 @@ public class AuthencaitonService {
             plan = "FREE"; 
         }
         //response FE
-        return AuthenticationResponse.builder()
+        AuthenticationResponse result = AuthenticationResponse.builder()
             .token(jwtToken)
             .companyId(account.getCompany().getId())
             .companyName(company.getCode())
             .username(account.getUsername())
+            .customType(company.getCustomType())
             .userId(account.getId())
             .email(account.getEmail())
             .role(account.getRole().getName()) // Gửi role để FE phân quyền Menu
@@ -150,6 +158,11 @@ public class AuthencaitonService {
             .maxUsers(maxUsers)
             .build();
 
+        return ApiResponse.builder()
+                .code(Code.SUCCESS)
+                .data(result)
+                .message("Đăng nhập thành công!")
+                .build();
 }
 
     //logout token

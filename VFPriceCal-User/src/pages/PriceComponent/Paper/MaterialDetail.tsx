@@ -14,7 +14,7 @@ import {
   FiFileText,
   FiTag,
   FiLayers,
-  FiImage,
+//   FiImage,
   FiGrid 
 } from "react-icons/fi";
 import { formatMoney } from "../../../utils/formatMoney";
@@ -122,14 +122,14 @@ const MaterialDetail = () => {
             <div className="content-area">
                 {/* LEFT SIDE: Thông tin chi tiết giấy/vật liệu sẽ hiển thị ở đây. Bạn có thể chỉnh sửa thông tin như tên, gsm, trạng thái, và xem trước hình ảnh của giấy/vật liệu. */}
                 <div className="sidebar-material">
-                    <div className="preview-card">
+                    {/* <div className="preview-card">
                         <div className="paper-preview" />
 
                         <button className="preview-btn">
                             <FiImage />
                             Xem ảnh
                         </button>
-                    </div>
+                    </div> */}
 
                     <div className="info-card">
                         <div className="field">

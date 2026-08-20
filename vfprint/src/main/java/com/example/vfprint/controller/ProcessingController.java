@@ -38,14 +38,14 @@ public class ProcessingController {
 
     @PostMapping
     public ResponseEntity<ApiResponse> createProcessingbyCategory(@RequestBody ProcessingRequest processingDTO){
-        processingService.createProcessing(processingDTO);
+        ApiResponse result = processingService.createProcessing(processingDTO);
+        if (result.getCode() == 409) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                result
+            );
+        }
         return ResponseEntity.status(HttpStatus.OK).body(
-            ApiResponse
-            .builder()
-            .code(200)
-            .data(processingDTO)
-            .message("Paper created successfully")
-            .build()
+            result
         );
     }
 
@@ -57,15 +57,15 @@ public class ProcessingController {
         return ResponseEntity.ok("Processing list created successfully");
     }
     
-    @GetMapping
-    public ProcessingDTO getProcessingByName(@RequestParam String name) {
-        if (!processingService.existsByName(name)) {
-            throw new RuntimeException("Processing with the given name does not exist");
-        }
-        // Assuming you have a method to fetch processing details by name
-        // return processingService.getProcessingByName(name);
-        return processingService.getProcessingByName(name); // Placeholder for actual implementation
-     }
+    // @GetMapping
+    // public ProcessingDTO getProcessingByName(@RequestParam String name) {
+    //     if (!processingService.existsByName(name)) {
+    //         throw new RuntimeException("Processing with the given name does not exist");
+    //     }
+    //     // Assuming you have a method to fetch processing details by name
+    //     // return processingService.getProcessingByName(name);
+    //     return processingService.getProcessingByName(name); // Placeholder for actual implementation
+    //  }
 
 
     @GetMapping("/{id}")

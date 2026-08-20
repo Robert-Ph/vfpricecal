@@ -48,6 +48,7 @@ const MaterialAdd = () => {
 
         const payload = {
             companyId: user?.companyId, // ID ẩn từ context
+            accountId: user?.userId,
             name: name,
             gsm: gsm,
             paperSizes: paperList 
@@ -56,7 +57,7 @@ const MaterialAdd = () => {
         try {
             console.log("Dữ liệu gửi đi:", payload);
             // Thay đổi URL theo API thực tế của bạn
-            const res = await createPaper(payload.companyId ?? "", name, gsm, paperList);
+            const res = await createPaper(payload.companyId ?? "", payload.accountId ?? "", name, gsm, paperList);
             
             if (res.code === 200 || res.code === 201) {
                 // alert("Tạo loại giấy thành công!");
@@ -82,8 +83,8 @@ const MaterialAdd = () => {
             </div>
             <div className="paper-detail-info">
                 <div className="paper-info-basic">
-                    <div className="paper-image"></div>
-                    
+                    {/* <div className="paper-image"></div> */}
+                    <br />
                     <div className="paper-item">
                         <label htmlFor="paper-name">Tên giấy/vật liệu:</label>
                         <input 

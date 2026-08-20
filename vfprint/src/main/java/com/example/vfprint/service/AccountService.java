@@ -5,6 +5,10 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import com.example.vfprint.entity.Roles;
 import com.example.vfprint.entity.UserStatus;
+import com.example.vfprint.enums.ActionLog;
+import com.example.vfprint.enums.LevelLog;
+import com.example.vfprint.enums.StatusLog;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.example.vfprint.repository.CompaniesRepository;
@@ -33,46 +37,84 @@ public class AccountService {
     private final UserStatusRepository userStatusRepository;
     private final EmailService emailService;
     private final UltiService ultiService;
+    private final LogUserService logUserService;
 
 
-    // Create a new account with encoded password
-    @Transactional
-    public void createAccount(AccountDTO accountDto){
-        //1. kiem tra email da ton tai chua
-        if (accountRepository.existsByEmail(accountDto.getEmail().toLowerCase())) {
+   @Transactional
+public void createAccount(AccountDTO accountDto) {
+
+    try {
+        // 1. Kiểm tra email
+        if (accountRepository.existsByEmail(
+                accountDto.getEmail().toLowerCase())) {
+
             throw new RuntimeException("Email already exists");
-            
         }
 
-        //2. tim company theo companyId
-        Companies company = companyRepository.findById(accountDto.getCompanyId())
-                .orElseThrow(() -> new RuntimeException("Company not found"));
+        // 2. Tìm company
+        Companies company = companyRepository
+                .findById(accountDto.getCompanyId())
+                .orElseThrow(() ->
+                        new RuntimeException("Company not found"));
 
-        //3. tim role theo roleId
-        Roles role = roleRepository.findById(accountDto.getRoleId())
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+        // 3. Tìm role
+        Roles role = roleRepository
+                .findById(accountDto.getRoleId())
+                .orElseThrow(() ->
+                        new RuntimeException("Role not found"));
 
-    
-        UserStatus activeStatus = userStatusRepository.findByCode("ACTIVE")
-                .orElseThrow(() -> new RuntimeException("User status not found"));
-        
+        // 4. Status ACTIVE
+        UserStatus activeStatus = userStatusRepository
+                .findByCode("ACTIVE")
+                .orElseThrow(() ->
+                        new RuntimeException("User status not found"));
 
-        // sinh password ngau nhien cho account moi
+        // 5. Sinh password
         String newPassword = ultiService.generateRandomPassword();
-      // 4. Sử dụng Builder (Đúng chuẩn với annotation @Builder bạn đã đặt ở Entity)
-        Account account = Account.builder()
-            .email(accountDto.getEmail().toLowerCase())
-            .username(accountDto.getUsername())  
-            .password(passwordEncoder.encode(newPassword))
-            .company(company)
-            .role(role)
-            .status(activeStatus) // Hoặc lấy từ DTO nếu bạn muốn cho phép set status khi tạo
-            .build(); // Đảm bảo không có trường ID nào bị set thủ công ở đây
-        //5. luu account moi vao database
-        accountRepository.save(account);
-        emailService.sendPasswordNewAccount(account.getEmail().toLowerCase(), newPassword);
 
+        // 6. Tạo account
+        Account account = Account.builder()
+                .email(accountDto.getEmail().toLowerCase())
+                .username(accountDto.getUsername())
+                .password(passwordEncoder.encode(newPassword))
+                .company(company)
+                .role(role)
+                .status(activeStatus)
+                .build();
+
+        // 7. Lưu account
+        Account savedAccount = accountRepository.save(account);
+
+        // 8. Ghi log thành công
+        logUserService.createLogUser(
+                accountDto.getCompanyId(),
+                LevelLog.SYSTEM,
+                ActionLog.ACCOUNT,
+                savedAccount.getId(),
+                "Tạo tài khoản mới",
+                StatusLog.Success
+        );
+
+        // 9. Gửi email
+        emailService.sendPasswordNewAccount(
+                savedAccount.getEmail(),
+                newPassword
+        );
+
+    } catch (Exception e) {
+
+        logUserService.createLogUser(
+                accountDto.getCompanyId(),
+                LevelLog.SYSTEM,
+                ActionLog.ACCOUNT,
+                accountDto.getAccountId(),
+                "Tạo tài khoản thất bại: " + e.getMessage(),
+                StatusLog.Failed
+        );
+
+        throw e;
     }
+}
 
 
     // Update account details, including password if provided

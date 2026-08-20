@@ -178,6 +178,15 @@ public class CompaniesService {
         return dto;
     }
 
+     //get company by ID
+    @Transactional(readOnly = true)
+    public Companies getCompany(UUID id){
+        Companies company = companiesRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Company not found"));
+        return company;
+    }
+
+
     @Transactional(readOnly = true)
 public List<CompaniesReponse> getAllCompanies() {
     

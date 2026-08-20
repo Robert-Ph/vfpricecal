@@ -37,7 +37,7 @@ public class Payment {
     private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "subscription_status_id",foreignKey = @ForeignKey(name = "fk_payment_subscription_status"))
+    @JoinColumn(name = "subscription_id",foreignKey = @ForeignKey(name = "fk_payment_subscription_status"))
     private CompansySubscriptions compansySubscription;
 
     private BigDecimal amount;

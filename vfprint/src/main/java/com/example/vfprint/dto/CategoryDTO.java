@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class CategoryDTO {
     private UUID id;
     private UUID companyId;
+    private UUID accountId;
     private Boolean canDelete;
     private String name;
 }

@@ -57,7 +57,7 @@ const Material = () => {
     try {
         if (!selectedPaperId) return;
 
-        await deletePaper(selectedPaperId, user?.companyId ?? "");
+        await deletePaper(selectedPaperId, user?.companyId ?? "", user?.userId ?? "");
 
         setPaperList((prev) =>
             prev.filter((item) => item.id !== selectedPaperId)

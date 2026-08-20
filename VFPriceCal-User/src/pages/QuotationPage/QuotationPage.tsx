@@ -20,7 +20,7 @@ import {
   FiSettings,     // Gia công sau in
   FiGrid,         // Kết quả báo giá
   FiTrash2,
-  FiExternalLink,
+  // FiExternalLink,
   
 } from "react-icons/fi";
 import { FaCalculator } from "react-icons/fa";
@@ -35,6 +35,7 @@ import { toast } from "react-toastify";
 const QuotationPage = () => {
 
     const navigate = useNavigate();
+    const [sizeMode, setSizeMode] = useState("manual");
     const [openPaperModal, setOpenPaperModal] = useState(false);
     const [processingList, setProcessingList] = useState<proCal[]>([]); 
     const [printPriceList, setPrintPriceList] = useState<printPrice[]>([]);
@@ -42,6 +43,7 @@ const QuotationPage = () => {
     const [height, setHeight] = useState<number | null>(null);
     const [printPrice, setPrintPrice] = useState<string | null>(null);
     const [quantity, setQuantity] = useState<number | null>(null);
+    const [productInPage, setProductInPage] = useState<number | null>(null);
     const [vat, setVat] = useState<number | null>(null);
     const [paperList, setPaperList] = useState<paper[]>([]); // State để quản lý danh sách giấy/vật liệu trong báo giá
     const [profitList, setProfitList] = useState<profitRequest[]>([]);
@@ -52,6 +54,7 @@ const QuotationPage = () => {
     const [discountId, setDiscountId] = useState<string | null>(null);
     const [name, setName] = useState<string>("");
     const [paperSize, setPaperSize] = useState<paperSize[]>([]);
+    const [paperSizeId, setPaperSizeId] = useState<string>("");
 
 
     
@@ -72,63 +75,41 @@ const QuotationPage = () => {
     };
     
     useEffect(() => {
-        const fetchPaperList = async () => {
-            try {
-                const data = await getPapers(user?.companyId ?? ""); // Sử dụng companyId từ context
-                setPaperList(data.data);
-            } catch (error) {
-                console.error("Lỗi khi lấy danh sách giấy/vật liệu:", error);
+    const fetchData = async () => {
+        if (!user?.companyId) return;
+
+        try {
+            const [
+                paperListRes,
+                printPriceRes,
+                profitRes,
+                discountRes,
+                paperSizeRes,
+            ] = await Promise.all([
+                getPapers(user.companyId),
+                getAllByCompany(user.companyId),
+                getAllProfitByCompany(user.companyId),
+                getAllDiscountByCompany(user.companyId),
+                selectedPaperId
+                    ? getPaperById(selectedPaperId)
+                    : Promise.resolve(null),
+            ]);
+
+            setPaperList(paperListRes.data);
+            setPrintPriceList(printPriceRes.data);
+            setProfitList(profitRes.data);
+            setDiscountList(discountRes.data);
+
+            if (paperSizeRes) {
+                setPaperSize(paperSizeRes.data.paperSizes);
             }
-        };
-        fetchPaperList();
-    }, [selectedPaperId]);
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu:", error);
+        }
+    };
 
-    useEffect(() => {
-            const fetchPrintPrice = async () => {
-                        // Chỉ gọi API khi đã có thông tin user và companyId
-                        if (user?.companyId) {
-                            try {
-                                const papers = await getAllByCompany(user.companyId);
-                                setPrintPriceList(papers.data); // Cập nhật danh sách vào state để hiển thị
-                            } catch (error) {
-                                console.error("Lỗi khi lấy giấy/vật liệu:", error);
-                            }
-                        }
-            };
-
-
-            const fetchProfitList = async () => {
-                            try {
-                                const response = await getAllProfitByCompany(user?.companyId ?? "");
-                                setProfitList(response.data); // Cập nhật danh sách vào state để hiển thị
-                            } catch (error) {
-                                console.error("Lỗi khi lấy biên lợi nhuận:", error);
-                            }
-            }
-
-            const fetchDiscountList = async () => {
-                try {
-                    const response = await getAllDiscountByCompany(user?.companyId ?? "");
-                    setDiscountList(response.data);
-                } catch (error) {
-                    console.error("Lỗi khi lấy chiết khấu:", error);
-                }
-            }
-
-            const fetchPaperSizeList = async () => {
-                try {
-                    const res = await getPaperById(selectedPaperId);
-                    setPaperSize(res.data.paperSizes);
-                } catch (error) {
-                    console.error("Lỗi khi lấy chiết khấu:", error);
-                }
-            }
-            
-            fetchPrintPrice();
-            fetchProfitList();
-            fetchDiscountList();
-            fetchPaperSizeList();
-    }, [user?.companyId, selectedPaperId]);
+    fetchData();
+}, [user?.companyId, selectedPaperId]);
 
   const validateProductSize = () => {
     if (!width || !height || paperSize.length === 0) {
@@ -164,8 +145,18 @@ const QuotationPage = () => {
         return;
       }
 
-      if(!width && !height && !selectedPaperId ){
+      if(!selectedPaperId){
         toast.error("Vui lòng nhập đầy đủ thông tin!")
+        return;
+      }
+
+      if (sizeMode === "manual" && (!width || !height)) {
+        toast.error("Vui lòng nhập đầy đủ chiều rộng và chiều cao!");
+        return;
+      }
+
+      if (sizeMode === "perSheet" && !productInPage || !paperSizeId) {
+        toast.error("Vui lòng nhập số lượng sản phẩm/tờ hoặc khổ giấy!");
         return;
       }
       
@@ -194,9 +185,11 @@ const QuotationPage = () => {
                 accoutId: user?.userId ?? "",
                 widthProduct: width,
                 heightProduct: height,
+                productInPage: productInPage,
                 quantity: quantity,
                 processingIds:  processingList,
                 paperId: selectedPaperId,
+                paperSizeId: paperSizeId,
                 companyId: user?.companyId ?? "",
                 printPrice: printPrice,
                 profit: profit,
@@ -216,21 +209,25 @@ const QuotationPage = () => {
         }
     }
 
-  const handShare = async () => {
-    const link = `${window.location.origin}/bao-gia/${user?.companyName}/${user?.phone}/${user?.companyId}`;
+  // const handShare = async () => {
+  //   const link = `${window.location.origin}/bao-gia/${user?.companyName}/${user?.phone}/${user?.companyId}`;
     
-   try {
-        await navigator.clipboard.writeText(link);
-        toast.success("Đã sao chép liên kết");
-    } catch {
-        toast.error("Không thể sao chép");
-    }
-  navigate(`/bao-gia/${user?.companyName}/${user?.phone}/${user?.companyId}`);
-};
+  //  try {
+  //       await navigator.clipboard.writeText(link);
+  //       toast.success("Đã sao chép liên kết");
+  //   } catch {
+  //       toast.error("Không thể sao chép");
+  //   }
+  //   navigate(`/bao-gia/${user?.companyName}/${user?.phone}/${user?.companyId}`);
+  // };
 
   const handExport = async () => {
     if(!name){
        toast.error("Vui lòng điền tên sản phẩm");
+      return;
+    }
+    if(!result){
+      toast.error("Chưa có thông tin xuất báo giá");
       return;
     }
     const selectedPaper = paperList.find(
@@ -270,10 +267,10 @@ const QuotationPage = () => {
         Làm mới
       </button>
 
-      <button className="btn-primary btn-share" onClick={() => handShare()}>
+      {/* <button className="btn-primary btn-share" onClick={() => handShare()}>
         <FiExternalLink />
         Chia sẻ
-      </button>
+      </button> */}
       <button className="btn-primary" onClick={handExport}>
           <FiFileText />
           Xuất file
@@ -353,17 +350,76 @@ const QuotationPage = () => {
 
           <div className="product-left">
 
-            <label>Kích thước sản phẩm<span className="required">*</span></label>
+            {/* <label>
+      Kích thước sản phẩm <span className="required">*</span>
+    </label> */}
 
-            <div className="size-group">
-              <input type="number" placeholder="Nhập chiều rộng"  onChange={(e) => setWidth(Number(e.target.value))} />
+    {/* Chọn cách nhập */}
+    <div className="size-mode">
+      <label className="radio-option">
+        <input
+          type="radio"
+          name="sizeMode"
+          value="manual"
+          checked={sizeMode === "manual"}
+          onChange={() => setSizeMode("manual")}
+          title="Nhập kích thước"
+        />
+        <span>Nhập kích thước</span>
+      </label>
 
-              <span className="x">x</span>
+      <label className="radio-option">
+        <input
+          type="radio"
+          name="sizeMode"
+          value="perSheet"
+          checked={sizeMode === "perSheet"}
+          onChange={() => setSizeMode("perSheet")}
+          title="Số lượng/tờ"
+        />
+        <span>Số lượng/tờ</span>
+      </label>
+    </div>
 
-              <input type="number" placeholder="Nhập chiều cao" onChange={(e) => setHeight(Number(e.target.value))} />
+    {/* Nhập kích thước */}
+    {sizeMode === "manual" && (
+      <div className="size-group">
+        <input
+          type="number"
+          min="1"
+          placeholder="Chiều rộng"
+          value={width || ""}
+          onChange={(e) => setWidth(Number(e.target.value))}
+        />
 
-              <span className="unit">mm</span>
-            </div>
+        <span className="x">×</span>
+
+        <input
+          type="number"
+          min="1"
+          placeholder="Chiều cao"
+          value={height || ""}
+          onChange={(e) => setHeight(Number(e.target.value))}
+        />
+
+        <span className="unit">mm</span>
+      </div>
+    )}
+
+    {/* Tự nhập số lượng trên tờ */}
+    {sizeMode === "perSheet" && (
+      <div className="per-sheet-input">
+        <input
+          type="number"
+          min="1"
+          placeholder="Nhập số sản phẩm/1 tờ"
+          value={productInPage || ""}
+          onChange={(e) => setProductInPage(Number(e.target.value))}
+        />
+
+        <span className="unit">sản phẩm / tờ</span>
+      </div>
+    )}
 
                 <label>Loại hình in<span className="required">*</span></label>
               <select onChange={(e) => setPrintPrice(e.target.value)}>
@@ -384,7 +440,7 @@ const QuotationPage = () => {
 
           <div className="product-right">
 
-                 <div className="field-quotation">
+            <div className="field-quotation">
               <label>Loại giấy in <span className="required">*</span></label>
               <select 
                 onChange={(e) => setSelectedPaperId(e.target.value)}
@@ -397,6 +453,23 @@ const QuotationPage = () => {
                 ))}
               </select>
             </div>
+
+            {sizeMode === "perSheet" ? (
+              <div className="field-quotation">
+              <label>Khổ giấy in <span className="required">*</span></label>
+              <select 
+                onChange={(e) => setPaperSizeId(e.target.value)}
+                >
+                <option>Chọn giấy</option>
+                {paperSize.map((paper) => (
+                    <option key={paper.id} value={paper.id ?? ""}>
+                        {paper.width} x {paper.height}
+                    </option>
+                ))}
+              </select>
+            </div>
+            ):null}
+            
 
             <div className="field-quotation">
               <label>Số lượng<span className="required">*</span></label>

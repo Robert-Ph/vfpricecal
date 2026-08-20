@@ -2,9 +2,9 @@
 import { apiClient } from "../api/APIConfig";
 import {type paperSize} from "../model/model";
 
-export const createPaper = async (companyId: string, name: string, gsm: string, paperSizes: { width: number; height: number; price: number }[]) => {
+export const createPaper = async (companyId: string, accountId: string, name: string, gsm: string, paperSizes: { width: number; height: number; price: number }[]) => {
     try {
-        const response = await apiClient.post('/papers', { companyId, name,  gsm, paperSizes });
+        const response = await apiClient.post('/papers', { companyId,accountId, name,  gsm, paperSizes });
         return response.data; // Assuming the created paper is in response.data
     }
     catch (error) {
@@ -35,9 +35,9 @@ export const getPaperById = async (paperId: string) => {
     }
 };
 
-export const deletePaper = async (id: string, comapanyId: string) => {
+export const deletePaper = async (id: string, comapanyId: string, accountId: string) => {
     try{
-        const response = await apiClient.delete(`/papers/${id}?companyId=${comapanyId}`)
+        const response = await apiClient.delete(`/papers/${id}?companyId=${comapanyId}?accountId=${accountId}`)
         return response.data;
     }catch(error){
         console.error('Failed to delete paper', error);

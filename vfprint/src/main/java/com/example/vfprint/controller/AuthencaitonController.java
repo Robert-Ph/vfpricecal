@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.example.vfprint.config.Code;
 import com.example.vfprint.dto.request.LoginRequest;
 import com.example.vfprint.dto.response.ApiResponse;
 import java.util.Map;
@@ -28,13 +27,14 @@ public class AuthencaitonController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest request, HttpServletRequest httpRequest){
+        ApiResponse result = authencaitonService.authenticateResponse(request, httpRequest);
+        if (result.getCode() == 409) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                result
+            );
+        }
         return ResponseEntity.status(HttpStatus.OK).body(
-            ApiResponse
-            .builder()
-            .code(Code.SUCCESS)
-            .message("Login successful")
-            .data(authencaitonService.authenticateResponse(request, httpRequest))
-            .build()
+           result
         );
     }
 

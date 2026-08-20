@@ -42,6 +42,7 @@ const CategoryModal = ({ open, setOpen }: Props) => {
     const payload = {
         id: "", // ID sẽ được backend tạo tự động
         companyId: user?.companyId ?? "", // ID ẩn từ context
+        accountId: user?.userId ?? "",
         name: categoryName ?? "",
         canDelete: true, // Mặc định cho phép xóa
         processings: null

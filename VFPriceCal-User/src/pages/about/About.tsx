@@ -132,7 +132,8 @@ const About = () => {
                         <h3>Thông tin gói dịch vụ</h3>
         
                         <div className="sub-info-group">
-                            <label>Tên doanh nghiệp</label>
+                            <label>
+                                {user?.customType === 'PERSONAL' ? 'Chủ tài khoản' : 'Tên doanh nghiệp' }</label>
                             <div className="company-name">{user?.fullname}</div>
                         </div>
 

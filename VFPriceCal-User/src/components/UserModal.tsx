@@ -51,6 +51,7 @@ const UserModal = ({ open, setOpen }: Props) => {
   const handleSubmit = async () => {
    const newUser = {
         companyId: user?.companyId ?? "", // ID ẩn từ context,
+        accountId: user?.userId ?? "",
         email: email,
         username: name,
         password: "", // Password sẽ được nhập từ input riêng

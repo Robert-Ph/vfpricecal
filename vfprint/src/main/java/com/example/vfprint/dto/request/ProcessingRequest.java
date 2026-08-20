@@ -22,6 +22,8 @@ import lombok.Setter;
 public class ProcessingRequest {
     private UUID id;
     private UUID categoryId;
+    private UUID companyId;
+    private UUID accountId;
     private String name;
     private String unit;
     @JsonProperty("pTierRequests")

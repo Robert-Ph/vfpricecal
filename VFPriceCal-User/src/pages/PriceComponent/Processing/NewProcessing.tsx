@@ -1,7 +1,8 @@
 import "./processingDetail.scss";
 import { FiEdit, FiTrash2,
     //  FiLayers,
-      FiImage, FiTag, FiGrid, FiPlus   } from "react-icons/fi";
+    //   FiImage, 
+      FiTag, FiGrid, FiPlus   } from "react-icons/fi";
 import { FaPlus } from "react-icons/fa";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
@@ -10,6 +11,7 @@ import { toast } from "react-toastify";
 import type {processingTier } from "../../../model/model";
 import { formatMoney } from "../../../utils/formatMoney";
 import { createProcessingByCategory } from "../../../service/ProcessingService";
+import type { UserInfo } from "../../../context/AuthContext";
 
 const NewProcessing = () => {
 
@@ -21,7 +23,18 @@ const NewProcessing = () => {
         ] = useState<processingTier>();
     const [data, setData] = useState<processingTier[]>([]);
     const {id} = useParams();
+    const [user] = useState<UserInfo>(() => {
+            const savedUser = localStorage.getItem("user");
+            if (savedUser) {
+                try {
+                    return JSON.parse(savedUser);
+                } catch (error) {
     
+                    return error;
+                }
+            }
+            return null;
+        });
 
     const handleAddProcessingTier = (newData: processingTier) => {
         setData([...data, newData]);
@@ -41,6 +54,8 @@ const NewProcessing = () => {
         const payload = {
             id: null,
             categoryId: id ?? "",
+            companyId: user?.companyId,
+            accountId: user?.userId,
             name: name,
             unit: unit,
             pTierRequests: data
@@ -88,14 +103,14 @@ const NewProcessing = () => {
             <div className="content-area">
                 {/* LEFT SIDE: Thông tin chi tiết giấy/vật liệu sẽ hiển thị ở đây. Bạn có thể chỉnh sửa thông tin như tên, gsm, trạng thái, và xem trước hình ảnh của giấy/vật liệu. */}
                                 <div className="sidebar-material">
-                                    <div className="preview-card">
+                                    {/* <div className="preview-card">
                                         <div className="paper-preview" />
                 
                                         <button className="preview-btn">
                                             <FiImage />
                                             Xem ảnh
                                         </button>
-                                    </div>
+                                    </div> */}
                 
                                     <div className="info-card">
                                         <div className="field">

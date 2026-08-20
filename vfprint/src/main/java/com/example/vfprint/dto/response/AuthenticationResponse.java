@@ -3,6 +3,8 @@ package com.example.vfprint.dto.response;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import com.example.vfprint.enums.CustomType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,4 +28,5 @@ public class AuthenticationResponse {
     private Timestamp startTime;
     private Timestamp endTime;
     private int maxUsers;
+    private CustomType customType;
 }

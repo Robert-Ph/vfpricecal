@@ -35,7 +35,6 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class CalculatorService {
-
     private final PaperSizeService paperSizeService;
 
     private final ProcessingRepository processingRepository;
@@ -55,6 +54,8 @@ public class CalculatorService {
     private final PrintPriceRepository priceRepository;
 
     private final LogUserService logUserService;
+
+
 
 
 
@@ -79,7 +80,9 @@ public CalculateResponse calculatePrintingCost(InfoPriceDTO infoPriceDTO) {
         // =========================================================
         // 2. Tìm khổ giấy phù hợp
         // =========================================================
-        PaperSizeDTO paperSizeDTO = selectOptimalPaperSize(
+        PaperSizeDTO paperSizeDTO = new PaperSizeDTO();
+        if (infoPriceDTO.getPaperSizeId().equals("")) {
+            paperSizeDTO = selectOptimalPaperSize(
                 infoPriceDTO.getWidthProduct(),
                 infoPriceDTO.getHeightProduct(),
                 infoPriceDTO.getQuantity(),
@@ -92,6 +95,11 @@ public CalculateResponse calculatePrintingCost(InfoPriceDTO infoPriceDTO) {
                             + infoPriceDTO.getPaperId()
             );
         }
+        }else{
+           paperSizeDTO = paperSizeService.getPaperSizeById(infoPriceDTO.getPaperSizeId());
+
+        }
+        
 
         // =========================================================
         // 3. Lấy Profit
@@ -154,28 +162,36 @@ public CalculateResponse calculatePrintingCost(InfoPriceDTO infoPriceDTO) {
         // =========================================================
         // 5. Tính số lượng tờ giấy cần sử dụng
         // =========================================================
-        int productWidth = infoPriceDTO.getWidthProduct() + 2;
-        int productHeight = infoPriceDTO.getHeightProduct() + 2;
+        System.out.println("số sản phẩm tren to:" + infoPriceDTO.getProductInPage() + "#########################################");
+        int sheetsNeeded = 0;
+        if (infoPriceDTO.getProductInPage() <=0) {
+            int productWidth = infoPriceDTO.getWidthProduct() + 2;
+            int productHeight = infoPriceDTO.getHeightProduct() + 2;
 
-        int usablePaperWidth = paperSizeDTO.getWidth() - 10;
-        int usablePaperHeight = paperSizeDTO.getHeight() - 10;
+            int usablePaperWidth = paperSizeDTO.getWidth() - 10;
+            int usablePaperHeight = paperSizeDTO.getHeight() - 10;
 
-        if (usablePaperWidth <= 0 || usablePaperHeight <= 0) {
-            throw new RuntimeException(
+            if (usablePaperWidth <= 0 || usablePaperHeight <= 0) {
+                throw new RuntimeException(
                     "Kích thước khổ giấy không hợp lệ: "
                             + paperSizeDTO.getWidth()
                             + " x "
                             + paperSizeDTO.getHeight()
-            );
-        }
+                );
+            }
 
-        int sheetsNeeded = calculatePaperSheets(
+            sheetsNeeded = calculatePaperSheets(
                 productWidth,
                 productHeight,
                 usablePaperWidth,
                 usablePaperHeight,
                 infoPriceDTO.getQuantity()
-        );
+            );
+        }else{
+            sheetsNeeded = infoPriceDTO.getQuantity()/infoPriceDTO.getProductInPage();
+        }
+
+        
 
         if (sheetsNeeded <= 0) {
             throw new RuntimeException(
@@ -353,7 +369,7 @@ public CalculateResponse calculatePrintingCost(InfoPriceDTO infoPriceDTO) {
                 ActionLog.QUOTATION,
                 infoPriceDTO != null ? infoPriceDTO.getAccoutId() : null,
                 "Tính báo giá",
-                StatusLog.Error
+                StatusLog.Failed
         );
 
         throw e;

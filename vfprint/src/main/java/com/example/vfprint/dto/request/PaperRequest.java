@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class PaperRequest {
     private UUID companyId;
+    private UUID accountId;
     private String name;
     private String gsm;
     private List<PaperSizeRequest> paperSizes;

@@ -310,3 +310,24 @@ select {
 
 
 }
+
+.per-sheet-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.per-sheet-input input {
+  flex: 1;
+}
+
+.per-sheet-input .unit {
+  white-space: nowrap;
+  color: #666;
+}
+.sheet-quantity span {
+  white-space: nowrap;
+  font-weight: 500;
+  color: #555;
+}

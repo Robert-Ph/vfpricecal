@@ -12,7 +12,7 @@ import com.example.vfprint.entity.Category;
 
 @Repository
 public interface ProcessingRepository extends JpaRepository<Processing, UUID> {
-    boolean existsByName(String name);
+    boolean existsByNameAndCategory(String name, Category category);
     void deleteByName(String name);
     Processing findByName(String name);
     List<Processing> findByCategoryId(UUID categoryId);

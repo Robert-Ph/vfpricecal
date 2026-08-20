@@ -4,7 +4,9 @@ import { FaFileAlt, FaCog
     // , FaBox
  } from "react-icons/fa";
 import { IoLayers } from "react-icons/io5";
-import { FiChevronDown, FiInfo, FiSmartphone } from "react-icons/fi";
+import { FiChevronDown, FiInfo
+    // , FiSmartphone 
+} from "react-icons/fi";
 import "./sidebar.scss";
 import logo from "../assets/logo.png";
 import avata from "../assets/avata.png";
@@ -148,10 +150,10 @@ const Sidebar = () => {
                 )
                 }
                 
-                <NavLink className="menu-item" to="/mobile">
+                {/* <NavLink className="menu-item" to="/mobile">
                     <FiSmartphone className="menu-icon" />
                     <span>Truy cập di động</span>
-                </NavLink>
+                </NavLink> */}
 
                 {user?.role === "ADMIN" || user?.role === "OWNER" ? (
                     <div className="menu-item parent"
